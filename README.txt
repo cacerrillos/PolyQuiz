@@ -1,0 +1,1 @@
+Rename config.func.sample.php to config.func.php and change the database login information.
