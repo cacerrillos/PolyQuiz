@@ -5,6 +5,7 @@ session_start();
 $use = true;
 $sat = true;
 $page = "";
+
 if(isset($_GET['p'])){
 	$page = $_GET['p'];
 	if($page == "managequiz" && !isset($_GET['UUID'])){
@@ -27,33 +28,47 @@ if(!isset($_SESSION["total"]) && $page=="done"){
 include("inc/header.inc.php");
 ?>
 <?
-if($page=="home" && $use == false){
+if($page=="home"){
+	$pagetype = "home";
+	$pagetype2 = "home";
 	include("inc/home.inc.php");
 } else if($page=="admin"){
+	$pagetype = "admin";
 	include("inc/admin.inc.php");
 } else if($page=="quizadmin"){
+	$pagetype = "admin";
 	include("inc/quiz.admin.inc.php");
-} else if($page=="takequiz" || ($page=="home" && $use == true)){
+} else if($page=="takequiz"){
+	$pagetype = "takequiz";
 	include("inc/takequiz.inc.php");
 } else if($page=="managequiz"){
+	$pagetype = "admin";
 	include("inc/managequiz.inc.php");
 } else if($page=="results"){
+	$pagetype = "admin";
 	include("inc/results.inc.php");
 } else if($page=="done"){
+	$pagetype = "take";
 	include("inc/fin.inc.php");
 } else if($page=="stats"){
 	include("inc/stats.inc.php");
 } else if($page=="postquizadmin"){
+	$pagetype = "admin";
 	include("inc/postquiz.inc.php");
 } else if($page=="addquestion"){
+	$pagetype = "admin";
 	include("inc/addquestion.inc.php");
 } else if($page=="pendingsessions"){
+	$pagetype = "admin";
 	include("inc/pending.inc.php");
 } else if($page=="survey"){
 	include("inc/survey.inc.php");
 } else if($page=="gradefr"){
+	$pagetype = "admin";
 	include("inc/freeresponsegrading.inc.php");
 } else {
+	$pagetype = "home";
+	$pagetype2 = "home";
 	include("inc/home.inc.php");
 }
 

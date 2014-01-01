@@ -47,8 +47,38 @@ window.onload=function() {
    showElement('quizz');
 }
 </script>
-  <div class="content">
-    <h3><a href="?p=admin">The Core</a></h3>
+		<!-- Main Wrapper -->
+			<div id="main-wrapper">
+				<div class="main-wrapper-style2">
+					<div class="inner">
+						<div class="container">
+							<div class="row">
+								<div class="4u">
+									<div id="sidebar">
+
+										<!-- Sidebar -->
+											<section>
+												<header class="major">
+													<h2>Subheading</h2>
+												</header>
+												<footer>
+													<a href="#" class="button alt fa fa-arrow-circle-o-right">Do Something</a>
+												</footer>
+											</section>
+								
+									</div>
+								</div>
+								<div class="8u skel-cell-important">
+									<div id="content">
+
+										<!-- Content -->
+									
+											<article>
+												<header class="major">
+													<h2>Page Title</h2>
+													<span class="byline">Which means the sidebar is on the left</span>
+												</header>
+                                                <h3><a href="?p=admin">The Core</a></h3>
     <p>Managing Quiz: <? echo $quizinfo['quizname']; ?></p>
     <div id="loading" style="margin-left:20px">
     Please wait while the text editors load...
@@ -220,4 +250,12 @@ window.onload=function() {
 	}
 	?>
     </div>
-    <!-- end .content --></div>
+											</article>
+								
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
