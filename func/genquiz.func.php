@@ -126,7 +126,6 @@ class quiz {
 		$question ->setResponse($response);
 	}
 }
-//include_once("question.func.php");
 include_once("question.obj.php");
 class quizFromMysql{
 	public $quiz;
