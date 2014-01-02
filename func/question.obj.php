@@ -87,33 +87,42 @@ class PolyQuestion {
 				}
 			?>
             <div class="question">
-				<div style="background-color:#<? echo $color; ?>; margin-top:5px; margin-bottom:5px; padding-left:10px; padding-right:10px;">
-                <div style="float:left;">
-				<div style="margin-bottom:0;"><h3 style="margin-bottom:0; color:#000;"><? echo ($x+1).") "; ?></h3>
-                <select name="ans<? echo $x; ?>">
-                <option value="-1"></option>
-                <?
-				for($y = 0 ; $y < count($this->right); $y++){
-					?>
-                    <option value="<? echo $y; ?>" <? if($this->left_res[$x]==$y){ echo "selected"; }?>><? echo $alphabet[$y]; ?></option>
-                    <?
-				}
-				?>
-                </select>
-                <h4 style="text-transform:none; color:#000;">
-				<? echo " ".$this->left[$x]; ?>
-                </h4>
-                </div></div>
-                <div style="float:right;">
-                <h3 style="margin-bottom:0; color:#000;">
-                <? echo "<b>".$alphabet[$x]."</b>) ";?>
-                </h3>
-                <h4 style="text-transform:none; color:#000;">
-                <? echo $this->right[$x]; ?>
-                </h4></div>
-                <div style="clear: both;"></div>
+                <div class="questionLetter">
+                    <div style="background-color:#<? echo $color; ?>; margin-top:5px; margin-bottom:5px; padding-left:10px; padding-right:10px;">
+                        <div style="float:left;">
+                            <div style="margin-bottom:0;">
+                                <span style="margin-bottom:0; color:#000;">
+									<? echo ($x+1).") "; ?>
+                                </span>
+                                <select name="ans<? echo $x; ?>">
+                                    <option value="-1"></option>
+                                    <?
+                                    for($y = 0 ; $y < count($this->right); $y++){
+                                        ?>
+                                        <option value="<? echo $y; ?>" <? if($this->left_res[$x]==$y){ echo "selected"; }?>>
+											<? echo $alphabet[$y]; ?>
+                                        </option>
+                                    <?
+                                    }
+                                    ?>
+                                </select>
+                                <span style="text-transform:none; color:#000; font-size:1.2em;">
+									<? echo " ".$this->left[$x]; ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="float:right;">
+                            <span style="margin-bottom:0; color:#000;">
+                                <? echo "<b>".$alphabet[$x]."</b>) ";?>
+                            </span>
+                            <span style="text-transform:none; color:#000; font-size:1.2em;">
+                                <? echo $this->right[$x]; ?>
+                            </span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
                 </div>
-                </div>
+            </div>
 			<?
 			}
 		}
