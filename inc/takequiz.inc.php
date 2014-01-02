@@ -10,7 +10,7 @@
 										<!-- Sidebar -->
 											<section>
 												<header class="major">
-													<h2>Quiz Status</h2>
+													<h2><i class="fa fa-info-circle"></i> Quiz Status</h2>
 												</header>
 												<footer>
                                                 <?
@@ -52,22 +52,22 @@
 													}
 													
 												?>
-                                                <table>
+                                                <table style="border-spacing: 10px;border-collapse: separate;">
                                                     <tr>
                                                         <td>First Name:</td>
-                                                        <td><? echo $_SESSION['firstname']; ?></td>
+                                                        <td style="color:#000;"><? echo $_SESSION['firstname']; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Last Name:</td>
-                                                        <td><? echo $_SESSION['lastname']; ?></td>
+                                                        <td style="color:#000;"><? echo $_SESSION['lastname']; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Quiz:</td>
-                                                        <td><? echo $quizname; ?></td>
+                                                        <td style="color:#000;"><? echo $quizname; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td>House:</td>
-                                                        <td><? echo $quiz->getHouse(); ?></td>
+                                                        <td style="color:#000;"><? echo $quiz->getHouse(); ?></td>
                                                     </tr>
                                                 </table>
                                                     <a href="?p=exit" <? if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){ echo "onclick='window.onbeforeunload = null;'";}?> class="button alt fa fa-trash-o">Exit Quiz</a>
@@ -86,7 +86,7 @@
 									
 											<article>
 												<header class="major">
-													<h2>Take a Quiz</h2>
+													<h2><i class="fa fa-file"></i> Take a Quiz</h2>
 												</header>
                                                 <?
 

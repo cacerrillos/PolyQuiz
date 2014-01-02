@@ -63,6 +63,8 @@ if($page=="home"){
 	include("inc/pending.inc.php");
 } else if($page=="survey"){
 	include("inc/survey.inc.php");
+} else if($page=="sessions"){
+	include("inc/sessions.inc.php");
 } else if($page=="gradefr"){
 	$pagetype = "admin";
 	include("inc/freeresponsegrading.inc.php");

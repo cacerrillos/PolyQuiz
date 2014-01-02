@@ -72,14 +72,14 @@
 									<div class="inner">
 									
 										<!-- Logo -->
-											<h1><a href="?p=home" id="logo" style="text-transform:none;">PolyQuiz</a></h1>
+											<a href="?p=home" id="logo" style="text-transform:none;"><img src="images/title.png" style="margin-left:10px; max-height:100%; max-width:100%" ></a>
 										
 										<!-- Nav -->
 											<nav id="nav">
 												<ul>
-													<li <? if($page=="home"){ echo 'class="current_page_item"'; } ?>><a href="?p=home">Home</a></li>
-                                                    <li <? if($page=="takequiz"){ echo 'class="current_page_item"'; } ?>><a href="?p=takequiz">Take a Quiz</a></li>
-                                                    <li <? if($page=="admin"){ echo 'class="current_page_item"'; } ?>><a href="?p=admin">The Core</a></li>
+													<li <? if($page=="home"){ echo 'class="current_page_item"'; } ?>><a href="?p=home"><i class="fa fa-home"></i> Home</a></li>
+                                                    <li <? if($page=="takequiz"){ echo 'class="current_page_item"'; } ?>><a href="?p=takequiz"><i class="fa fa-file"></i> Take a Quiz</a></li>
+                                                    <li <? if($page=="admin"){ echo 'class="current_page_item"'; } ?>><a href="?p=admin"><i class="fa fa-cog"></i> The Core</a></li>
 												</ul>
 											</nav>
 									
@@ -93,7 +93,7 @@
 								<div id="banner">
                                     <div style="position: absolute; left: 50%; bottom: 5%; display:block;">
                                     <div style="position: relative; left: -50%;">
-                                    <a href="?p=takequiz" class="button big fa">Take A Quiz!</a>
+                                    <a href="?p=takequiz" class="button big fa"><i class="fa fa-file"></i> Take A Quiz!</a>
                                     </div>
                                     </div>
 								</div>

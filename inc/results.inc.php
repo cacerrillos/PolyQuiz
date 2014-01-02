@@ -38,12 +38,9 @@ function showElement(element_id) {
 
 										<!-- Sidebar -->
 											<section>
-												<header class="major">
-													<h2>Subheading</h2>
-												</header>
-												<footer>
-													<a href="#" class="button alt fa fa-arrow-circle-o-right">Do Something</a>
-												</footer>
+                                                <?
+												include("inc/adminleftsidebar.inc.php");
+												?>
 											</section>
 								
 									</div>

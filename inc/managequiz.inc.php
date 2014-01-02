@@ -58,38 +58,33 @@ window.onload=function() {
 
 										<!-- Sidebar -->
 											<section>
-												<header class="major">
-													<h2>Subheading</h2>
-												</header>
-												<footer>
-													<a href="#" class="button alt fa fa-arrow-circle-o-right">Do Something</a>
-												</footer>
+                                                <?
+												include("inc/adminleftsidebar.inc.php");
+												?>
 											</section>
 								
 									</div>
 								</div>
 								<div class="8u skel-cell-important">
 									<div id="content">
-
 										<!-- Content -->
-									
 											<article>
 												<header class="major">
-													<h2>Page Title</h2>
-													<span class="byline">Which means the sidebar is on the left</span>
+													<h2>Edit Quiz</h2>
+													<span class="byline">Editing Quiz: <? echo $quizinfo['quizname']; ?><br />
+                                                        <form name="editquiz" action="func/edit.func.php" method="post">
+    <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
+    <input type="radio" name="status" value="1" <? if($quizinfo['status']==1){ echo "checked"; }?>/>Enabled | <input type="radio" name="status" value="0" <? if($quizinfo['status']==0){ echo "checked"; }?>/>Disabled <input type="submit" name="submit" value="Change" /></form>
+    <a href="func/renumber.func.php?uuid=<? echo $uuid; ?>">Reset Numbers!</a>
+                                                    </span>
 												</header>
-                                                <h3><a href="?p=admin">The Core</a></h3>
-    <p>Managing Quiz: <? echo $quizinfo['quizname']; ?></p>
     <div id="loading" style="margin-left:20px">
     Please wait while the text editors load...
     </div>
     <div id="quizz" style="margin-left:20px; display:none;">
-    <p><a href="func/renumber.func.php?uuid=<? echo $uuid; ?>">Reset!</a></p>
-    <form name="editquiz" action="func/edit.func.php" method="post">
-    <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
-    <input type="radio" name="status" value="1" <? if($quizinfo['status']==1){ echo "checked"; }?>/>Enabled | <input type="radio" name="status" value="0" <? if($quizinfo['status']==0){ echo "checked"; }?>/>Disabled <input type="submit" name="submit" value="Change" /><br /><br />
-    </form>
-    <h2>Add A Question</h2>
+    <p></p>
+	<div id="addquestiondiv" style="margin-left:20px; margin-bottom:30px">
+    <h3 style="margin-bottom:5px">Add A Question</h3>
     <form action="?p=addquestion&uuid=<? echo $uuid; ?>" method="post">
     <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
     Type: <select name="type">
@@ -107,7 +102,7 @@ window.onload=function() {
     </select>
     <input type="submit" name="submit" value="Add!" />
     </form>
-    <br />
+    </div>
     <?
 //	$questions = mysql_fetch_array($query);
 	while($questions = mysql_fetch_array($limitedq)){
