@@ -47,18 +47,15 @@ function showElement(element_id) {
 								</div>
 								<div class="8u skel-cell-important">
 									<div id="content">
-
 										<!-- Content -->
-									
 											<article>
 												<header class="major">
-													<h2>Page Title</h2>
-													<span class="byline">Which means the sidebar is on the left</span>
+													<h2>Add a Question</h2>
+													<span class="byline">Editing Quiz: <? echo $_POST['quizname']; ?></span>
 												</header>
                                                 <?
 	if(isset($_SESSION["is_admin"])){
 	?>
-	<p>Welcome back admin!</p>
     <form name="add" method="post" action="func/edit.func.php">
     <input type="hidden" name="uuid" value="<? echo $_POST['uuid']; ?>" />
         <input type="hidden" name="type" value="<? echo $_POST['type']; ?>" />
@@ -118,23 +115,6 @@ function showElement(element_id) {
     ?>
         <input type="submit" name="submit" value="Add" /><br />
         </h4>
-    
-    
-    <a href="func/admin.logout.php">Logout</a>
-    <?
-	} else {
-	
-?>
-    <p>
-    <div id="login" style="margin-left:20px">
-    <h2>Login</h2>
-    <form id="adminlogin" action="func/admin.login.php" method="post">
-    User: <input type="text" name="user"><br>
-    Pass: <input type="password" name="pass"><br>
-    <input type="submit" name="submit" value="Login"><br>
-    </form>
-    </div>
-    </p>
 <?
 }
 ?>

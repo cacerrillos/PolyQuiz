@@ -87,6 +87,7 @@ window.onload=function() {
     <h3 style="margin-bottom:5px">Add A Question</h3>
     <form action="?p=addquestion&uuid=<? echo $uuid; ?>" method="post">
     <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
+    <input type="hidden" name="quizname" value="<? echo $quizinfo['quizname']; ?>" />
     Type: <select name="type">
     <option value="0">Multiple Choice</option>
     <option value="1">Free Response</option>
