@@ -52,7 +52,7 @@ function showElement(element_id) {
 									
 											<article>
 												<header class="major">
-													<h2>Admin Home</h2>
+													<h2>Edit Sessions</h2>
                                                     <?
 													if(!isset($_SESSION["is_admin"])){
 													?>
@@ -69,51 +69,7 @@ function showElement(element_id) {
 												if(isset($_SESSION["is_admin"])){
 												?>
                                                 <div id="sessions">
-												<div id="closed" style="margin-left:20px">
-													<a href="#" onclick="showElement('open'); hideElement('closed'); return false;"><img src="inc/icon_arrow_right.gif" />View Sessions</a>
-												</div>
-												<div id="open" style="display: none; margin-left:20px;">
-													<a href="#" onclick="showElement('closed'); hideElement('open'); return false;"><img src="inc/icon_arrow_down.gif" />Hide Sessions</a><br />
-													<?
-													mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-													mysql_select_db($db_name) or die(mysql_error());
-													$data = mysql_query("SELECT * FROM sessions ORDER BY date ASC;");
-													$numrows = mysql_num_rows($data);
-													?>
-													<table cellpadding="2px" border="2px">
-													<tr>
-													<td>Name</td>
-													<td>ID</td>
-													<td>Key</td>
-													<td>Date</td>
-													<td>Quiz</td>
-													<td>House</td>
-													<td>Status</td>
-													<td>Delete</td>
-													</tr>
-													<?
-													while($info = mysql_fetch_array($data)){
-														$quizuuid = $info['quiz'];
-														$data1 = mysql_query("SELECT * FROM quizes WHERE uuid='$quizuuid'");
-														$info1 = mysql_fetch_array($data1);
-														?>
-														<tr>
-														<td><? echo $info['sessionname']; ?></td>
-														<td><? echo $info['uuid'];?></td>
-														<td><? echo $info['key']; ?></td>
-														<td><? echo $info['date']; ?></td>
-														<td><? echo $info1['quizname']; ?></td>
-														<td><? echo $info['house']; ?></td>
-														<td><? if($info['status']==1){ echo "Open"; } else { echo "Closed"; }?></td>
-														<td><a href="func/sessiondelete.func.php?uuid=<? echo $info['uuid'];?>"><font color="#FF0000">Delete</font></a></td>
-														<tr>
-														<?
-													}
-												?>
-												</table>
-												<a href="func/sessiondelete.func.php?uuid=all"><font color="#FF0000">Delete All Sessions</font></a>
-												</div>
-												<br /><br />
+                                                <div>
 												<h3>Create New Session</h3>
 												<div id="createsess" style="margin-left:20px">
 												<form id="newsession" action="func/ses.func.php" method="post">
@@ -166,6 +122,53 @@ function showElement(element_id) {
 															</select><br />
 												<input type="submit" name="submit" value="Open" /><input type="submit" name="submit" value="Close" />
 												</form>
+                                                </div>
+                                                </div>
+                                                
+                                                
+												<div id="closed" style="margin-left:20px">
+													<a href="#" onclick="showElement('open'); hideElement('closed'); return false;"><img src="inc/icon_arrow_right.gif" />View Sessions</a>
+												</div>
+												<div id="open" style="display: none; margin-left:20px;">
+													<a href="#" onclick="showElement('closed'); hideElement('open'); return false;"><img src="inc/icon_arrow_down.gif" />Hide Sessions</a><br />
+													<?
+													mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
+													mysql_select_db($db_name) or die(mysql_error());
+													$data = mysql_query("SELECT * FROM sessions ORDER BY date ASC;");
+													$numrows = mysql_num_rows($data);
+													?>
+													<table class="sessionstable">
+													<tr>
+													<td>Name</td>
+													<td>ID</td>
+													<td>Key</td>
+													<td>Date</td>
+													<td>Quiz</td>
+													<td>House</td>
+													<td>Status</td>
+													<td>Delete</td>
+													</tr>
+													<?
+													while($info = mysql_fetch_array($data)){
+														$quizuuid = $info['quiz'];
+														$data1 = mysql_query("SELECT * FROM quizes WHERE uuid='$quizuuid'");
+														$info1 = mysql_fetch_array($data1);
+														?>
+														<tr>
+														<td><? echo $info['sessionname']; ?></td>
+														<td><? echo $info['uuid'];?></td>
+														<td><? echo $info['key']; ?></td>
+														<td><? echo $info['date']; ?></td>
+														<td><? echo $info1['quizname']; ?></td>
+														<td><? echo $info['house']; ?></td>
+														<td><? if($info['status']==1){ echo "Open"; } else { echo "Closed"; }?></td>
+														<td><a href="func/sessiondelete.func.php?uuid=<? echo $info['uuid'];?>"><font color="#FF0000">Delete</font></a></td>
+														<tr>
+														<?
+													}
+												?>
+												</table>
+												<a href="func/sessiondelete.func.php?uuid=all"><font color="#FF0000">Delete All Sessions</font></a>
 												</div>
                                                 </div>
 												<?

@@ -49,29 +49,22 @@ class PolyQuestion {
 					$color = "CCC";
 				}
 			?>
-            
-				<div style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px;">
-                    <h3 style="color:#000; display:inline;">
-                        <label for="radio<? echo $x; ?>">
-                            <? echo $alphabet[$x]; ?>
-                        </label>
-                    </h3>
-                        <input style="display:inline" type="radio" id="radio<? echo $x; ?>" name="answer" value="<? echo $x; ?>" <? if($this->response==$x) { echo "checked"; }?>>
-                    <h4 style="color:#000; text-transform:none; display:inline">
-                        <label for="radio<? echo $x; ?>" style="display:inline;">
-                            <? echo $this->answerArray[$x] ?>
-                        </label>
-                    </h4>
+				<div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px;">
+                    <input type="radio" id="radio<? echo $x; ?>" name="answer" value="<? echo $x; ?>" <? if($this->response==$x) { echo "checked"; }?>>
+                    <label for="radio<? echo $x; ?>">
+                    	<span><? echo $alphabet[$x].") "; ?></span>
+                        <span style="color:#000; font-size:1em"><? echo $this->answerArray[$x] ?></span>
+                    </label>
                 </div>
 			<?
 			}
 			//outoffor
 			?>
-			<div style="background-color:#666; padding-left:10px;">
-            	<h4 style="color:#FFF;">
+            <div style="background-color:#666; padding-left:10px;">
+            	<h3 style="color:#FFF;">
             		<input id="skip" type="radio" name="answer" value="-1" <? if($curans=="-1"){ echo "checked"; } ?>/>
                     <label for="skip">Skip</label>
-                </h4>
+                </h3>
             </div>
             </div>
             
