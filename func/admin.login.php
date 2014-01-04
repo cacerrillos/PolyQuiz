@@ -18,7 +18,6 @@ if($_POST['submit']=="Login"){
 			echo $mysqli->error;
 		}
 	if($num==1){
-		
 		$_SESSION['is_admin'] = "set";
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}

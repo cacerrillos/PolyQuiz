@@ -1,5 +1,4 @@
 <?
-//session_start();
 include("img.class.php");
 include_once("config.func.php");
 class quiz {
@@ -43,29 +42,22 @@ class quiz {
 		return false;
 	}
 	function addQuestion($questions){
-	//	if(!$this->ifExists($questions->uuid)){
-			array_push($this->questions, $questions);
-			//$this->possiblepoints = $this->possiblepoints+$questions->getPoints;
-	//	}
+		array_push($this->questions, $questions);
 		if(isset($this->questions["A"])){
 			unset($this->questions["A"]);
 		}
-		
 	}
 	function randomize(){
-	//	if(randomized==false){
-			if(isset($this->questions[0])){
-				if($this->questions[0]==""){
-					unset($this->questions[0]);
-				}
+		if(isset($this->questions[0])){
+			if($this->questions[0]==""){
+				unset($this->questions[0]);
 			}
-			
-			shuffle($this->questions);
-			for($x = 0; $x < count($this->questions); $x++){
-				$this->questions[$x]->randomize();
-			}
-			$this->randomized = true;
-	//	}
+		}
+		shuffle($this->questions);
+		for($x = 0; $x < count($this->questions); $x++){
+			$this->questions[$x]->randomize();
+		}
+		$this->randomized = true;
 	}
 	function setFRGraded(){
 		for($x = 0; $x <count($this->questions); $x++){
@@ -84,16 +76,9 @@ class quiz {
 		$this->numberofquestions = $size;
 		$possiblefree = 0;
 		$freeresponse = 0;
-		/*
-		echo '<pre>'.htmlspecialchars(var_dump($this)).'</pre>';
-		foreach($questions as $que){
-			echo htmlspecialchars("$que->question")." <br>";
-		}
-		*/
 		$possiblepoints = 0;
 		for($x = 0; $x<$size; $x++){
 			$question = $questions[$x];
-			
 			if($question->type==0){
 				$possiblepoints += $question->getPoints();
 				if($question->correct()){
@@ -101,8 +86,6 @@ class quiz {
 					$correctq++;
 				} else if($question->omitted()){
 					$ommitedq++;
-				} else {
-					//$totalscore -=
 				}
 			}
 			if($question->type==1){
@@ -151,7 +134,6 @@ class quizFromMysql{
 		} else {
 			mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
 			mysql_select_db($db_name) or die(mysql_error());
-			
 			$data = mysql_query("SELECT * FROM results WHERE id='$studentuuid'");
 			while($info = mysql_fetch_array($data)){
 				$quiz = unserialize($info['object']);
@@ -193,11 +175,9 @@ class quizFromMysql{
 					if($stmt = $mysqli -> prepare("SELECT * FROM ".$result['uuid'])){
 						$stmt -> execute();
 						$stmt -> bind_result($resultq2['id'], $resultq2['object'], $resultq2['images']);
-						//$stmt -> bind_result($resultq['id'], $resultq['question'], $resultq['a'], $resultq['b'], $resultq['c'], $resultq['d'], $resultq['answer'], $resultq['images']);
 						$stmt -> store_result();
 						while($stmt -> fetch()){
 							$thisquestion = unserialize($resultq2['object']);
-							//$thisquestion = new question($resultq['id'], 1, $resultq['question'], $resultq['answer'], $resultq['a'], $resultq['b'], $resultq['c'], $resultq['d']);
 							if($resultq2['images']!=null && $resultq2['images']!=""){
 								$thisquestion -> imagegroup = unserialize($resultq2['images']);
 							}
@@ -225,8 +205,6 @@ class quizSessionFromMysql {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		echo $uuid."<br>";
-		echo $pass;
 		$uuid = strtolower($uuid);
 		$pass = strtolower($pass);
 		if($stmt = $mysqli -> prepare("SELECT * FROM sessions WHERE uuid=?")){
@@ -244,10 +222,7 @@ class quizSessionFromMysql {
 						while($stmt -> fetch()){
 							if($session['key']==$pass){
 								if($session['status']==1){
-									//is good
 									$tempsession = new quizSession($session['uuid'], $session['house'], $session['quiz']);
-								//	$temparray = unserialize($session['quizes']);
-								//	$tempsession ->addQuiz($temparray);
 									return $tempsession;
 								}
 							}
@@ -272,10 +247,7 @@ class quizSession {
 		$this->house = $house;
 	}
 	function addQuiz($uuid){
-	//	array_push($this->quizes, $uuid);
-	//	if(isset($this->quizes['init'])){
-	//		unset($this->quizes['init']);
-	//	}
+		//IDK WHY THIS IS EMPTY
 	}
 	function getUUID(){
 		return $this->uuid;
@@ -286,25 +258,5 @@ class quizSession {
 	function getHouse(){
 		return $this->house;
 	}
-	
 }
-
-
-/*
-if(isset($_SESSION['quiz'])){
-	$quiz = $_SESSION['quiz'];
-	$quiz -> setResponse(1, "4");
-	$quiz -> calculateScore();
-	$_SESSION['quiz'] = $quiz;
-} else {
-	$quiz = new quiz("ABCDE");
-	$test = new question("uuid123", 2,"Does This work?", "a", "Yes", "No","C","D");
-	$quiz -> addQuestion($test);
-	$quiz -> randomize();
-	$_SESSION['quiz'] = $quiz;
-}
-*/
-?>
-<?
-//session_destroy();
 ?>

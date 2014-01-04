@@ -15,5 +15,5 @@ if(true || isset($_SESSION['is_admin'])){
 		}
 	}
 }
-//header('Location: ' . $_SERVER['HTTP_REFERER']);
+header('Location: ' . $_SERVER['HTTP_REFERER']);
 ?>

@@ -49,21 +49,13 @@ if(isset($_SESSION["is_admin"])){
 			}
 			if(intval($type)==1){
 				$question = $_POST['question'];
-				//$numOfQuestions = intval($_POST['answerNum']);
 				$pointValue = intval($_POST['points']);
-				//$answer = $_POST['answer'];
 				$type = $_POST['type'];
-				//for($x = 0; $x < $numOfQuestions; $x++){
-				//	$ansArray[$x] = $_POST[$x.'text'];
-				//}
 				$object = new PolyQuestion($type, $pointValue);
 				$object -> setAttributesFREERESPONSE($question);
 			}
 			if(intval($type)==2){
-				//$question = $_POST['question'];
 				$numOfQuestions = intval($_POST['answerNum']);
-				//$pointValue = intval($_POST['points']);
-				//$answer = $_POST['answer'];
 				$type = $_POST['type'];
 				$question = $_POST['question'];
 				$object = new PolyQuestion($type, 1);
@@ -75,7 +67,6 @@ if(isset($_SESSION["is_admin"])){
 				$object->setAttributesMATCH($left, $right, $left_ans);
 				$object->question = $question;
 			}
-			//var_dump($object);
 			if($stmt = $mysqli -> prepare("INSERT INTO `".$uuid."` (`id`, `object`) VALUES (?,?);")){
 				$stmt -> bind_param("is",$y =0, serialize($object));
 				$stmt -> execute();
@@ -113,10 +104,6 @@ if(isset($_SESSION["is_admin"])){
 			}
 			if(intval($type)==1){
 				$num = intval($_POST['num']);
-				//$ansNum = $_POST['answerNum'];
-				//for($x = 0; $x < $ansNum; $x++){
-				//	$temparray[$x] = $_POST[$x.'text'];
-				//}
 				$quest = new PolyQuestion(1, $_POST['points']);
 				$quest->setAttributesFREERESPONSE($_POST['question']);
 			}
@@ -142,7 +129,6 @@ if(isset($_SESSION["is_admin"])){
 			}
 			$mysqli -> close();
 			resetnumbers($_POST['uuid']);
-			//var_dump($quest);
 			header('Location: ../?p=managequiz&UUID='.$uuid.'');
 		}
 	} else {
@@ -151,5 +137,4 @@ if(isset($_SESSION["is_admin"])){
 } else {
 	header('Location: ' . $_SERVER['HTTP_REFERER']);
 }
-
 ?>
