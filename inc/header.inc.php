@@ -72,8 +72,7 @@
 									<div class="inner">
 									
 										<!-- Logo -->
-											<a href="?p=home" id="logo" style="text-transform:none;"><img src="images/title.png" style="margin-left:10px; max-height:100%; max-width:100%" ></a>
-										
+											<a href="?p=home" id="logo" style="text-transform:none;"><img src="images/title.png" style="margin-left:10px; max-height:100%; max-width:100%" ></a> 
 										<!-- Nav -->
 											<nav id="nav">
 												<ul>

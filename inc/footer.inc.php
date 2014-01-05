@@ -48,7 +48,7 @@
 					<div class="row">
 						<div class="12u">
 							<div id="copyright">
-								&copy; Untitled. All rights reserved | Design: <a href="http://html5up.net/">HTML5 UP</a>
+								&copy; Cerrillos Tech. All rights reserved | Design: <a href="http://html5up.net/">HTML5 UP</a><br />Currently there are <? echo lines(); ?> lines of code!
 							</div>
 						</div>
 					</div>

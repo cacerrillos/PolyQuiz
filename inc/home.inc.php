@@ -9,7 +9,7 @@
 									<div class="12u">
 										<header class="first major">
 											<h2>PolyQuiz, The Online Quiz Site</h2>
-											<span class="byline">Made for students, teachers, and <strong>treehuggers</strong> ...</span>
+											<span class="byline">Made for students, teachers, and <strong>treehuggers</strong><br />in only <? echo lines(); ?> lines of code!</span>
 										</header>
 									</div>
 								</div>
