@@ -1,4 +1,5 @@
 <?
+include_once("config.func.php");
 class QQ {
 	function insert($name, $house, $quiz, $date, $status){
 		global $db_host, $db_user, $db_password, $db_name;
