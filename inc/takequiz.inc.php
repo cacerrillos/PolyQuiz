@@ -220,7 +220,12 @@ if(!isset($_GET['UUID']) && $use==false){
 						if(isset($questions[intval($num)])){
 							$thisquestion = $quiz -> getQuestion(intval($num));
 							echo "<h2 style='margin-bottom:5px'>#".($num+1)."</h2>";
-							echo "<h4>".$thisquestion->question."</h4>";
+							if($thisquestion->displayextracredit==true){
+								$ecstatus = "[Extra Credit] ";
+							} else {
+								$ecstatus = "";
+							}
+							echo "<h4>".$ecstatus.$thisquestion->question."</h4>";
 							$thisquestion -> imagegroup -> printThumbnails("normal");
 							if(isset($_SESSION["answers"][$num])){
 								$curans = $_SESSION["answers"][$num];

@@ -63,7 +63,15 @@ function showElement(element_id) {
     <?
 	if(intval($_POST['type'])==0){
 	?>
-        Points:<input type="number" name="points" value="1">
+        Points:<input type="number" name="points" value="1"> Extra Credit
+        <select name="extracredit" size="1">
+        	<option value="0">No</option>
+            <option value="1">Yes</option>
+        </select> Display Extra Credit Label
+        <select name="extracreditdisplay" size="1">
+        	<option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
         <h4>
         <textarea rows="4" cols="42" name="question"></textarea><br /><br />
 
@@ -79,7 +87,11 @@ function showElement(element_id) {
 	}
 	if(intval($_POST['type'])==1){
 	?>
-        Points:<input type="number" name="points" value="1">
+        Points:<input type="number" name="points" value="1"> Extra Credit
+        <select name="extracredit" size="1">
+        	<option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
         <h4>
         <textarea rows="4" cols="42" name="question"></textarea><br /><br />
         <br /><br />

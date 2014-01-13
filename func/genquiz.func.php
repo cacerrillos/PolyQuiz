@@ -80,7 +80,11 @@ class quiz {
 		for($x = 0; $x<$size; $x++){
 			$question = $questions[$x];
 			if($question->type==0){
-				$possiblepoints += $question->getPoints();
+				if($question->isExtraCredit()){
+					//add no points to possible points
+				} else {
+					$possiblepoints += $question->getPoints();
+				}
 				if($question->correct()){
 					$totalscore += $question->getPoints();
 					$correctq++;
@@ -96,7 +100,11 @@ class quiz {
 			}
 			if($question->type==2){
 				$totalscore += $question->pointsEarned;
-				$possiblepoints += count($question->left);
+				if($question->isExtraCredit()){
+					//add no points to possible points
+				} else {
+					$possiblepoints += count($question->left);
+				}
 			}
 		}
 		$this->totalscore = $totalscore;

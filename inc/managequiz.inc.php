@@ -5,14 +5,14 @@ include_once("func/question.obj.php");
 	$uuid = mysql_real_escape_string($_GET['UUID']);
 	$quizinfoq = mysql_query("SELECT * FROM quizes WHERE uuid='$uuid'");
 	$quizinfo = mysql_fetch_array($quizinfoq);
-	$query = mysql_query("SELECT * FROM ".$uuid." ORDER BY id ASC;");
+	$query = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC;") or die(mysql_error());;
 	$numrows = mysql_num_rows($query);
 	if(isset($_GET['page'])){
 		$offset = intval($_GET['page'])*10;
 	} else {
 		$offset = 0;
 	}
-	$limitedq = mysql_query("SELECT * FROM ".$uuid." ORDER BY id ASC LIMIT ".$offset.", 10;");
+	$limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offset.", 10;");
 ?>
 <script type="text/javascript">
 function findElement(element_id) {
@@ -97,7 +97,12 @@ window.onload=function() {
     <select name="num">
     <?
 	for($x = 1; $x <=20; $x++){
-		echo "<option value='".$x."'>".$x."</option>";
+		if($x==4){
+			$mod = " selected";
+		} else {
+			$mod = "";
+		}
+		echo "<option value='".$x."'".$mod.">".$x."</option>";
 	}
 	?>
     </select>
@@ -137,7 +142,7 @@ window.onload=function() {
         <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
         <input type="hidden" name="num" value="<? echo $questions['id']; ?>" />
         <input type="hidden" name="type" value="<? echo $quest->type; ?>" />
-        <input type="hidden" name="answerNum" value="<? echo count($quest->right); ?>" />
+        
         
         <h4>
         Edit #<? echo $questions['id']; ?><br />
@@ -146,7 +151,17 @@ window.onload=function() {
         <?
 		if($quest->type==0){
 		?>
-        Points:<input type="number" name="points" value="<? echo $quest->getPoints(); ?>" /><br /><br />
+        <input type="hidden" name="answerNum" value="<? echo count($quest->answerArray); ?>" />
+        Points:<input type="number" name="points" value="<? echo $quest->getPoints(); ?>" /> Extra Credit
+        <select name="extracredit" size="1">
+        	<option value="0">No</option>
+            <option value="1" <? if($quest->isExtraCredit()){ echo "selected";}?>>Yes</option>
+        </select>
+         Display Extra Credit Label
+        <select name="extracreditdisplay" size="1">
+        	<option value="0">No</option>
+            <option value="1" <? if($quest->displayextracredit==true){ echo "selected";}?>>Yes</option>
+        </select><br /><br />
 
         <br /><br />
         <?
@@ -166,6 +181,18 @@ window.onload=function() {
         <?
 		}//end type
 		if($quest->type==2){
+			?>
+        Extra Credit
+        <select name="extracredit" size="1">
+        	<option value="0">No</option>
+            <option value="1" <? if($quest->isExtraCredit()){ echo "selected";}?>>Yes</option>
+        </select>
+             Display Extra Credit Label
+        <select name="extracreditdisplay" size="1">
+        	<option value="0">No</option>
+            <option value="1" <? if($quest->displayextracredit==true){ echo "selected";}?>>Yes</option>
+        </select>
+            <?
 			for($x = 0; $x < count($quest->left); $x++){
 				if($x %2 ==0){
 					$color = "999";
@@ -173,6 +200,7 @@ window.onload=function() {
 					$color = "CCC";
 				}
 			?>
+            <input type="hidden" name="answerNum" value="<? echo count($quest->right); ?>" />
 				<div style="background-color:#<? echo $color; ?>; margin-top:5px; margin-bottom:5px;"><div style="float:left;">
 				<h3 style="margin-bottom:0;"><? echo ($x+1).") Question"; ?>
 				<? echo " "; ?>

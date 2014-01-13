@@ -11,6 +11,7 @@ class PolyQuestion {
 	public $type; //Multiple, FreeResponse, Matching, Survey
 	public $set = false, $correct = null;
 	public $question, $response = -1, $answerArray, $answer, $freeresponse, $left_res, $left, $right, $left_ans, $pointsEarned = 0, $freeGraded = false;
+	public $isextracredit, $extracreditpoints, $displayextracredit;
 			
 	function __construct($type, $points){
 		//$this->uuid = $uuid;
@@ -33,6 +34,12 @@ class PolyQuestion {
 		for($x = 0; $x < count($left); $x++){
 			$this->left_res[$x] = -1;
 		}
+	}
+	function setIsExtraCredit($bool){
+		$this->isextracredit = $bool;
+	}
+	function isExtraCredit(){
+		return $this->isextracredit;
 	}
 	function setAttributesFREERESPONSE($question){
 		$this->question = $question;
@@ -174,6 +181,9 @@ class PolyQuestion {
 		if($this->type==0){
 			$this->response = intval($response);
 			$this->correct = $this->check();
+			if($this->correct()){
+				$this->pointsEarned = $this->points;
+			}
 		}
 		if($this->type==1){
 			$this->response = $response;

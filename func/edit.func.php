@@ -6,11 +6,11 @@ function resetnumbers($uuidr){
 	global $db_host, $db_user, $db_password, $db_name;
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
 	mysql_select_db($db_name) or die(mysql_error()); 
-	$query = mysql_query("SELECT * FROM ".$uuidr." ORDER BY id ASC;");
+	$query = mysql_query("SELECT * FROM `".$uuidr."` ORDER BY id ASC;");
 	$number = mysql_num_rows($query);
 	$counter = 1;
 	while($info = mysql_fetch_array($query)){
-		$queryy = mysql_query("UPDATE ".$uuidr." SET id='$counter' WHERE id='$info[id]'");
+		$queryy = mysql_query("UPDATE `".$uuidr."` SET id='$counter' WHERE id='$info[id]'");
 		$counter++;
 	}
 	mysql_close();
@@ -67,6 +67,12 @@ if(isset($_SESSION["is_admin"])){
 				$object->setAttributesMATCH($left, $right, $left_ans);
 				$object->question = $question;
 			}
+			if(intval($_POST['extracredit'])==1){
+				$object -> setIsExtraCredit(true);
+			}
+			if(intval($_POST['extracreditdisplay'])==1){
+				$object -> displayextracredit = true;
+			}
 			if($stmt = $mysqli -> prepare("INSERT INTO `".$uuid."` (`id`, `object`) VALUES (?,?);")){
 				$stmt -> bind_param("is",$y =0, serialize($object));
 				$stmt -> execute();
@@ -83,7 +89,7 @@ if(isset($_SESSION["is_admin"])){
 				mysql_select_db($db_name) or die(mysql_error()); 
 				$uuid = mysql_real_escape_string($_POST['uuid']);
 				$num = mysql_real_escape_string($_POST['num']);
-				$query = mysql_query("DELETE FROM ".$uuid." WHERE id='$num'");
+				$query = mysql_query("DELETE FROM `".$uuid."` WHERE id='$num'");
 				mysql_close();
 				resetnumbers($uuid);
 				header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -101,6 +107,21 @@ if(isset($_SESSION["is_admin"])){
 				}
 				$quest = new PolyQuestion(MULTIPLE, $_POST['points']);
 				$quest->setAttributesMC($_POST['question'], $temparray, $_POST['answer']);
+				/*
+				$uuid = $mysqli -> real_escape_string($_POST['uuid']);
+			$type = $_POST['type'];
+			if(intval($type)==0){
+				$question = $_POST['question'];
+				$numOfQuestions = intval($_POST['answerNum']);
+				$pointValue = intval($_POST['points']);
+				$answer = $_POST['answer'];
+				$type = $_POST['type'];
+				for($x = 0; $x < $numOfQuestions; $x++){
+					$ansArray[$x] = $_POST[$x.'text'];
+				}
+				$object = new PolyQuestion($type, $pointValue);
+				$object -> setAttributesMC($question, $ansArray, $answer);
+				*/
 			}
 			if(intval($type)==1){
 				$num = intval($_POST['num']);
@@ -119,6 +140,9 @@ if(isset($_SESSION["is_admin"])){
 				$quest = new PolyQuestion(2, 1);
 				$quest->setAttributesMATCH($left, $right, $left_ans);
 				$quest->question = $question;
+			}
+			if(intval($_POST['extracreditdisplay'])==1){
+				$quest -> displayextracredit = true;
 			}
 			if($stmt = $mysqli -> prepare("UPDATE ".$uuid." SET object=? WHERE id=?")){
 				$stmt -> bind_param("si", serialize($quest), $num);
