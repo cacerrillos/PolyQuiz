@@ -144,7 +144,7 @@ if(isset($_SESSION["is_admin"])){
 			if(intval($_POST['extracreditdisplay'])==1){
 				$quest -> displayextracredit = true;
 			}
-			if($stmt = $mysqli -> prepare("UPDATE ".$uuid." SET object=? WHERE id=?")){
+			if($stmt = $mysqli -> prepare("UPDATE `".$uuid."` SET object=? WHERE id=?")){
 				$stmt -> bind_param("si", serialize($quest), $num);
 				$stmt -> execute();
 				$stmt -> close();

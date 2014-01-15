@@ -180,7 +180,7 @@ class quizFromMysql{
 					return false;
 				} else {
 					$quiz = new quiz($result['uuid'], $result['quizname'], $result['quizsubject']);
-					if($stmt = $mysqli -> prepare("SELECT * FROM ".$result['uuid'])){
+					if($stmt = $mysqli -> prepare("SELECT * FROM `".$result['uuid']."`")){
 						$stmt -> execute();
 						$stmt -> bind_result($resultq2['id'], $resultq2['object'], $resultq2['images']);
 						$stmt -> store_result();
