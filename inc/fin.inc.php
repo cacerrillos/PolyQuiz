@@ -20,12 +20,16 @@ session_unset();
 
 										<!-- Sidebar -->
 											<section>
+                                            <?
+											/*
 												<header class="major">
 													<h2>Subheading</h2>
 												</header>
 												<footer>
 													<a href="#" class="button alt fa fa-arrow-circle-o-right">Do Something</a>
 												</footer>
+												*/
+												?>
 											</section>
 								
 									</div>
@@ -37,8 +41,7 @@ session_unset();
 									
 											<article>
 												<header class="major">
-													<h2>Page Title</h2>
-													<span class="byline">Which means the sidebar is on the left</span>
+													<h2>Results</h2>
 												</header>
                                                 <p>Congratulations!</p>
                                                 <div id="quizz" style="margin-left:20px">
