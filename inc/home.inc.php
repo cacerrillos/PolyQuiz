@@ -2,7 +2,6 @@
 			<div id="main-wrapper">
 				<div class="main-wrapper-style1">
 					<div class="inner">
-				
 						<!-- Feature 1 -->
 							<section class="container box-feature1">
 								<div class="row">
@@ -14,9 +13,6 @@
 									</div>
 								</div>
 							</section>
-
 					</div>
 				</div>
-				
-				
 			</div>

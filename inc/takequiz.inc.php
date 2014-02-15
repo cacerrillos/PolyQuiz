@@ -53,21 +53,21 @@
 													
 												?>
                                                 <table style="border-spacing: 10px;border-collapse: separate;">
-                                                    <tr>
-                                                        <td>First Name:</td>
-                                                        <td style="color:#000;"><? echo $_SESSION['firstname']; ?></td>
+                                                    <tr style="border:0">
+                                                        <td style="border:0">First Name:</td>
+                                                        <td style="color:#000;border:0"><? echo $_SESSION['firstname']; ?></td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>Last Name:</td>
-                                                        <td style="color:#000;"><? echo $_SESSION['lastname']; ?></td>
+                                                    <tr style="border:0">
+                                                        <td style="border:0">Last Name:</td>
+                                                        <td style="color:#000;border:0"><? echo $_SESSION['lastname']; ?></td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>Quiz:</td>
-                                                        <td style="color:#000;"><? echo $quizname; ?></td>
+                                                    <tr style="border:0">
+                                                        <td style="border:0">Quiz:</td>
+                                                        <td style="color:#000;border:0"><? echo $quizname; ?></td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>House:</td>
-                                                        <td style="color:#000;"><? echo $quiz->getHouse(); ?></td>
+                                                    <tr style="border:0">
+                                                        <td style="border:0">House:</td>
+                                                        <td style="color:#000;border:0"><? echo $quiz->getHouse(); ?></td>
                                                     </tr>
                                                 </table>
                                                     <a href="?p=exit" <? if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){ echo "onclick='window.onbeforeunload = null;'";}?> class="button alt fa fa-trash-o">Exit Quiz</a>
@@ -132,21 +132,21 @@ if(!isset($_GET['UUID']) && $use==false){
                                 <input type="hidden" name="type" value="session" />
                 <span style="display:inline-block">            
                 <table>
-                <tr>
-                	<td>First Name:</td>
-                    <td><input type="text" name="firstname" autocorrect="off" autocomplete="off" autocapitalize="on"></td>
+                <tr style="border:0">
+                	<td style="border:0">First Name:</td>
+                    <td style="border:0"><input type="text" name="firstname" autocorrect="off" autocomplete="off" autocapitalize="on"></td>
                 </tr>
-                <tr>
-                	<td>Last Name:</td>
-                    <td><input type="text" name="lastname" autocorrect="off" autocomplete="off" autocapitalize="on"></td>
+                <tr style="border:0">
+                	<td style="border:0">Last Name:</td>
+                    <td style="border:0"><input type="text" name="lastname" autocorrect="off" autocomplete="off" autocapitalize="on"></td>
                 </tr>
-                <tr>
-                	<td>Session ID:</td>
-                    <td><input type="text" name="sessionid" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
+                <tr style="border:0">
+                	<td style="border:0">Session ID:</td>
+                    <td style="border:0"><input type="text" name="sessionid" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
                 </tr>
-                <tr>
-                	<td>Session Key:</td>
-                    <td><input type="text" name="sessionkey" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
+                <tr style="border:0">
+                	<td style="border:0">Session Key:</td>
+                    <td style="border:0"><input type="text" name="sessionkey" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
                 </tr>
                 </table>
                 <div align="center">
@@ -161,12 +161,12 @@ if(!isset($_GET['UUID']) && $use==false){
                 <span style="display:inline-block;">
                 <table>
                 <tr>
-                	<td>Resume Id:</td>
-                    <td><input type="text" name="id" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
+                	<td style="border:0">Resume Id:</td>
+                    <td style="border:0"><input type="text" name="id" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
                 </tr>
                 <tr>
-                	<td>Resume Key:</td>
-                    <td><input type="text" name="key" autocorrect="off" autocomplete="off" autocapitalize="off" /></td>
+                	<td style="border:0">Resume Key:</td>
+                    <td style="border:0"><input type="text" name="key" autocorrect="off" autocomplete="off" autocapitalize="off" /></td>
                 </tr>
                 </table>
                 <div align="center">

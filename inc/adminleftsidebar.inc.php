@@ -27,16 +27,16 @@
                                                     <form id="adminlogin" action="func/admin.login.php" method="post">
                                                     <table>
                                                     <tr>
-                                                    	<td><b>User:</b></td>
-                                                    	<td><input type="text" name="user"></td>
+                                                    	<td style="border:0"><b>User:</b></td>
+                                                    	<td style="border:0"><input type="text" name="user"></td>
                                                     </tr>
                                                     <tr>
-                                                   		<td>Pass:</td>
-                                                    	<td><input type="password" name="pass"></td>
+                                                   		<td style="border:0">Pass:</td>
+                                                    	<td style="border:0"><input type="password" name="pass"></td>
                                                     </tr>
                                                     <tr>
-                                                    	<td></td>
-                                                    	<td><input type="submit" name="submit" value="Login" class="button alt fa fa-lock"></td>
+                                                    	<td style="border:0"></td>
+                                                    	<td style="border:0"><input type="submit" name="submit" value="Login" class="button alt fa fa-lock"></td>
                                                     </tr>
                                                     </table>
                                                     </form>
