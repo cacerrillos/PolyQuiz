@@ -33,7 +33,6 @@ if ((($_FILES["file"]["type"] == "image/gif")
       {
       move_uploaded_file($_FILES["file"]["tmp_name"],
       "../images/" . $hash.".".$extension);
-     // echo "Stored in: " . "../images/" . $hash.".".$extension;
 	 $quizuuid = $_POST['uuid'];
 	 $question = $_POST['num'];
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
@@ -47,7 +46,6 @@ if ((($_FILES["file"]["type"] == "image/gif")
 		$stmt -> bind_param("ss", $hash, $url);
 		$stmt -> execute();
 		$stmt -> close();
-		//echo var_dump($quiz);
 	} else {
 		echo $mysqli->error;
 	}
