@@ -3,13 +3,6 @@ include_once("genquiz.func.php");
 include_once("polysession.func.php");
 include_once("config.func.php");
 session_start();
-/*
-var_dump($_GET);
-echo "<br>";
-var_dump($_POST);
-echo "<br>";
-var_dump($_SESSION);
-echo "<br>"; */
 $quiz = $_SESSION['quiz'];
 $thisquestion = $quiz->getQuestion($_POST['num']);
 if($thisquestion->type==0){
@@ -103,44 +96,12 @@ if($thisquestion->type==2){
 	}
 }
 if($_POST['submit']=="Finish"){
-//	echo "Proccessing!";
 	$uuid = $_POST['uuid'];
 	$quiz = $_SESSION['quiz'];
 	$quiz ->calculateScore();
 	$rawscore = $quiz -> totalscore;
 	$possibleScore = $quiz->possiblepoints;
-	//$numberofquestions = $quiz -> numberofquestions;
-	/*
-	if($stmt = $mysqli -> prepare("SELECT * FROM ".$mysqli->real_escape_string($uuid))){
-		$stmt -> execute();
-		$stmt -> bind_result($quiz['id'], $quiz['question'], $quiz['a'], $quiz['b'], $quiz['c'], $quiz['d'], $quiz['answer']);
-		$stmt -> store_result();
-		$numberofquestions = $stmt ->num_rows;
-		$stmt -> fetch();
-		$stmt -> close();
-		//echo var_dump($quiz);
-	} else {
-		echo $mysqli->error();
-	}
-	$rawscore = 0;
-	for($x = 1; $x <= $numberofquestions; $x++){
-		if($stmt = $mysqli -> prepare("SELECT * FROM ".$mysqli->real_escape_string($uuid)." WHERE id = ?")){
-			$stmt -> bind_param("i", $x);
-			$stmt -> execute();
-			$stmt -> bind_result($currentcorrect['id'], $currentcorrect['question'], $currentcorrect['a'], $currentcorrect['b'], $currentcorrect['c'], $currentcorrect['d'], $currentcorrect['answer']);
-			$stmt -> fetch();
-			$stmt -> close();
-		} else {
-			echo $mysqli->error();
-		}
-	//	$currentcorrect = mysql_fetch_array(mysql_query("SELECT * FROM ". mysql_real_escape_string($_POST['uuid']) ." WHERE id='".$x."';"));
-		if($currentcorrect['answer']==$_SESSION['answers'][$x]){
-			$rawscore += 1;
-		}
-	}*/
 	$percentage = round((($rawscore/$possibleScore)*100), 2);
-//	echo " ".$rawscore;
-//	echo "<br>".$percentage;
 	$fn = $_SESSION['firstname'];
 	$ln = $_SESSION['lastname'];
 	$ts = time();
@@ -172,8 +133,6 @@ if($_POST['submit']=="Finish"){
 	} else {
 		echo $mysqli->error;
 	}
-	//echo $mysqli->error;
-//	$result = mysql_query($query) or die(mysql_error());
 	$_SESSION['raw'] = $rawscore;
 	$_SESSION['total'] = $possibleScore;
 	$_SESSION['perc'] = $percentage;
@@ -182,7 +141,6 @@ if($_POST['submit']=="Finish"){
 	$_SESSION['frgraded'] = $frgraded;
 	$ps = new PolySession($quiz->uuidid);
 	$ps->remove();
-	//echo $rawscore;
 	header("Location: ../?p=done");
 }
 

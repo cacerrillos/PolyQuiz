@@ -31,7 +31,6 @@ if(isset($_SESSION["is_admin"])){
 			$temppp = new imageGroup();
 		}
 		$temppp -> removeImage($imguuid);
-
 		$ser = serialize($temppp);
 		$query = mysql_query("UPDATE ".$quizuuid." SET images='$ser' WHERE id='$nummy'");
 		mysql_close();

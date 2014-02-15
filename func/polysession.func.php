@@ -99,8 +99,6 @@ class PolySessionRestore {
 						if(strlen($this->sessionid)<0){
 							$this->sessionid = $resultq['id'];
 						}
-						//var_dump(unserialize($resultq['data']));
-						
 						$_SESSION = unserialize($resultq['data']);
 						$this->remove();
 					}
@@ -112,7 +110,7 @@ class PolySessionRestore {
 	}
 	function remove(){
 		global $db_host, $db_user, $db_password, $db_name;
-				$mysqli = new mysqli($db_host, $db_user, $db_password);
+		$mysqli = new mysqli($db_host, $db_user, $db_password);
 		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();

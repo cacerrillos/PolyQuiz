@@ -14,7 +14,6 @@ class PolyQuestion {
 	public $isextracredit, $extracreditpoints, $displayextracredit;
 			
 	function __construct($type, $points){
-		//$this->uuid = $uuid;
 		$this->type = $type;
 		$this->points = intval($points);
 		$this->imagegroup = new imageGroup();

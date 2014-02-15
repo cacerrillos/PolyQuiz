@@ -44,33 +44,33 @@ class imageGroup {
 		}
 	}
 	function printThumbnailsAdmin($uuid, $num){
-				$imagegroup = md5(serialize($this->images));
-					?>
-            <table border="2px">
-            <tr>
-            <td>Image</td>
-            <td>Options</td>
-            </tr>
-            <?
-			foreach($this->images as $index=>$image){
-				$url = $image->getURL();
-				?>
-                <tr>
-                <td>
-                <?
-				if($url!=null){
-					echo '<a href="'.$url.'" rel="lightbox['.$imagegroup.']" onclick="window.onbeforeunload = null;"><img src="'.$url.'" width="100px" height="100px"></a>';
-				} else {
-					echo "Error Finding Image!";
-				}
-				?>
-                </td>
-                <td><a href="<? echo 'func/img.remove.php?uuid='.$uuid.'&num='.$num.'&img='.$image->getUUID(); ?>">Remove</a></td>
-                <?
+		$imagegroup = md5(serialize($this->images));
+	?>
+		<table border="2px">
+		<tr>
+		<td>Image</td>
+		<td>Options</td>
+		</tr>
+		<?
+		foreach($this->images as $index=>$image){
+			$url = $image->getURL();
+			?>
+			<tr>
+			<td>
+			<?
+			if($url!=null){
+				echo '<a href="'.$url.'" rel="lightbox['.$imagegroup.']" onclick="window.onbeforeunload = null;"><img src="'.$url.'" width="100px" height="100px"></a>';
+			} else {
+				echo "Error Finding Image!";
 			}
 			?>
-            </tr></table>
-            <?
+			</td>
+			<td><a href="<? echo 'func/img.remove.php?uuid='.$uuid.'&num='.$num.'&img='.$image->getUUID(); ?>">Remove</a></td>
+			<?
+		}
+		?>
+		</tr></table>
+		<?
 	}
 }
 class image {

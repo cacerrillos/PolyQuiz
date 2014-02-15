@@ -5,8 +5,7 @@ include_once("genquiz.func.php");
 include_once("question.obj.php");
 if(isset($_SESSION["is_admin"])){
 	if(isset($_POST['submit'])){
-		$uuid = $_POST['uuid'];
-			
+		$uuid = $_POST['uuid'];	
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
 		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()){
@@ -23,7 +22,6 @@ if(isset($_SESSION["is_admin"])){
 			$stmt -> fetch();
 			$stmt -> close();
 		}
-		
 		if($numrows>0){
 			$quiz = unserialize($info['object']);
 			$frt = 0;

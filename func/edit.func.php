@@ -107,21 +107,6 @@ if(isset($_SESSION["is_admin"])){
 				}
 				$quest = new PolyQuestion(MULTIPLE, $_POST['points']);
 				$quest->setAttributesMC($_POST['question'], $temparray, $_POST['answer']);
-				/*
-				$uuid = $mysqli -> real_escape_string($_POST['uuid']);
-			$type = $_POST['type'];
-			if(intval($type)==0){
-				$question = $_POST['question'];
-				$numOfQuestions = intval($_POST['answerNum']);
-				$pointValue = intval($_POST['points']);
-				$answer = $_POST['answer'];
-				$type = $_POST['type'];
-				for($x = 0; $x < $numOfQuestions; $x++){
-					$ansArray[$x] = $_POST[$x.'text'];
-				}
-				$object = new PolyQuestion($type, $pointValue);
-				$object -> setAttributesMC($question, $ansArray, $answer);
-				*/
 			}
 			if(intval($type)==1){
 				$num = intval($_POST['num']);
