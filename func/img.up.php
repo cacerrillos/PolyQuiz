@@ -81,6 +81,6 @@ else
 //  echo "Invalid file";
   }
 }
-//header('Location: ' . $_SERVER['HTTP_REFERER']);
+header('Location: ' . $_SERVER['HTTP_REFERER']);
 
 ?>
