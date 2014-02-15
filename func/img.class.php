@@ -86,7 +86,7 @@ class image {
 	function setURL($url){
 		if($url!=null){
 			$this ->filename = $url;
-			$url = "http://".$_SERVER['HTTP_HOST']."/polyquiz/images/".$url;
+			$url = "http://".$_SERVER['HTTP_HOST']."/images/".$url;
 		}
 		$this -> url = $url;
 	}
