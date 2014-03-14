@@ -11,6 +11,7 @@ if($_POST['submit']=="Login"){
 	if($stmt = $mysqli -> prepare("SELECT * FROM users WHERE username = ? AND password = ?")){
 			$stmt -> bind_param("ss", $_POST['user'], md5($_POST['pass']));
 			$stmt -> execute();
+			$stmt -> bind_result($data['id'], $data['username'], $data['passwordHash'], $data['permsid']);
 			$stmt -> store_result();
 			$num = $stmt -> num_rows;
 			$stmt -> close();
@@ -19,6 +20,9 @@ if($_POST['submit']=="Login"){
 		}
 	if($num==1){
 		$_SESSION['is_admin'] = "set";
+		$_SESSION['username'] = $_POST['user'];
+		$_SESSION['dbext'] = "_".$_POST['user'];
+		$_SESSION['permsid'] = $data['permsid'];
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}
 	$mysqli -> close();
