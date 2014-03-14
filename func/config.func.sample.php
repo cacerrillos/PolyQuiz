@@ -1,5 +1,15 @@
 <?
 date_default_timezone_set('America/Los_Angeles');
+if(file_exists("func/count.func.php")){
+	include_once("func/count.func.php");
+} else if(file_exists("count.func.php")){
+	include_once("count.func.php");
+}
+if(file_exists("func/permissions.obj.php")){
+	include_once("func/permissions.obj.php");
+} else if(file_exists("permissions.obj.php")){
+	include_once("permissions.obj.php");
+}
 $db_host = "localhost";
 $db_user = "username";
 $db_password = "password";
