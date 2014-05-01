@@ -27,8 +27,8 @@ if($thisquestion->type==0){
 		if(isset($_POST['answer'])){
 			$_SESSION["answers"][$num] = $_POST['answer'];
 			$quiz = $_SESSION['quiz'];
-		$quiz -> setResponse($num, $_POST['answer']);
-		$_SESSION['quiz'] = $quiz;
+			$quiz -> setResponse($num, $_POST['answer']);
+			$_SESSION['quiz'] = $quiz;
 		}
 		$ps = new PolySession($quiz->uuidid);
 		$ps->push();
@@ -125,9 +125,9 @@ if($_POST['submit']=="Finish"){
 		$frgraded = 0;
 	}
 	if($stmt = $mysqli -> prepare("INSERT INTO results
-	(id,firstname,lastname,quizuuid,rawscore,possiblescore,percentage,datestamp,timestamp,ip,house,session,object, frscore, frpossible,frgraded)
-	VALUES ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
-		$stmt -> bind_param("sssiisssssssiii", $fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid , serialize($quiz), $frt, $frp,$frgraded);
+	(id,firstname,lastname,quizuuid,rawscore,possiblescore,percentage,datestamp,timestamp,ip,house,session,object, frscore, frpossible,frgraded,owner)
+	VALUES ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
+		$stmt -> bind_param("sssiisssssssiii", $fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid , serialize($quiz), $frt, $frp,$frgraded,$sessionn->owner);
 		$stmt -> execute();
 		$stmt -> close();
 	} else {
