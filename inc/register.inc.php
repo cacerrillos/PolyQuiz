@@ -65,7 +65,7 @@ function showElement(element_id) {
                                                 </tr>
                                                 <tr>
                                                     <td style="border:0">Password:</td>
-                                                    <td style="border:0"><input type="text" name="password" autocorrect="off" autocomplete="off" autocapitalize="off" /></td>
+                                                    <td style="border:0"><input type="password" name="password" autocorrect="off" autocomplete="off" autocapitalize="off" /></td>
                                                 </tr>
                                                 </table>
                                                 <div align="center">
