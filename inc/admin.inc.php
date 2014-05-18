@@ -56,7 +56,15 @@ function showElement(element_id) {
                                                     <?
                                                     } else {
                                                     ?>
-                                                    <span class="byline">Welcome back admin!</span>
+                                                    <span class="byline">
+                                                    Welcome back admin!<br />
+                                                    Quick Start Guide:<br />
+                                                    1) Create a Quiz under "Edit Quizzes" & add questions to it.<br />
+                                                    2) Create a Quiz Session under "Edit Sessions" and be sure to select your desired quiz.<br />
+                                                    3) Use the Session Id & Session Key to let others take your quiz.<br />
+                                                    4) View the results under "Quiz Results".<br />
+                                                    *) Should any quiz taker accidentally exit their quiz early,<br />find their name under "Quizzes In Progress" and give them the "Restore Id" & "Restore Key".
+                                                    </span>
                                                     <?
 													}
 													?>

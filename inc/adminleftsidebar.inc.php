@@ -4,6 +4,7 @@
 												<?
 												if(isset($_SESSION["is_admin"])){
 												?>
+                                                	<a href="?p=admin" style="margin-left:20px;"><i class="fa fa-cog"></i> Quick Start Guide</a>
                                                     <h4 style="margin-bottom:0;">Session Management</h4>
                                                     <a href="?p=sessions" style="margin-left:20px"><i class="fa fa-cog"></i> Edit Sessions</a><br>
                                                     <a href="?p=pendingsessions" style="margin-left:20px"><i class="fa fa-cog"></i> Quizzes In Progress</a>
