@@ -149,7 +149,7 @@ class quizFromMysql{
 			return false;
 		} else {
 			mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-			mysql_select_db($db_name) or die(mysql_error());
+			mysql_select_db($_SESSION['dbext']) or die(mysql_error());
 			$data = mysql_query("SELECT * FROM results WHERE id='$studentuuid'");
 			while($info = mysql_fetch_array($data)){
 				$quiz = unserialize($info['object']);
