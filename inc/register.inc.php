@@ -47,6 +47,7 @@ function showElement(element_id) {
 												<header class="major">
 													<h2>Register</h2>
 												</header>
+                                                <h5>Register today to start making your very own online quizzes with multiple choice, free response, and matching questions!</h5>
                                                 <form name="register" method="post" action="func/register.func.php">
                                                 <span style="display:inline-block;">
                                                 <?
