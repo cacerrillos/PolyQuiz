@@ -13,7 +13,7 @@ if(file_exists("func/permissions.obj.php")){
 $db_host = "127.0.0.1";
 $db_user = "quiz";
 $db_password = "quiz";
-$db_name = "PolyQuiz2";
+$db_name = "PolyQuiz";
 $db_array = array(
 		"db_host" => $db_host,
 		"db_user" => $db_user,
