@@ -163,6 +163,24 @@ if($_POST['submit']=="Finish"){
 	} else {
 		echo $mysqli->error;
 	}
+	$mysqli -> select_db($db_name);
+	if($stmt = $mysqli->prepare("SELECT value FROM stats WHERE id='totalresults';")){
+		$stmt -> execute();
+		$stmt -> bind_result($count);
+		$stmt -> store_result();
+		$stmt -> fetch();
+		$stmt -> close();
+		$count = intval($count) + 1;
+		if($stmt = $mysqli->prepare("UPDATE stats SET value = ? WHERE id='totalresults';")){
+			$stmt -> bind_param("s", $count);
+			$stmt -> execute();
+			$stmt -> close();
+		} else {
+			echo $mysqli->error;
+		}
+	} else {
+		echo $mysqli->error;
+	}
 	$_SESSION['raw'] = $rawscore;
 	$_SESSION['total'] = $possibleScore;
 	$_SESSION['perc'] = $percentage;
