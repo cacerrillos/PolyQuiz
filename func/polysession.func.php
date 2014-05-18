@@ -24,8 +24,8 @@ class PolySession {
 			echo $mysqli->error;
 		}
 		if($num==0){
-			if($stmt = $mysqli -> prepare("INSERT INTO polysessions (id,recoveryid,recoverykey,data,date) VALUES (?,?,?,?,?)")){
-				$stmt -> bind_param("sssss", $this->sessionid, $this->recoveryid, $this->recoverykey, serialize($_SESSION), time());
+			if($stmt = $mysqli -> prepare("INSERT INTO polysessions (id,recoveryid,recoverykey,data,date,owner) VALUES (?,?,?,?,?,?)")){
+				$stmt -> bind_param("ssssss", $this->sessionid, $this->recoveryid, $this->recoverykey, serialize($_SESSION), time(), $_SESSION['dbext']);
 				$stmt -> execute();
 				$stmt -> close();
 			} else {
@@ -93,7 +93,7 @@ class PolySessionRestore {
 			if($stmt = $mysqli -> prepare("SELECT * FROM polysessions WHERE recoveryid = ? AND recoverykey = ?")){
 					$stmt -> bind_param("ss", $this->recoveryid, $this->recoverykey);
 					$stmt -> execute();
-					$stmt -> bind_result($resultq['id'], $resultq['recoveryid'], $resultq['recoverykey'], $resultq['data'], $resultq['date']);
+					$stmt -> bind_result($resultq['id'], $resultq['recoveryid'], $resultq['recoverykey'], $resultq['data'], $resultq['date'], $resultq['owner']);
 					$stmt -> store_result();
 					while($stmt -> fetch()){
 						if(strlen($this->sessionid)<0){

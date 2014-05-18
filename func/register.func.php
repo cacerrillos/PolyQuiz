@@ -1,6 +1,6 @@
 <?
 session_start();
-/*
+
 include_once("config.func.php");
 if(isset($_POST['username'])){
 	if(strlen($_POST['username'])>0 && strlen($_POST['password'])>0){
@@ -18,9 +18,63 @@ if(isset($_POST['username'])){
 			$stmt -> close();
 			if($num==0){
 				if($stmt = $mysqli -> prepare("INSERT INTO users (id,username,password,permissionsid) VALUES ('',?,?,?)")){
-					$stmt -> bind_param("sss", $_POST['username'], md5($_POST['password']), md5($_POST['username'].md5($_POST['password'])));
+					$permsid = md5($_POST['username'].md5($_POST['password']));
+					$stmt -> bind_param("sss", $_POST['username'], md5($_POST['password']), $permsid);
 					$stmt -> execute();
 					$stmt -> close();
+					if(mysqli_query($mysqli, "CREATE DATABASE IF NOT EXISTS `_".$permsid."`;")){
+						mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
+						mysql_select_db("_".$permsid) or die(mysql_error());
+						$qu = mysql_query(
+							"CREATE TABLE `images` (
+							  `uuid` varchar(65) NOT NULL,
+							  `url` text,
+							  PRIMARY KEY (`uuid`)
+							) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+						$qu = mysql_query(
+							"CREATE TABLE `quizes` (
+							  `uuid` varchar(255) NOT NULL DEFAULT '',
+							  `quizname` text NOT NULL,
+							  `quizsubject` text NOT NULL,
+							  `status` int(11) DEFAULT '1',
+							  PRIMARY KEY (`uuid`)
+							) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+						$qu = mysql_query(
+							"CREATE TABLE `results` (
+							  `id` int(11) NOT NULL AUTO_INCREMENT,
+							  `firstname` text,
+							  `lastname` text,
+							  `quizuuid` text,
+							  `rawscore` text,
+							  `possiblescore` text,
+							  `percentage` text,
+							  `datestamp` text,
+							  `timestamp` text,
+							  `ip` text,
+							  `house` text,
+							  `session` text,
+							  `object` text,
+							  `flag` varchar(11) DEFAULT 'no',
+							  `frscore` int(11) DEFAULT '0',
+							  `frpossible` int(11) DEFAULT '0',
+							  `frgraded` int(11) DEFAULT '1',
+							  PRIMARY KEY (`id`)
+							) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+						$qu = mysql_query(
+							"CREATE TABLE `sessions` (
+							  `uuid` varchar(65) NOT NULL,
+							  `key` text,
+							  `house` text,
+							  `status` int(11) DEFAULT NULL,
+							  `quiz` text,
+							  `date` text,
+							  `sessionname` text,
+							  PRIMARY KEY (`uuid`)
+							) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+					} else {
+						die(mysqli_error($mysqli));
+					}
+					
 					header('Location: ../?p=admin');
 					exit();
 				} else {
@@ -36,6 +90,6 @@ if(isset($_POST['username'])){
 		}
 	}
 }
-*/
+
 header('Location: ../?p=register');
 ?>

@@ -13,6 +13,7 @@ if($_POST['submit']=="Login"){
 			$stmt -> execute();
 			$stmt -> bind_result($data['id'], $data['username'], $data['passwordHash'], $data['permsid']);
 			$stmt -> store_result();
+			$stmt -> fetch();
 			$num = $stmt -> num_rows;
 			$stmt -> close();
 		} else {
@@ -21,7 +22,7 @@ if($_POST['submit']=="Login"){
 	if($num==1){
 		$_SESSION['is_admin'] = "set";
 		$_SESSION['username'] = $_POST['user'];
-		$_SESSION['dbext'] = "_".$_POST['user'];
+		$_SESSION['dbext'] = "_".$data['permsid'];
 		$_SESSION['permsid'] = $data['permsid'];
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}

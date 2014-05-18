@@ -95,6 +95,36 @@ if($thisquestion->type==2){
 		header("Location: ../?p=takequiz&UUID=".$_POST['uuid']."&num=".$prev);
 	}
 }
+if($thisquestion->type==4){
+	if($_POST['submit']=="Next" && (!isset($_POST['answer'])) ){
+		header('Location: ' . $_SERVER['HTTP_REFERER']);
+	}
+	
+	if($_POST['submit']=="Next" && isset($_POST['answer'])){
+		$num = $_POST['num'];
+		$next = $num+1;
+		$_SESSION["answers"][$num] = $_POST['answer'];
+		$quiz = $_SESSION['quiz'];
+		$quiz -> setResponse($num, $_POST['answer']);
+		$ps = new PolySession($quiz->uuidid);
+		$ps->push();
+		$_SESSION['quiz'] = $quiz;
+		header("Location: ../?p=takequiz&UUID=".$_POST['uuid']."&num=".$next);
+	}
+	if($_POST['submit']=="Previous"){
+		$num = $_POST['num'];
+		$prev = $num-1;
+		if(isset($_POST['answer'])){
+			$_SESSION["answers"][$num] = $_POST['answer'];
+			$quiz = $_SESSION['quiz'];
+			$quiz -> setResponse($num, $_POST['answer']);
+			$_SESSION['quiz'] = $quiz;
+		}
+		$ps = new PolySession($quiz->uuidid);
+		$ps->push();
+		header("Location: ../?p=takequiz&UUID=".$_POST['uuid']."&num=".$prev);
+	}
+}
 if($_POST['submit']=="Finish"){
 	$uuid = $_POST['uuid'];
 	$quiz = $_SESSION['quiz'];
@@ -109,7 +139,7 @@ if($_POST['submit']=="Finish"){
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$house = $_SESSION['house'];
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
-	$mysqli -> select_db($db_name);
+	$mysqli -> select_db($_SESSION['dbext']);
 	if(mysqli_connect_errno()) {
 		echo "Connection Failed: " . mysqli_connect_errno();
 		exit();
@@ -125,9 +155,9 @@ if($_POST['submit']=="Finish"){
 		$frgraded = 0;
 	}
 	if($stmt = $mysqli -> prepare("INSERT INTO results
-	(id,firstname,lastname,quizuuid,rawscore,possiblescore,percentage,datestamp,timestamp,ip,house,session,object, frscore, frpossible,frgraded,owner)
-	VALUES ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
-		$stmt -> bind_param("sssiisssssssiii", $fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid , serialize($quiz), $frt, $frp,$frgraded,$sessionn->owner);
+	(id,firstname,lastname,quizuuid,rawscore,possiblescore,percentage,datestamp,timestamp,ip,house,session,object, frscore, frpossible,frgraded)
+	VALUES ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
+		$stmt -> bind_param("sssiisssssssiii", $fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid , serialize($quiz), $frt, $frp,$frgraded);
 		$stmt -> execute();
 		$stmt -> close();
 	} else {

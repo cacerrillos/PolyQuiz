@@ -106,6 +106,14 @@ class quiz {
 					$possiblepoints += count($question->left);
 				}
 			}
+			if($question->type==4){
+				if($question->isExtraCredit()){
+					//do nothing
+				} else {
+					$possiblepoints += $question->getPoints();
+				}
+				$totalscore += $question->pointsEarned;
+			}
 		}
 		$this->totalscore = $totalscore;
 		$this->possiblepoints = $possiblepoints;
@@ -123,7 +131,7 @@ class quizFromMysql{
 	function getQuiz($studentuuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($_SESSION['dbext']);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
@@ -152,7 +160,7 @@ class quizFromMysql{
 	function createQuiz($uuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($_SESSION['dbext']);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
@@ -205,10 +213,10 @@ class quizFromMysql{
 	}
 }
 class quizSessionFromMysql {
-	function getSession($uuid, $pass){
+	function getSession($db, $uuid, $pass){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($db);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
@@ -231,24 +239,26 @@ class quizSessionFromMysql {
 							if($session['key']==$pass){
 								if($session['status']==1){
 									$tempsession = new quizSession($session['uuid'], $session['house'], $session['quiz']);
+									$tempsession->db = $db;
 									return $tempsession;
 								}
 							}
 						}
 						$stmt -> close();	
 					} else {
-						echo $mysqli->error;
+						die($mysqli->error);
 					}
 				} else {
 					return false;
 				}
 		} else {
-			echo $mysqli->error;
+			die($mysqli->error);
 		}
 	}
 }
 class quizSession {
 	public $uuid, $house, $quiz;
+	public $db;
 	function __construct($uuid, $house, $quiz){
 		$this->quiz = $quiz;
 		$this->uuid = $uuid;

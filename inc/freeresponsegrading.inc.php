@@ -36,7 +36,7 @@
     <div id="seeresults" style="margin-left:20px">
     <?
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($db_name) or die(mysql_error()); 
+	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 	$overall = mysql_query("SELECT * FROM quizes ORDER BY quizname ASC"); 
 	$none[0]=false;
 	$none[1]=false;
@@ -165,7 +165,7 @@
     <?
 	if(isset($_GET['uuid'])){
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($_SESSION['dbext']);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();

@@ -66,7 +66,7 @@ function showElement(element_id) {
     <div id="seeresults" style="margin-left:20px">
     <?
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($db_name) or die(mysql_error()); 
+	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 	$overall = mysql_query("SELECT * FROM quizes ORDER BY quizname ASC"); 
 	while($overalldata = mysql_fetch_array($overall)){
 		$house[0] = "North";

@@ -7,7 +7,7 @@ if(!isset($_SESSION["is_admin"])){
 	header('Location: ' . $_SERVER['HTTP_REFERER']);
 } else {
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($db_name) or die(mysql_error()); 
+	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 	if(isset($_GET['uuid'])){
 		$uuid = mysql_real_escape_string($_GET['uuid']);
 		if($uuid=="all"){

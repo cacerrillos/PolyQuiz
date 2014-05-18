@@ -31,7 +31,7 @@ if(isset($_POST['submit'])){
 				$sessionid = $_POST['sessionid'];
 				$sessionkey = $_POST['sessionkey'];
 				$qsfm = new quizSessionFromMysql();
-				$tempqs = $qsfm -> getSession($sessionid, $sessionkey);
+				$tempqs = $qsfm -> getSession(getDBExt($sessionid), $sessionid, $sessionkey);
 				if($tempqs==false){
 					header('Location: ' . $_SERVER['HTTP_REFERER']."");
 				} else {
@@ -43,6 +43,7 @@ if(isset($_POST['submit'])){
 						$_SESSION['firstname'] = $_POST['firstname'];
 						$_SESSION['lastname'] = $_POST['lastname'];
 						$_SESSION['house'] = $house;
+						$_SESSION['dbext'] = getDBExt($sessionid);
 						$temp = new quizFromMysql();
 						$generatedquiz = $temp -> createQuiz($uuid);
 						$generatedquiz -> randomize();

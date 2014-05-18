@@ -7,7 +7,7 @@ if(isset($_SESSION["is_admin"])){
 	if(isset($_POST['submit'])){
 		$uuid = $_POST['uuid'];	
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($_SESSION['dbext']);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();

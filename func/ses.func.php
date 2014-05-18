@@ -7,7 +7,7 @@ class QQ {
 			$uuid = substr($preuuid, 0, 6);
 			$key = substr($preuuid, 6, 2);
 			$mysqli = new mysqli($db_host, $db_user, $db_password);
-			$mysqli -> select_db($db_name);
+			$mysqli -> select_db($_SESSION['dbext']);
 			if(mysqli_connect_errno()){
 				echo "Connection Failed: " . mysqli_connect_errno();
 				exit();
@@ -26,6 +26,12 @@ class QQ {
 						$stmt2 -> bind_param("sssisss", $uuid, $key, $house, $statusint, $quiz, $date, $name);
 						$stmt2 -> execute();
 						$stmt2 -> close();
+						$mysqli->select_db($db_name);
+						if($stmt3 = $mysqli->prepare("INSERT INTO globalsession VALUES (?, ?)")){
+							$stmt3->bind_param("ss", $uuid, $_SESSION['dbext']);
+							$stmt3->execute();
+							$stmt3->close();
+						}
 					} else {
 						echo $mysqli->error;
 					}
@@ -38,7 +44,7 @@ class QQ {
 	function open($uuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($_SESSION['dbext']);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
@@ -55,7 +61,7 @@ class QQ {
 	function close($uuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db_name);
+		$mysqli -> select_db($_SESSION['dbext']);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();

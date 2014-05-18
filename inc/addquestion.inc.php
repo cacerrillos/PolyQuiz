@@ -125,6 +125,43 @@ function showElement(element_id) {
 			}
 	}
     ?>
+     <?
+	if(intval($_POST['type'])==4){
+	?>
+        <h3>Question Value: <? echo $_POST['num']; ?></h3>
+        <input type="hidden" name="points" value="<? echo $_POST['num']; ?>"> Extra Credit
+        <select name="extracredit" size="1">
+        	<option value="0">No</option>
+            <option value="1">Yes</option>
+        </select> Display Extra Credit Label
+        <select name="extracreditdisplay" size="1">
+        	<option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+        <h4>
+        <textarea rows="4" cols="42" name="question"></textarea><br /><br />
+
+        <br /><br />
+        <?
+		for($x = 0; $x < $_POST['num']; $x++){
+		?>
+            
+			<? echo $alphabet[$x]; ?>) Points: <select name="<? echo $x; ?>points" size="1">
+                <?
+                for($b = 0; $b <= $_POST['num']; $b++){
+                    ?>
+                    <option value="<? echo $b; ?>"><? echo $b; ?></option>
+                    <?
+                }
+                ?>
+            </select>
+            <textarea rows="2" cols="42" name="<? echo $x; ?>text"></textarea><br /><br />
+        <?
+		}
+		?>
+    <?
+	}
+	?>
         <input type="submit" name="submit" value="Add" /><br />
         </h4>
 <?

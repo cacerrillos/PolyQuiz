@@ -1,7 +1,7 @@
 <?
 include_once("func/question.obj.php");
 mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-mysql_select_db($db_name) or die(mysql_error()); 
+mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 $uuid = mysql_real_escape_string($_GET['UUID']);
 $quizinfoq = mysql_query("SELECT * FROM quizes WHERE uuid='$uuid'");
 $quizinfo = mysql_fetch_array($quizinfoq);
@@ -86,6 +86,7 @@ $limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offs
                                         <option value="0">Multiple Choice</option>
                                         <option value="1">Free Response</option>
                                         <option value="2">Matching</option>
+                                        <option value="4">Multiple Choice (XChoice)</option>
                                         </select>
                                         # of Answers:
                                         <select name="num">
@@ -212,6 +213,38 @@ $limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offs
                                                             }
                                                         }
                                                         ?>
+                                                        <? if($quest->type==4){ ?>
+                                                            <input type="hidden" name="answerNum" value="<? echo count($quest->answerArray); ?>" />
+                                                            Points:<input type="number" name="points" value="<? echo $quest->getPoints(); ?>" /> Extra Credit
+                                                            <select name="extracredit" size="1">
+                                                                <option value="0">No</option>
+                                                                <option value="1" <? if($quest->isExtraCredit()){ echo "selected";}?>>Yes</option>
+                                                            </select>
+                                                            Display Extra Credit Label
+                                                            <select name="extracreditdisplay" size="1">
+                                                                <option value="0">No</option>
+                                                                <option value="1" <? if($quest->displayextracredit==true){ echo "selected";}?>>Yes</option>
+                                                            </select><br /><br />
+                                                            <br /><br />
+                                                            <?
+                                                            for($x = 0; $x < count($quest->answerArray); $x++){
+                                                                ?>
+                                                                <select name="<? echo $x; ?>points" size="1">
+																	<?
+																	for($b = 0; $b <= $quest->getPoints(); $b++){
+																		?>
+                                                                        <option value="<? echo $b; ?>" <? if($quest->answerArray[$x]->getPoints()==$b){ echo "selected"; } ?>><? echo $b; ?></option>
+                                                                        <?
+																	}
+																	?>
+																</select>
+																<? echo $alphabet[$x].") "; ?>
+                                                                <textarea rows="2" cols="42" name="<? echo $x; ?>text"><? echo $quest->answerArray[$x]->getAnswer(); ?></textarea>
+                                                                <br /><br />
+                                                                <?
+                                                            }
+                                                        }
+														?>
                                                         <input type="submit" name="submit" value="Edit" /><br />
                                                         <font color="#FF0000">!!!<input type="submit" name="submit" value="Delete" />!!!</font>
                                                     </h4>

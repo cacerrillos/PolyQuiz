@@ -5,7 +5,7 @@ include_once("question.obj.php");
 function resetnumbers($uuidr){
 	global $db_host, $db_user, $db_password, $db_name;
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($db_name) or die(mysql_error()); 
+	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 	$query = mysql_query("SELECT * FROM `".$uuidr."` ORDER BY id ASC;");
 	$number = mysql_num_rows($query);
 	$counter = 1;
@@ -21,7 +21,7 @@ if(isset($_SESSION["is_admin"])){
 		if($submit=="Change"){
 			if(isset($_POST['uuid']) && isset($_POST['status'])){
 				mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-				mysql_select_db($db_name) or die(mysql_error()); 
+				mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 				$uuid = mysql_real_escape_string($_POST['uuid']);
 				$status = mysql_real_escape_string($_POST['status']);
 				$query = mysql_query("UPDATE quizes SET status='$status' WHERE uuid='$uuid'");
@@ -32,7 +32,7 @@ if(isset($_SESSION["is_admin"])){
 			}
 		} else if($submit=="Add"){
 			$mysqli = new mysqli($db_host, $db_user, $db_password);
-			$mysqli -> select_db($db_name);
+			$mysqli -> select_db($_SESSION['dbext']);
 			$uuid = $mysqli -> real_escape_string($_POST['uuid']);
 			$type = $_POST['type'];
 			if(intval($type)==0){
@@ -67,6 +67,18 @@ if(isset($_SESSION["is_admin"])){
 				$object->setAttributesMATCH($left, $right, $left_ans);
 				$object->question = $question;
 			}
+			if(intval($type)==4){
+				$question = $_POST['question'];
+				$numOfQuestions = intval($_POST['answerNum']);
+				$pointValue = intval($_POST['points']);
+				$answer = $_POST['answer'];
+				$type = $_POST['type'];
+				for($x = 0; $x < $numOfQuestions; $x++){
+					$ansArray[$x] = new PolyAnswer($_POST[$x.'text'], intval($_POST[$x.'points']));
+				}
+				$object = new PolyQuestion($type, $pointValue);
+				$object -> setAttributesXC($question, $ansArray);
+			}
 			if(intval($_POST['extracredit'])==1){
 				$object -> setIsExtraCredit(true);
 			}
@@ -86,7 +98,7 @@ if(isset($_SESSION["is_admin"])){
 		} else if($submit=="Delete"){
 			if(isset($_POST['uuid']) && isset($_POST['num'])){
 				mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-				mysql_select_db($db_name) or die(mysql_error()); 
+				mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
 				$uuid = mysql_real_escape_string($_POST['uuid']);
 				$num = mysql_real_escape_string($_POST['num']);
 				$query = mysql_query("DELETE FROM `".$uuid."` WHERE id='$num'");
@@ -96,7 +108,7 @@ if(isset($_SESSION["is_admin"])){
 			}
 		} else if($submit=="Edit"){
 			$mysqli = new mysqli($db_host, $db_user, $db_password);
-			$mysqli -> select_db($db_name);
+			$mysqli -> select_db($_SESSION['dbext']);
 			$uuid = $mysqli -> real_escape_string($_POST['uuid']);
 			$type = $_POST['type'];
 			if(intval($type)==0){
@@ -125,6 +137,15 @@ if(isset($_SESSION["is_admin"])){
 				$quest = new PolyQuestion(2, 1);
 				$quest->setAttributesMATCH($left, $right, $left_ans);
 				$quest->question = $question;
+			}
+			if(intval($type)==4){
+				$num = intval($_POST['num']);
+				$ansNum = $_POST['answerNum'];
+				for($x = 0; $x < $ansNum; $x++){
+					$ansArray[$x] = new PolyAnswer($_POST[$x.'text'], intval($_POST[$x.'points']));
+				}
+				$quest = new PolyQuestion(4, $_POST['points']);
+				$object -> setAttributesXC($_POST['question'], $ansArray);
 			}
 			if(intval($_POST['extracreditdisplay'])==1){
 				$quest -> displayextracredit = true;

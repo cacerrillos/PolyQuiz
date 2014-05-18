@@ -6,9 +6,22 @@ Construct -> Set Attributes -> Randomize
 */
 include_once("config.func.php");
 include_once("img.class.php");
+class PolyAnswer {
+	public $answer, $points;
+	function __construct($answer, $points){
+		$this->answer = $answer;
+		$this->points = $points;
+	}
+	function getAnswer(){
+		return $this->answer;
+	}
+	function getPoints(){
+		return $this->points;
+	}
+}
 class PolyQuestion {
 	public $points, $imagegroup;
-	public $type; //Multiple, FreeResponse, Matching, Survey
+	public $type; //Multiple(0), FreeResponse(1), Matching(2), Survey(3), MultipleX(4)
 	public $set = false, $correct = null;
 	public $question, $response = -1, $answerArray, $answer, $freeresponse, $left_res, $left, $right, $left_ans, $pointsEarned = 0, $freeGraded = false;
 	public $isextracredit, $extracreditpoints, $displayextracredit;
@@ -24,6 +37,10 @@ class PolyQuestion {
 		$this->answerArray = $answerArray;
 		$this->answer = $answer;
 		
+	}
+	function setAttributesXC($question, $answerArray){
+		$this->question = $question;
+		$this->answerArray = $answerArray;
 	}
 	function setAttributesMATCH($left, $right, $left_ans){
 		$this->left = $left;
@@ -47,33 +64,62 @@ class PolyQuestion {
 		if($this->type==0){
 			?>
             <div class="question">
-            <?
-			for($x = 0; $x < count($this->answerArray); $x++){
-				if($x %2 ==0){
-					$color = "999";
-				} else {
-					$color = "CCC";
-				}
-			?>
-				<div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px;">
+				<?
+                for($x = 0; $x < count($this->answerArray); $x++){
+                    if($x %2 ==0){
+                        $color = "999";
+                    } else {
+                        $color = "CCC";
+                    }
+                ?>
+                <div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px;">
                     <input type="radio" id="radio<? echo $x; ?>" name="answer" value="<? echo $x; ?>" <? if($this->response==$x) { echo "checked"; }?>>
                     <label for="radio<? echo $x; ?>">
-                    	<span><? echo $alphabet[$x].") "; ?></span>
+                        <span><? echo $alphabet[$x].") "; ?></span>
                         <span style="color:#000; font-size:1em"><? echo $this->answerArray[$x] ?></span>
                     </label>
                 </div>
-			<?
-			}
-			//outoffor
+                <?
+                }
+                ?>
+                <div style="background-color:#666; padding-left:10px;">
+                    <h3 style="color:#FFF;">
+                        <input id="skip" type="radio" name="answer" value="-1" <? if($curans=="-1"){ echo "checked"; } ?>/>
+                        <label for="skip">Skip</label>
+                    </h3>
+                </div>
+            </div>
+            <?
+		}
+		if($this->type==4){
 			?>
-            <div style="background-color:#666; padding-left:10px;">
-            	<h3 style="color:#FFF;">
-            		<input id="skip" type="radio" name="answer" value="-1" <? if($curans=="-1"){ echo "checked"; } ?>/>
-                    <label for="skip">Skip</label>
-                </h3>
+            <div class="question">
+				<?
+                for($x = 0; $x < count($this->answerArray); $x++){
+                    if($x %2 ==0){
+                        $color = "999";
+                    } else {
+                        $color = "CCC";
+                    }
+                ?>
+                <div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px;">
+                    <input type="radio" id="radio<? echo $x; ?>" name="answer" value="<? echo $x; ?>" <? if($this->response==$x) { echo "checked"; }?>>
+                    <label for="radio<? echo $x; ?>">
+                        <span><? echo $alphabet[$x].") "; ?></span>
+                        <? $thisAnswer = $this->answerArray[$x]; ?>
+                        <span style="color:#000; font-size:1em"><? echo $thisAnswer->getAnswer(); ?></span>
+                    </label>
+                </div>
+                <?
+                }
+                ?>
+                <div style="background-color:#666; padding-left:10px;">
+                    <h3 style="color:#FFF;">
+                        <input id="skip" type="radio" name="answer" value="-1" <? if($curans=="-1"){ echo "checked"; } ?>/>
+                        <label for="skip">Skip</label>
+                    </h3>
+                </div>
             </div>
-            </div>
-            
             <?
 		}
 		if($this->type==1){
@@ -200,6 +246,10 @@ class PolyQuestion {
 				}
 			}
 			//$this->correct = $this->check();
+		}
+		if($this->type==4){
+			$this->response = intval($response);
+			$this->pointsEarned = $this->answerArray[intval($response)]->getPoints();
 		}
 	}
 	function getResponse(){

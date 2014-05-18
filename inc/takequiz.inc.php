@@ -23,7 +23,7 @@
 													$uuid = $quiz->uuid;
 													
 													$mysqli = new mysqli($db_host, $db_user, $db_password);
-													$mysqli -> select_db($db_name);
+													$mysqli -> select_db($_SESSION['dbext']);
 													if(mysqli_connect_errno()) {
 														echo "Connection Failed: " . mysqli_connect_errno();
 														exit();
@@ -98,7 +98,7 @@ if(!isset($_GET['UUID']) && $use==false){
 	}
 //	$data = mysql_query("SELECT * FROM quizes WHERE uuid='". mysql_real_escape_string() ."';");
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
-	$mysqli -> select_db($db_name);
+	$mysqli -> select_db($_SESSION['dbext']);
 	if(mysqli_connect_errno()){
 		echo "Connection Failed: " . mysqli_connect_errno();
 		exit();
@@ -195,7 +195,7 @@ if(!isset($_GET['UUID']) && $use==false){
 					//echo "Checkpoint";
 					//var_dump($quiz);
 					$mysqli = new mysqli($db_host, $db_user, $db_password);
-					$mysqli -> select_db($db_name);
+					$mysqli -> select_db($_SESSION['dbext']);
 					if(mysqli_connect_errno()){
 						echo "Connection Failed: " . mysqli_connect_errno();
 						//exit();
