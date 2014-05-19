@@ -30,7 +30,11 @@ class quiz {
 		$this->session = $session;
 	}
 	function getQuestion($num){
-		return $this->questions[$num];
+		if($num<count($this->questions)){
+			return $this->questions[$num];
+		} else {
+			return "null";
+		}
 	}
 	function ifExists($uuid){
 		$questions = $this->questions;
