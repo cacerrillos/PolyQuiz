@@ -4,7 +4,7 @@ include_once("config.func.php");
 if(isset($_SESSION["is_admin"])){
 	include("img.class.php");
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($db_name) or die(mysql_error());
+	mysql_select_db($_SESSION['dbext']) or die(mysql_error());
 	$quizuuid = $_GET['uuid'];
 	$question = $_GET['num'];
 	$imguuid = $_GET['img'];
@@ -12,7 +12,7 @@ if(isset($_SESSION["is_admin"])){
 	$question = mysql_real_escape_string($question);
 	$imguuid = mysql_real_escape_string($imguuid);
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
-	$mysqli -> select_db($db_name);
+	$mysqli -> select_db($_SESSION['dbext']);
 	if(mysqli_connect_errno()) {
 		echo "Connection Failed: " . mysqli_connect_errno();
 		exit();
@@ -33,6 +33,13 @@ if(isset($_SESSION["is_admin"])){
 		$temppp -> removeImage($imguuid);
 		$ser = serialize($temppp);
 		$query = mysql_query("UPDATE ".$quizuuid." SET images='$ser' WHERE id='$nummy'");
+		if($stmt = $mysqli->prepare("DELETE FROM images WHERE uuid=?")){
+			$stmt->bind_param("s", $imguuid);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			echo $mysqli->error;
+		}
 		mysql_close();
 	} else {
 		echo $mysqli -> error;
