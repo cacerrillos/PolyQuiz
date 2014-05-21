@@ -14,6 +14,7 @@ if(true || isset($_SESSION['is_admin'])){
 			$troublemakers = mysql_query("UPDATE results SET flag = 'yes' WHERE `ip` = '".$thisip."' AND `session` = '".$thissession."'");
 		}
 	}
+	mysql_close();
 }
 header('Location: ' . $_SERVER['HTTP_REFERER']);
 ?>
