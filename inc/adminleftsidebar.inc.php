@@ -1,5 +1,8 @@
 												<header class="major">
 													<a href="?p=admin" style="text-decoration: none;"><h2><i class="fa fa-cog"></i> The Core</h2></a>
+                                                    <?
+													theSecretMenu();
+													?>
 												</header>
 												<?
 												if(isset($_SESSION["is_admin"])){

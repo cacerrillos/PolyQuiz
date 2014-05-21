@@ -10,6 +10,11 @@ if(file_exists("func/permissions.obj.php")){
 } else if(file_exists("permissions.obj.php")){
 	include_once("permissions.obj.php");
 }
+if(file_exists("func/secret.obj.php")){
+	include_once("func/secret.obj.php");
+} else if(file_exists("secret.obj.php")){
+	include_once("secret.obj.php");
+}
 $db_host = "127.0.0.1";
 $db_user = "quiz";
 $db_password = "quiz";
@@ -68,7 +73,7 @@ function getDBExt($uuid){
 	} else {
 		echo $mysqli->error;
 	}
-	return $db;
 	$mysqli->close();
+	return $db;
 }
 ?>
