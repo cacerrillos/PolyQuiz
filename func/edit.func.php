@@ -71,7 +71,6 @@ if(isset($_SESSION["is_admin"])){
 				$question = $_POST['question'];
 				$numOfQuestions = intval($_POST['answerNum']);
 				$pointValue = intval($_POST['points']);
-				$answer = $_POST['answer'];
 				$type = $_POST['type'];
 				for($x = 0; $x < $numOfQuestions; $x++){
 					$ansArray[$x] = new PolyAnswer($_POST[$x.'text'], intval($_POST[$x.'points']));
@@ -145,7 +144,7 @@ if(isset($_SESSION["is_admin"])){
 					$ansArray[$x] = new PolyAnswer($_POST[$x.'text'], intval($_POST[$x.'points']));
 				}
 				$quest = new PolyQuestion(4, $_POST['points']);
-				$object -> setAttributesXC($_POST['question'], $ansArray);
+				$quest -> setAttributesXC($_POST['question'], $ansArray);
 			}
 			if(intval($_POST['extracreditdisplay'])==1){
 				$quest -> displayextracredit = true;
