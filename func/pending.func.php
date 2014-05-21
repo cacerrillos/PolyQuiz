@@ -4,12 +4,12 @@ include_once("genquiz.func.php");
 include_once("config.func.php");
 if(isset($_GET['uuid']) && isset($_SESSION["is_admin"])){
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
+	mysql_select_db($db_name) or die(mysql_error()); 
 	$uuid = mysql_real_escape_string($_GET['uuid']);
 	if($uuid=="11223344"){
-		$query = mysql_query("TRUNCATE TABLE polysessions");
+		$query = mysql_query("DELETE FROM polysessions WHERE owner='".$_SESSION['dbext']."'");
 	} else {
-	$query = mysql_query("DELETE FROM polysessions WHERE id='$uuid'");
+		$query = mysql_query("DELETE FROM polysessions WHERE id='$uuid' AND owner='".$_SESSION['dbext']."'");
 	}
 	mysql_close();
 	header('Location: ' . $_SERVER['HTTP_REFERER']);
