@@ -149,6 +149,7 @@ class quizFromMysql{
 		} else {
 			echo $mysqli->error;
 		}
+		$mysqli->close();
 		if($num==0){
 			return false;
 		} else {
@@ -158,6 +159,7 @@ class quizFromMysql{
 			while($info = mysql_fetch_array($data)){
 				$quiz = unserialize($info['object']);
 			}
+			mysql_close();
 			return $quiz;
 		}
 	}
