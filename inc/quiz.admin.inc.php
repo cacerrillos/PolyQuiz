@@ -43,17 +43,31 @@
     <div id="quizmanageouter" style="display:inline-block; float:left; padding-left:10px; padding-right:10px;">
         <h3>Manage Quiz</h3>
         <div id="quizmanageinner" style="margin-left:20px">
-        <?
+        <table>
+		<?
         mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
         mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
         $data = mysql_query("SELECT * FROM quizes ORDER BY quizname ASC;");
         if(mysql_num_rows($data)==0){
             echo "You have no quizes!";
-        }
+        } else {
+			?>
+            <tr>
+            	<td>Quiz Name</td>
+                <td>Delete</td>
+            </tr>
+            <?
+		}
         while($info = mysql_fetch_array($data)){
-            echo "<a href='?p=managequiz&UUID=".$info['uuid']."'>".$info['quizname']."</a><br>";
+			?>
+            <tr>
+            	<td><a href='?p=managequiz&UUID=<? echo $info['uuid']; ?>'><? echo $info['quizname']; ?></a></td>
+                <td><a href='func/quiz.admin.php?delete=<? echo $info['uuid']; ?>' style="color:#F00;">Delete</a></td>
+            </tr>
+		<?
         }
         ?>
+        </table>
         <br><br>
         </div>
     </div>
