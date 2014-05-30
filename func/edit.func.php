@@ -158,7 +158,8 @@ if(isset($_SESSION["is_admin"])){
 			}
 			$mysqli -> close();
 			resetnumbers($_POST['uuid']);
-			header('Location: ../?p=managequiz&UUID='.$uuid.'');
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+			//header('Location: ../?p=managequiz&UUID='.$uuid.'');
 		}
 	} else {
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
