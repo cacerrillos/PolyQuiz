@@ -24,6 +24,7 @@
 											<article>
 												<header class="major">
 													<h2>Quiz Management</h2>
+                                                    <span class="byline"><h3>Edit Quizzes</h3></span>
 												</header>
 <?
 	if(isset($_SESSION["is_admin"])){

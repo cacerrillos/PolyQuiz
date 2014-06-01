@@ -23,14 +23,12 @@
 									
 											<article>
 												<header class="major">
-													<h2>Page Title</h2>
-													<span class="byline">Which means the sidebar is on the left</span>
+													<h2>Results & Grading</h2>
+													<span class="byline"><h3>Free Response Grading</h3></span>
 												</header>
-                                                    <h1>Free Response Grading</h1>
     <?
 	if(isset($_SESSION["is_admin"])){
 	?>
-	<p>Welcome back admin!</p>
     <? if(!isset($_GET['uuid'])){
 		?>
     <div id="seeresults" style="margin-left:20px">
@@ -153,9 +151,9 @@
 	
 	if($none[0] && $none[1] && $none[2] && $none[3] && $none[4]){
 		
-
-	//	 <h3>All free response questions have been graded!</h3>
-
+?>
+		 <h3>All free response questions have been graded!</h3>
+<?
 	}
 	?>
     </div>
@@ -226,25 +224,7 @@
         <?	
 		}
 	}
-	?>
-    
-        <a href="func/admin.logout.php" style="margin-left:20px">Logout</a>
-    <?
-	} else {
-	
-?>
-    <p>
-    <div id="login" style="margin-left:20px">
-    <h2>Login</h2>
-    <form id="adminlogin" action="func/admin.login.php" method="post">
-    User: <input type="text" name="user"><br>
-    Pass: <input type="password" name="pass"><br>
-    <input type="submit" name="submit" value="Login"><br>
-    </form>
-    </div>
-    </p>
-<?
-}
+	}
 ?>
 											</article>
 								

@@ -52,17 +52,12 @@ function showElement(element_id) {
 									
 											<article>
 												<header class="major">
-													<h2>Page Title</h2>
-													<span class="byline">Which means the sidebar is on the left</span>
+													<h2>Results & Grading</h2>
+													<span class="byline"><h3>Results</h3></span>
 												</header>
-                                                  <h3><a href="?p=admin">The Core</a></h3>
-    <h1>Quiz Management</h1>
 <?
 	if(isset($_SESSION["is_admin"])){
 	?>
-	<p>Welcome back admin!</p>
-
-    <h3>Results</h3>
     <div id="seeresults" style="margin-left:20px">
     <?
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
@@ -204,23 +199,8 @@ $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
 	?>
     <p><a href="func/resultdelete.func.php?uuid=all"><font color="#FF0000">Delete All</font></a></p>
     </div>
-    <p><a href="func/admin.logout.php">Logout</a></p>
     <?
-	} else {
-	
-?>
-    <p>
-    <div id="login" style="margin-left:20px">
-    <h2>Login</h2>
-    <form id="adminlogin" action="func/admin.login.php" method="post">
-    User: <input type="text" name="user"><br>
-    Pass: <input type="password" name="pass"><br>
-    <input type="submit" name="submit" value="Login"><br>
-    </form>
-    </div>
-    </p>
-<?
-}
+	}
 ?>
 
 											</article>

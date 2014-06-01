@@ -27,6 +27,8 @@
 													<dd><a href="mailto:carlos@cerrillostech.com">Carlos@CerrillosTech.com</a></dd>
 												</dl>
 											</div>
+                                            <?
+											/*
 											<div class="6u">
 												<dl class="contact">
 													<dt>Address</dt>
@@ -39,6 +41,8 @@
 													<dd>Yes Please.</dd>
 												</dl>
 											</div>
+											*/
+											?>
 										</div>
 									</div>
 								</section>

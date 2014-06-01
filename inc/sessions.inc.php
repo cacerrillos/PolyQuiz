@@ -52,18 +52,8 @@ function showElement(element_id) {
 									
 											<article>
 												<header class="major">
-													<h2>Edit Sessions</h2>
-                                                    <?
-													if(!isset($_SESSION["is_admin"])){
-													?>
-													<span class="byline">Please Log-In.</span>
-                                                    <?
-                                                    } else {
-                                                    ?>
-                                                    <span class="byline">Welcome back admin!</span>
-                                                    <?
-													}
-													?>
+													<h2>Session Management</h2>
+                                                    <span class="byline"><h3>Edit Sessions</h3></span>
 												</header>
                                             	<?
 												if(isset($_SESSION["is_admin"])){
