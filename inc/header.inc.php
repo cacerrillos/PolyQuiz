@@ -18,6 +18,7 @@
 		<script src="js/skel-panels.min.js"></script>
         <script src="js/jquery-1.7.2.min.js"></script>
 		<script src="js/lightbox.js"></script>
+        <script src="js/sketch.js"></script>
         <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
         <script type="text/javascript">
         tinymce.init({
@@ -41,6 +42,17 @@
            ]
          });
         </script>
+        <script>
+			var canvas = document.getElementById('myCanvas');
+			var context = canvas.getContext('2d');
+			function addCanvas(){
+				var dataURL = canvas.toDataURL();
+				document.getElementById("canvasValue").value = dataURL;
+			}
+			window.onload = function(){
+				$('#myCanvas').sketch();
+			}
+		</script>
         <link href="css/lightbox.css" rel="stylesheet" />
 		<noscript>
 			<link rel="stylesheet" href="css/skel-noscript.css" />

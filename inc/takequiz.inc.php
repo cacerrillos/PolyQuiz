@@ -180,7 +180,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 				}
 			}
 			?>
-			<form name="<? echo $num; ?>" method="post" action="func/quiz.func.php">
+			<form name="<? echo $num; ?>" method="post" action="func/quiz.func.php" onsubmit="addCanvas()">
 			<input type="hidden" name="uuid" value="<? if($use==false){ echo mysqli_real_escape_string($mysqli, $_GET['UUID']); } else { echo $quiz->uuid(); } ?>">
 			<input type="hidden" name="num" value="<? echo $num; ?>">
 			<?
