@@ -146,8 +146,15 @@ if(isset($_SESSION["is_admin"])){
 				$quest = new PolyQuestion(4, $_POST['points']);
 				$quest -> setAttributesXC($_POST['question'], $ansArray);
 			}
+			if(intval($_POST['extracredit'])==1){
+				$quest -> setIsExtraCredit(true);
+			} else {
+				$quest -> setIsExtraCredit(false);
+			}
 			if(intval($_POST['extracreditdisplay'])==1){
 				$quest -> displayextracredit = true;
+			} else {
+				$quest -> displayextracredit = false;
 			}
 			if($stmt = $mysqli -> prepare("UPDATE `".$uuid."` SET object=? WHERE id=?")){
 				$stmt -> bind_param("si", serialize($quest), $num);

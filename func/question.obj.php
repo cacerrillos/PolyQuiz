@@ -25,7 +25,8 @@ class PolyQuestion {
 	public $set = false, $correct = null;
 	public $question, $response = -1, $answerArray, $answer, $freeresponse, $left_res, $left, $right, $left_ans, $pointsEarned = 0, $freeGraded = false;
 	public $isextracredit, $extracreditpoints, $displayextracredit;
-			
+	public $includeCanvas;
+	public $canvasValue;
 	function __construct($type, $points){
 		$this->type = $type;
 		$this->points = intval($points);
@@ -53,6 +54,9 @@ class PolyQuestion {
 	}
 	function setIsExtraCredit($bool){
 		$this->isextracredit = $bool;
+	}
+	function setCanvasValue($value){
+		$this->canvasValue = $value;
 	}
 	function isExtraCredit(){
 		return $this->isextracredit;
@@ -176,6 +180,98 @@ class PolyQuestion {
                 </div>
             </div>
 			<?
+			}
+		}
+	}
+	function paintGlobalQuestionOptions(){
+		?>
+        Extra Credit
+        <select name="extracredit" size="1">
+            <option value="0">No</option>
+            <option value="1" <? if($this->isExtraCredit()){ echo "selected";}?>>Yes</option>
+        </select>
+        Display Extra Credit Label
+        <select name="extracreditdisplay" size="1">
+            <option value="0">No</option>
+            <option value="1" <? if($this->displayextracredit==true){ echo "selected";}?>>Yes</option>
+        </select>
+        <?
+	}
+	function paintEdit($alphabet){
+		if($this->type==0){
+			?>
+            <input type="hidden" name="answerNum" value="<? echo count($this->answerArray); ?>" />
+            Points:<input type="number" name="points" value="<? echo $this->getPoints(); ?>" />
+            <? $this->paintGlobalQuestionOptions(); ?>
+            <br /><br />
+            <?
+            for($x = 0; $x < count($this->answerArray); $x++){
+                ?>
+                <input type="radio" name="answer" value="<? echo $x; ?>" <? if($this->answer==$x) { echo "checked"; } ?> />
+                <? echo $alphabet[$x].") "; ?>
+                <textarea rows="2" cols="42" name="<? echo $x; ?>text"><? echo $this->answerArray[$x]; ?></textarea>
+                <br /><br />
+            <?
+            }
+		}
+		if($this->type==1){
+			?>
+			Points:<input type="number" name="points" value="<? echo $this->getPoints(); ?>" />
+            <? $this->paintGlobalQuestionOptions(); ?>
+            <br /><br />
+            <?
+		}
+		if($this->type==2){
+			?>
+			<? $this->paintGlobalQuestionOptions(); ?>
+            <br /><br />
+			<?
+			for($x = 0; $x < count($this->left); $x++){
+				if($x %2 ==0){
+					$color = "999";
+				} else {
+					$color = "CCC";
+				}
+				?>
+				<input type="hidden" name="answerNum" value="<? echo count($this->right); ?>" />
+				<div style="background-color:#<? echo $color; ?>; margin-top:5px; margin-bottom:5px;">
+					<div style="float:left;">
+						<h3 style="margin-bottom:0;">
+							<? echo ($x+1).") Question "; ?>
+							<textarea rows="3" cols="20" name="left<? echo $x; ?>"><? echo $this->left[$x]; ?></textarea>
+						</h3>
+					</div>
+					<div style="float:left;">
+						<h3 style="margin-bottom:0;">
+							<? echo "<b>".$alphabet[$x]."</b>) Answer to #".($x+1).""; ?>
+							<textarea rows="3" cols="20" name="right<? echo $x; ?>"><? echo $this->right[$x]; ?></textarea>
+						</h3>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+				<?
+			}
+		}
+		if($this->type==4){
+			?>
+			<? $this->paintGlobalQuestionOptions(); ?>
+			<br /><br />
+			<?
+			for($x = 0; $x < count($this->answerArray); $x++){
+				?>
+				<select name="<? echo $x; ?>points" size="1">
+					<?
+					for($b = 0; $b <= $this->getPoints(); $b++){
+						?>
+						<option value="<? echo $b; ?>" <? if($this->answerArray[$x]->getPoints()==$b){ echo "selected"; } ?>><? echo $b; ?></option>
+						<?
+					}
+					?>
+				</select>
+				<? echo $alphabet[$x].") "; ?>
+				<textarea rows="2" cols="42" name="<? echo $x; ?>text"><? echo $this->answerArray[$x]->getAnswer(); ?></textarea>
+				<br /><br />
+				<?
 			}
 		}
 	}
