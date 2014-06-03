@@ -17,8 +17,17 @@ if(isset($_POST['username'])){
 			$num = $stmt -> num_rows;
 			$stmt -> close();
 			if($num==0){
+				$permsid = md5($_POST['username'].md5($_POST['password']));
+				if($stmt = $mysqli -> prepare("INSERT INTO stats VALUES (?, ?);")){
+					$zero = "0";
+					$ext = "_".$permsid;
+					$stmt -> bind_param("ss", $ext, $zero);
+					$stmt -> execute();
+					$stmt -> close();
+				} else {
+					error_log($mysqli->error);
+				}
 				if($stmt = $mysqli -> prepare("INSERT INTO users (id,username,password,permissionsid) VALUES ('',?,?,?)")){
-					$permsid = md5($_POST['username'].md5($_POST['password']));
 					$stmt -> bind_param("sss", $_POST['username'], md5($_POST['password']), $permsid);
 					$stmt -> execute();
 					$stmt -> close();

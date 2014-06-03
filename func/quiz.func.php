@@ -190,6 +190,24 @@ if($thisquestion!="null"){
 		} else {
 			echo $mysqli->error;
 		}
+		if($stmt = $mysqli->prepare("SELECT value FROM stats WHERE id=?;")){
+			$stmt -> bind_param("s", $_SESSION['dbext']);
+			$stmt -> execute();
+			$stmt -> bind_result($count);
+			$stmt -> store_result();
+			$stmt -> fetch();
+			$stmt -> close();
+			$count = intval($count) + 1;
+			if($stmt = $mysqli->prepare("UPDATE stats SET value = ? WHERE id=?;")){
+				$stmt -> bind_param("ss", $count, $_SESSION['dbext']);
+				$stmt -> execute();
+				$stmt -> close();
+			} else {
+				echo $mysqli->error;
+			}
+		} else {
+			echo $mysqli->error;
+		}
 		$_SESSION['raw'] = $rawscore;
 		$_SESSION['total'] = $possibleScore;
 		$_SESSION['perc'] = $percentage;
