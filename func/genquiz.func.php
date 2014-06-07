@@ -128,6 +128,10 @@ class quiz {
 		$question = $this->questions[$number];
 		$question ->setResponse($response);
 	}
+	function setCanvasValue($number, $canvasValue){
+		$question = $this->questions[$number];
+		$question -> setCanvasValue($canvasValue);
+	}
 }
 include_once("question.obj.php");
 class quizFromMysql{

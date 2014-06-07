@@ -56,7 +56,10 @@ class PolyQuestion {
 		$this->isextracredit = $bool;
 	}
 	function setCanvasValue($value){
-		$this->canvasValue = $value;
+		$this->canvasValue = base64_encode($value);
+	}
+	function getCanvasValue(){
+		return base64_decode($this->canvasValue);
 	}
 	function isExtraCredit(){
 		return $this->isextracredit;
@@ -65,6 +68,47 @@ class PolyQuestion {
 		$this->question = $question;
 	}
 	function paint($alphabet, $curans){
+		if($this->includeCanvas){
+			?>
+            <div id="closedCanvas" style="display: none; margin-left:20px">
+        		<a href="#" onclick="showElement('openCanvas'); hideElement('closedCanvas'); return false;"><img src="inc/icon_arrow_right.gif" />Show Canvas</a>
+            </div>
+			<div id="openCanvas" style="margin-left:20px;">
+                <a href="#" onclick="showElement('closedCanvas'); hideElement('openCanvas'); return false;"><img src="inc/icon_arrow_down.gif" />Hide Canvas</a>
+                <div class="tools">
+                    <a href="#myCanvas" data-color="#000" style="width: 20px; background: #000;"></a>
+                    <a href="#myCanvas" data-color="#f00" style="width: 20px; background: #f00;"></a>
+                    <a href="#myCanvas" data-color="#ff0" style="width: 20px; background: #ff0;"></a>
+                    <a href="#myCanvas" data-color="#0f0" style="width: 20px; background: #0f0;"></a>
+                    <a href="#myCanvas" data-color="#0ff" style="width: 20px; background: #0ff;"></a>
+                    <a href="#myCanvas" data-color="#00f" style="width: 20px; background: #00f;"></a>
+                    <a href="#myCanvas" data-color="#f0f" style="width: 20px; background: #f0f;"></a>
+                    <a href="#myCanvas" data-color="#fff" style="width: 20px; background: #fff;"></a>
+                    <a href="#myCanvas" data-size="3" style="background: #ccc">Size 3</a>
+                    <a href="#myCanvas" data-size="5" style="background: #ccc">Size 5</a>
+                    <a href="#myCanvas" data-size="10" style="background: #ccc">Size 10</a>
+                    <a href="#myCanvas" data-size="25" style="background: #ccc">Size 25</a>
+                    <a href="#myCanvas" data-tool="marker">Marker</a>
+                    <a href="#myCanvas" data-tool="eraser">Eraser</a>
+                    <a href="#myCanvas" data-clear="true">Clear</a>
+                </div>
+                <canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid #ccc;"></canvas>
+                <input type="hidden" name="canvasValue" id="canvasValue" />
+                <script type="text/javascript">
+					$(function() {
+						$('#myCanvas').sketch();
+					});
+					var canvas = document.getElementById("myCanvas");
+					var ctx = canvas.getContext("2d");
+					var image = new Image();
+					image.src = "<? echo $this->getCanvasValue(); ?>";
+					image.onload = function() {
+						ctx.drawImage(image, 0, 0);
+					};
+				</script>
+            </div>
+            <?
+		}
 		if($this->type==0){
 			?>
             <div class="question">
@@ -194,6 +238,11 @@ class PolyQuestion {
         <select name="extracreditdisplay" size="1">
             <option value="0">No</option>
             <option value="1" <? if($this->displayextracredit==true){ echo "selected";}?>>Yes</option>
+        </select>
+        Use Canvas
+        <select name="includeCanvas" size="1">
+            <option value="0">No</option>
+            <option value="1" <? if($this->includeCanvas==true){ echo "selected";}?>>Yes</option>
         </select>
         <?
 	}

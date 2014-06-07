@@ -43,14 +43,11 @@
          });
         </script>
         <script>
-			var canvas = document.getElementById('myCanvas');
-			var context = canvas.getContext('2d');
 			function addCanvas(){
+				var canvas = document.getElementById('myCanvas');
+				var context = canvas.getContext('2d');
 				var dataURL = canvas.toDataURL();
 				document.getElementById("canvasValue").value = dataURL;
-			}
-			window.onload = function(){
-				$('#myCanvas').sketch();
 			}
 		</script>
         <link href="css/lightbox.css" rel="stylesheet" />

@@ -84,6 +84,9 @@ if(isset($_SESSION["is_admin"])){
 			if(intval($_POST['extracreditdisplay'])==1){
 				$object -> displayextracredit = true;
 			}
+			if(intval($_POST['includeCanvas'])==1){
+				$object -> includeCanvas = true;
+			}
 			if($stmt = $mysqli -> prepare("INSERT INTO `".$uuid."` (`id`, `object`) VALUES (?,?);")){
 				$stmt -> bind_param("is",$y =0, serialize($object));
 				$stmt -> execute();
@@ -150,6 +153,9 @@ if(isset($_SESSION["is_admin"])){
 				$quest -> setIsExtraCredit(true);
 			} else {
 				$quest -> setIsExtraCredit(false);
+			}
+			if(intval($_POST['includeCanvas'])==1){
+				$quest -> includeCanvas = true;
 			}
 			if(intval($_POST['extracreditdisplay'])==1){
 				$quest -> displayextracredit = true;

@@ -80,6 +80,11 @@ include_once("func/config.func.php");
 	for($x = 0; $x <$numofq; $x++){
 		$thisquestion = $quiz->getQuestion($x);
 		echo ($x+1).") ".$thisquestion->question."<br>";
+		if($thisquestion->includeCanvas){
+			?>
+			<img src="<? echo $thisquestion->getCanvasValue(); ?>" /><br />
+			<?
+		}
 		for($y = 0; $y <count($thisquestion->answerArray); $y++){
 			if($thisquestion->answer==$y){
 				echo "<b>";

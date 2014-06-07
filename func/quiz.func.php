@@ -17,6 +17,9 @@ if($thisquestion!="null"){
 			$_SESSION["answers"][$num] = $_POST['answer'];
 			$quiz = $_SESSION['quiz'];
 			$quiz -> setResponse($num, $_POST['answer']);
+			if(isset($_POST['canvasValue'])){
+				$quiz->setCanvasValue($num, $_POST['canvasValue']);
+			}
 			$ps = new PolySession($quiz->uuidid);
 			$ps->push();
 			$_SESSION['quiz'] = $quiz;
@@ -28,6 +31,9 @@ if($thisquestion!="null"){
 			if(isset($_POST['answer'])){
 				$_SESSION["answers"][$num] = $_POST['answer'];
 				$quiz = $_SESSION['quiz'];
+				if(isset($_POST['canvasValue'])){
+					$quiz->setCanvasValue($num, $_POST['canvasValue']);
+				}
 				$quiz -> setResponse($num, $_POST['answer']);
 				$_SESSION['quiz'] = $quiz;
 			}
@@ -47,6 +53,9 @@ if($thisquestion!="null"){
 			$_SESSION["answers"][$num] = $_POST['answer'];
 			$quiz = $_SESSION['quiz'];
 			$quiz -> setResponse($num, $_POST['answer']);
+			if(isset($_POST['canvasValue'])){
+				$quiz->setCanvasValue($num, $_POST['canvasValue']);
+			}
 			$ps = new PolySession($quiz->uuidid);
 			$ps->push();
 			$_SESSION['quiz'] = $quiz;
@@ -58,8 +67,11 @@ if($thisquestion!="null"){
 			if(isset($_POST['answer'])){
 				$_SESSION["answers"][$num] = $_POST['answer'];
 				$quiz = $_SESSION['quiz'];
-			$quiz -> setResponse($num, $_POST['answer']);
-			$_SESSION['quiz'] = $quiz;
+				$quiz -> setResponse($num, $_POST['answer']);
+				if(isset($_POST['canvasValue'])){
+					$quiz->setCanvasValue($num, $_POST['canvasValue']);
+				}
+				$_SESSION['quiz'] = $quiz;
 			}
 			$ps = new PolySession($quiz->uuidid);
 			$ps->push();
@@ -76,6 +88,9 @@ if($thisquestion!="null"){
 			$_SESSION["answers"][$num] = $responsArray;
 			$quiz = $_SESSION['quiz'];
 			$quiz -> setResponse($num, $responsArray);
+			if(isset($_POST['canvasValue'])){
+				$quiz->setCanvasValue($num, $_POST['canvasValue']);
+			}
 			$ps = new PolySession($quiz->uuidid);
 			$ps->push();
 			$_SESSION['quiz'] = $quiz;
@@ -88,9 +103,11 @@ if($thisquestion!="null"){
 				$responsArray[$x] = $_POST['ans'.$x];
 			}
 			$_SESSION["answers"][$num] = $responsArray;
-			$quiz -> setResponse($num, $responsArray);
 			$_SESSION['quiz'] = $quiz;
-			
+			$quiz -> setResponse($num, $responsArray);
+			if(isset($_POST['canvasValue'])){
+				$quiz->setCanvasValue($num, $_POST['canvasValue']);
+			}
 			$ps = new PolySession($quiz->uuidid);
 			$ps->push();
 			header("Location: ../?p=takequiz&UUID=".$_POST['uuid']."&num=".$prev);
@@ -107,6 +124,9 @@ if($thisquestion!="null"){
 			$_SESSION["answers"][$num] = $_POST['answer'];
 			$quiz = $_SESSION['quiz'];
 			$quiz -> setResponse($num, $_POST['answer']);
+			if(isset($_POST['canvasValue'])){
+				$quiz->setCanvasValue($num, $_POST['canvasValue']);
+			}
 			$ps = new PolySession($quiz->uuidid);
 			$ps->push();
 			$_SESSION['quiz'] = $quiz;
@@ -119,6 +139,9 @@ if($thisquestion!="null"){
 				$_SESSION["answers"][$num] = $_POST['answer'];
 				$quiz = $_SESSION['quiz'];
 				$quiz -> setResponse($num, $_POST['answer']);
+				if(isset($_POST['canvasValue'])){
+					$quiz->setCanvasValue($num, $_POST['canvasValue']);
+				}
 				$_SESSION['quiz'] = $quiz;
 			}
 			$ps = new PolySession($quiz->uuidid);

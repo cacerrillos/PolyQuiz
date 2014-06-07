@@ -1,10 +1,43 @@
+<script type="text/javascript">
+function findElement(element_id) {
+  if (document.getElementById && document.getElementById(element_id)) {
+   return document.getElementById(element_id);
+  } else {
+    return false;
+  }
+}
+
+function hideElement(element_id) {
+  element = findElement(element_id)
+  if (element) {
+    element.style.display = 'none';
+    return element;
+  } else {
+    return false;
+  }
+}
+
+function showElement(element_id) {
+  element = findElement(element_id)
+  if (element) {
+    element.style.display = '';
+    return element;
+  } else {
+    return false;
+  }
+}
+function addCanvas(){
+	var dataURL = canvas.toDataURL();
+	document.getElementById("canvasValue").value = dataURL;
+}
+</script>
 		<!-- Main Wrapper -->
 			<div id="main-wrapper">
 				<div class="main-wrapper-style2">
 					<div class="inner">
 						<div class="container">
 							<div class="row">
-								<div class="4u">
+								<div class="3u">
 									<div id="sidebar">
 
 										<!-- Sidebar -->
@@ -79,7 +112,7 @@
 								
 									</div>
 								</div>
-								<div class="8u skel-cell-important">
+								<div class="9u skel-cell-important">
 									<div id="content">
                                         <article>
                                             <header class="major">
