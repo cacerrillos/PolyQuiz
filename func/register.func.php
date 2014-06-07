@@ -62,7 +62,7 @@ if(isset($_POST['username'])){
 							  `ip` text,
 							  `house` text,
 							  `session` text,
-							  `object` text,
+							  `object` longtext,
 							  `flag` varchar(11) DEFAULT 'no',
 							  `frscore` int(11) DEFAULT '0',
 							  `frpossible` int(11) DEFAULT '0',
