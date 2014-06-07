@@ -2,17 +2,7 @@
 			<div id="footer-wrapper">
 				<footer id="footer" class="container">
 					<div class="row">
-						<div class="3u">
-                        <section>
-                        <h2>I might put</h2>
-                        </section>
-						</div>
-						<div class="3u">
-						<section>
-                        <h2>links here.</h2>
-                        </section>
-						</div>
-						<div class="6u">
+						<div class="-8u 4u">
 								<section>
 									<h2>Get in touch</h2>
 									<div>
