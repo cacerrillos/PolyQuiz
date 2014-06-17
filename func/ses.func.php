@@ -7,13 +7,13 @@ class QQ {
 			$uuid = substr($preuuid, 0, 6);
 			$key = substr($preuuid, 6, 2);
 			$mysqli = new mysqli($db_host, $db_user, $db_password);
-			$mysqli -> select_db($_SESSION['dbext']);
+			$mysqli -> select_db($db_name);
 			if(mysqli_connect_errno()){
 				echo "Connection Failed: " . mysqli_connect_errno();
 				exit();
 			}
-			if($stmt = $mysqli -> prepare("SELECT * FROM sessions WHERE uuid=?")){
-				$stmt -> bind_param("s", $uuid);
+			if($stmt = $mysqli -> prepare("SELECT * FROM sessions WHERE uuid=? AND owner=?")){
+				$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
 				$stmt -> execute();
 				$stmt -> store_result();
 				$numrows = $stmt->num_rows;
@@ -22,8 +22,8 @@ class QQ {
 					$this->insert($name, $house, $quiz, $date, $status);
 				} else {
 					$statusint = intval($status);
-					if($stmt2 = $mysqli -> prepare("INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?)")){
-						$stmt2 -> bind_param("sssisss", $uuid, $key, $house, $statusint, $quiz, $date, $name);
+					if($stmt2 = $mysqli -> prepare("INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?, ?)")){
+						$stmt2 -> bind_param("sssissss", $uuid, $key, $house, $statusint, $quiz, $date, $name, $_SESSION['dbext']);
 						$stmt2 -> execute();
 						$stmt2 -> close();
 						$mysqli->select_db($db_name);
@@ -44,13 +44,13 @@ class QQ {
 	function open($uuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		if($stmt = $mysqli -> prepare("UPDATE sessions SET status='1' WHERE uuid=?")){
-			$stmt -> bind_param("s", $uuid);
+		if($stmt = $mysqli -> prepare("UPDATE sessions SET status='1' WHERE uuid=? AND owner=?")){
+			$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
 			$stmt -> execute();
 			$stmt -> close();
 		} else {
@@ -61,13 +61,13 @@ class QQ {
 	function close($uuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		if($stmt = $mysqli -> prepare("UPDATE sessions SET status='0' WHERE uuid=?")){
-			$stmt -> bind_param("s", $uuid);
+		if($stmt = $mysqli -> prepare("UPDATE sessions SET status='0' WHERE uuid=? AND owner=?")){
+			$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
 			$stmt -> execute();
 			$stmt -> close();
 		} else {
