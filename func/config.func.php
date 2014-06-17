@@ -86,11 +86,11 @@ function hasPermissions($uuid){
 	}
 	$flag = false;
 	if($stmt = $mysqli->prepare("SELECT * FROM `quizzes` WHERE uuid = ? AND owner = ?")){
-		$stmt->bind_param("ss", $uuid, $_SESSION['dbext']);
+		$stmt->bind_param("ss", $for, $_SESSION['dbext']);
 		$stmt->execute();
 		$stmt->store_result();
-		$numrows = $stmt->num_rows;
-		if($numrows==1){
+		$stmt->fetch();
+		if($stmt->num_rows==1){
 			$flag = true;
 		}
 		$stmt->close();

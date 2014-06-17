@@ -105,7 +105,7 @@ if(isset($_SESSION["is_admin"])){
 				$mysqli -> close();
 				resetnumbers($uuid);
 			}
-			header('Location: ../?p=managequiz&UUID='.$_POST['uuid'].'');
+			header('Location: ../?p=managequiz&UUID='.$uuid.'');
 		} else if($submit=="Delete"){
 			if(isset($_POST['uuid']) && isset($_POST['num'])){
 				if(hasPermissions($_POST['uuid'])){
