@@ -42,28 +42,29 @@ if(isset($_SESSION["is_admin"])){
 				} else {
 					echo $mysqli->error;
 				}
-				$mysqli->select_db($_SESSION["dbext"]);
-				if($stmt = $mysqli -> prepare("SELECT images FROM ".$quizuuid." WHERE id = ?")){
-					$nummy = intval($question);
-					$stmt -> bind_param("i", $nummy);
-					$stmt -> execute();
-					$stmt -> bind_result($result);
-					$stmt -> store_result();
-					$stmt -> fetch();
-					$stmt -> close();
-					if($result!=null && $result!=""){
-						$temppp = unserialize($result);
+				if(hasPermissions($quizuuid)){
+					if($stmt = $mysqli -> prepare("SELECT images FROM ".$quizuuid." WHERE id = ?")){
+						$nummy = intval($question);
+						$stmt -> bind_param("i", $nummy);
+						$stmt -> execute();
+						$stmt -> bind_result($result);
+						$stmt -> store_result();
+						$stmt -> fetch();
+						$stmt -> close();
+						if($result!=null && $result!=""){
+							$temppp = unserialize($result);
+						} else {
+							$temppp = new imageGroup();
+						}
+						$temppp -> addImage($hash);
+						mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
+						mysql_select_db($db_name) or die(mysql_error());
+						$ser = serialize($temppp);
+						$query = mysql_query("UPDATE ".$quizuuid." SET images='$ser' WHERE id='$nummy'");
+						mysql_close();
 					} else {
-						$temppp = new imageGroup();
+						echo $mysqli -> error;
 					}
-					$temppp -> addImage($hash);
-					mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-					mysql_select_db($_SESSION["dbext"]) or die(mysql_error());
-					$ser = serialize($temppp);
-					$query = mysql_query("UPDATE ".$quizuuid." SET images='$ser' WHERE id='$nummy'");
-					mysql_close();
-				} else {
-					echo $mysqli -> error;
 				}
 			}
 		}
