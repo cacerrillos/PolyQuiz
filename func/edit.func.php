@@ -112,6 +112,7 @@ if(isset($_SESSION["is_admin"])){
 					$mysqli = new mysqli($db_host, $db_user, $db_password);
 					$mysqli -> select_db($db_name);
 					$num = intval($_POST['num']);
+					$uuid = $mysqli -> real_escape_string($_POST['uuid']);
 					if($stmt = $mysqli->prepare("DELETE FROM `".$uuid."` WHERE id=?")){
 						$stmt->bind_param("i", $num);
 						$stmt->execute();

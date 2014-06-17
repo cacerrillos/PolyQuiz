@@ -76,7 +76,7 @@ function addCanvas(){
 														if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
 															$stmt -> bind_param("s", $uuid);
 															$stmt -> execute();
-															$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status']);
+															$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status'], $result['owner']);
 															$stmt -> store_result();
 															$stmt -> fetch();
 															$stmt -> close();
