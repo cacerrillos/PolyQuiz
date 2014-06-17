@@ -15,10 +15,10 @@ if(file_exists("func/secret.obj.php")){
 } else if(file_exists("secret.obj.php")){
 	include_once("secret.obj.php");
 }
-$db_host = "127.0.0.1";
-$db_user = "quiz";
-$db_password = "quiz";
-$db_name = "PolyQuiz";
+$db_host = "hostname";
+$db_user = "username";
+$db_password = "password";
+$db_name = "database";
 $db_array = array(
 		"db_host" => $db_host,
 		"db_user" => $db_user,
@@ -75,5 +75,29 @@ function getDBExt($uuid){
 	}
 	$mysqli->close();
 	return $db;
+}
+function hasPermissions($uuid){
+	global $db_host, $db_user, $db_password, $db_name;
+	$mysqli = new mysqli($db_host, $db_user, $db_password);
+	$mysqli -> select_db($db_name);
+	if(mysqli_connect_errno()) {
+		echo "Connection Failed: " . mysqli_connect_errno();
+		exit();
+	}
+	$flag = false;
+	if($stmt = $mysqli->prepare("SELECT * FROM `quizzes` WHERE uuid = ? AND owner = ?")){
+		$stmt->bind_param("ss", $for, $_SESSION['dbext']);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->fetch();
+		if($stmt->num_rows==1){
+			$flag = true;
+		}
+		$stmt->close();
+	} else {
+		echo $mysqli->error;
+	}
+	$mysqli->close();
+	return $flag;
 }
 ?>
