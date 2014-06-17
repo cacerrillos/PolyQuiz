@@ -107,56 +107,62 @@ if(hasPermissions($uuid)){
                                         </form>
                                     </div>
                                     <?
-                                    while($questions = mysql_fetch_array($limitedq)){
-                                        $quest = unserialize($questions['object']);
-                                        ?>
-                                        <div id="<? echo $questions['id']; ?>_closed">
-                                            <a href="#" onclick="showElement('<? echo $questions['id'];?>_open'); hideElement('<? echo $questions['id'];?>_closed'); return false;">
-                                                <img src="inc/icon_arrow_right.gif" /><? echo $questions['id'].") ".htmlspecialchars(substr($quest->question, 0, 40)); ?>
-                                            </a>
-                                        </div>
-                                        
-                                        <div id="<? echo $questions['id']; ?>_open" style="display: none;">
-                                            <a href="#" onclick="showElement('<? echo $questions['id'];?>_closed'); hideElement('<? echo $questions['id'];?>_open'); return false;">
-                                                <img src="inc/icon_arrow_down.gif" /><? echo $questions['id'].") ".htmlspecialchars(substr($quest->question, 0, 40)); ?>
-                                            </a>
-                                            <br>
-                                            <div style="margin-left:40px;">
-                                                <?
-                                                if($questions['images']!=null && $questions['images']!=""){
-                                                    $imageGroup = unserialize($questions['images']);
-                                                } else {
-                                                    $imageGroup = new imageGroup();
-                                                }
-                                                $imageGroup -> printThumbnailsAdmin($uuid, $questions['id']);
-                                                
-                                                ?>
-                                                <form action="func/img.up.php" method="post" enctype="multipart/form-data">
-                                                    <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
-                                                    <input type="hidden" name="num" value="<? echo $questions['id']; ?>" />
-                                                    <label for="file">New Image:</label>
-                                                    <input type="file" name="file" id="file">
-                                                    <input type="submit" name="submit" value="Upload">
-                                                </form>
-                                                <form name="edit<? echo $questions['id']; ?>" method="post" action="func/edit.func.php">
-                                                    <input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
-                                                    <input type="hidden" name="num" value="<? echo $questions['id']; ?>" />
-                                                    <input type="hidden" name="type" value="<? echo $quest->type; ?>" />
-                                                    <h4>
-                                                        Edit #<? echo $questions['id']; ?><br />
-                                                        Question/Directions:<br />
-                                                        <textarea rows="4" cols="42" name="question"><? echo $quest->question; ?></textarea>
-                                                        <?
-														$quest->paintEdit($alphabet);
-														?>
-                                                        <input type="submit" name="submit" value="Edit" /><br />
-                                                        <font color="#FF0000">!!!<input type="submit" name="submit" value="Delete" />!!!</font>
-                                                    </h4>
-                                                </form>
-                                            </div>
-                                        </div>
+									if($numrows>0){
+										while($questions = mysql_fetch_array($limitedq)){
+											$quest = unserialize($questions['object']);
+											?>
+											<div id="<? echo $questions['id']; ?>_closed">
+												<a href="#" onclick="showElement('<? echo $questions['id'];?>_open'); hideElement('<? echo $questions['id'];?>_closed'); return false;">
+													<img src="inc/icon_arrow_right.gif" /><? echo $questions['id'].") ".htmlspecialchars(substr($quest->question, 0, 40)); ?>
+												</a>
+											</div>
+											
+											<div id="<? echo $questions['id']; ?>_open" style="display: none;">
+												<a href="#" onclick="showElement('<? echo $questions['id'];?>_closed'); hideElement('<? echo $questions['id'];?>_open'); return false;">
+													<img src="inc/icon_arrow_down.gif" /><? echo $questions['id'].") ".htmlspecialchars(substr($quest->question, 0, 40)); ?>
+												</a>
+												<br>
+												<div style="margin-left:40px;">
+													<?
+													if($questions['images']!=null && $questions['images']!=""){
+														$imageGroup = unserialize($questions['images']);
+													} else {
+														$imageGroup = new imageGroup();
+													}
+													$imageGroup -> printThumbnailsAdmin($uuid, $questions['id']);
+													
+													?>
+													<form action="func/img.up.php" method="post" enctype="multipart/form-data">
+														<input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
+														<input type="hidden" name="num" value="<? echo $questions['id']; ?>" />
+														<label for="file">New Image:</label>
+														<input type="file" name="file" id="file">
+														<input type="submit" name="submit" value="Upload">
+													</form>
+													<form name="edit<? echo $questions['id']; ?>" method="post" action="func/edit.func.php">
+														<input type="hidden" name="uuid" value="<? echo $uuid; ?>" />
+														<input type="hidden" name="num" value="<? echo $questions['id']; ?>" />
+														<input type="hidden" name="type" value="<? echo $quest->type; ?>" />
+														<h4>
+															Edit #<? echo $questions['id']; ?><br />
+															Question/Directions:<br />
+															<textarea rows="4" cols="42" name="question"><? echo $quest->question; ?></textarea>
+															<?
+															$quest->paintEdit($alphabet);
+															?>
+															<input type="submit" name="submit" value="Edit" /><br />
+															<font color="#FF0000">!!!<input type="submit" name="submit" value="Delete" />!!!</font>
+														</h4>
+													</form>
+												</div>
+											</div>
+											<?
+										}
+									} else {
+										?>
+                                        <h3>This Quiz has no questions!</h3>
                                         <?
-                                    }
+									}
                                     ?>
                                     <br /><br />
                                     <?
