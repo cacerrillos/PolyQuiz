@@ -1,18 +1,20 @@
 <?
 include_once("func/question.obj.php");
 mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
+mysql_select_db($db_name) or die(mysql_error()); 
 $uuid = mysql_real_escape_string($_GET['UUID']);
-$quizinfoq = mysql_query("SELECT * FROM quizes WHERE uuid='$uuid'");
+$quizinfoq = mysql_query("SELECT * FROM quizzes WHERE uuid='$uuid' AND owner='".$_SESSION['dbext']."'");
 $quizinfo = mysql_fetch_array($quizinfoq);
-$query = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC;") or die(mysql_error());;
-$numrows = mysql_num_rows($query);
-if(isset($_GET['page'])){
-	$offset = intval($_GET['page'])*10;
-} else {
-	$offset = 0;
+if(hasPermissions($uuid)){
+	$query = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC;") or die(mysql_error());;
+	$numrows = mysql_num_rows($query);
+	if(isset($_GET['page'])){
+		$offset = intval($_GET['page'])*10;
+	} else {
+		$offset = 0;
+	}
+	$limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offset.", 10;");
 }
-$limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offset.", 10;");
 ?>
 <script type="text/javascript">
 	function findElement(element_id) {
@@ -167,9 +169,9 @@ $limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offs
                                             echo '<a href="?p=managequiz&UUID='.$uuid.'&page='.$x.'">['.(((($x+1)-1)*10)+1).'-'.(($x+1)*10).']</a> ';
                                         }
                                     }
-                                    $data = mysql_query("SELECT * FROM quizes ORDER BY quizname DESC;");
+                                    $data = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname DESC;");
                                     if(mysql_num_rows($quizinfoq)==0){
-                                        echo "Sorry, no quizes available!";
+                                        echo "Sorry, no quizzes available!";
                                     }
                                     ?>
                                 </div>
