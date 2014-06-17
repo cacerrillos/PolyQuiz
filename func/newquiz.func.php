@@ -18,8 +18,8 @@ if(!isset($_SESSION["is_admin"])){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		if($stmt = $mysqli -> prepare("INSERT INTO quizzes (uuid, quizname, quizsubject, status) VALUES (?,?,'',?)")){
-			$stmt -> bind_param("ssi", $uuid, $quizname, $status);
+		if($stmt = $mysqli -> prepare("INSERT INTO quizzes (uuid, quizname, quizsubject, status, owner) VALUES (?,?,'',?, ?)")){
+			$stmt -> bind_param("ssi", $uuid, $quizname, $status, $_SESSION['dbext']);
 			$stmt -> execute();
 			$stmt -> close();
 		} else {
