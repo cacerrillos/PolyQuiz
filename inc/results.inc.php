@@ -61,8 +61,8 @@ function showElement(element_id) {
     <div id="seeresults" style="margin-left:20px">
     <?
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
-	$overall = mysql_query("SELECT * FROM quizes ORDER BY quizname ASC"); 
+	mysql_select_db($db_name) or die(mysql_error()); 
+	$overall = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC"); 
 	while($overalldata = mysql_fetch_array($overall)){
 		$house[0] = "North";
 		$house[1] = "South";
@@ -72,7 +72,7 @@ function showElement(element_id) {
 		?>
         <?
 		for($x = 0; $x <= 4; $x++){
-			$dataquiz = mysql_query("SELECT * FROM results WHERE house='".$house[$x]."' AND quizuuid='".$overalldata['uuid']."' ORDER BY lastname ASC");
+			$dataquiz = mysql_query("SELECT * FROM results WHERE house='".$house[$x]."' AND quizuuid='".$overalldata['uuid']."' AND owner='".$_SESSION['dbext']."' ORDER BY lastname ASC");
 			if(mysql_num_rows($dataquiz)>0){
 $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
 ?>
