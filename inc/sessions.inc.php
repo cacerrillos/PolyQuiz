@@ -75,8 +75,8 @@ function showElement(element_id) {
 												Quiz: <select name="quiz" size="1">
 												<?
 													mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-													mysql_select_db($_SESSION['dbext']) or die(mysql_error());
-													$data = mysql_query("SELECT * FROM quizes WHERE status='1';");
+													mysql_select_db($db_name) or die(mysql_error());
+													$data = mysql_query("SELECT * FROM quizzes WHERE status='1' AND owner='".$_SESSION['dbext']."';");
 													$numrows = mysql_num_rows($data);
 													while($info = mysql_fetch_array($data)){
 														?>
@@ -97,12 +97,12 @@ function showElement(element_id) {
 												Session: <select name="uuid" size="1">
 												<?
 												mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-												mysql_select_db($_SESSION['dbext']) or die(mysql_error());
-												$data = mysql_query("SELECT * FROM sessions ORDER BY date ASC;");
+												mysql_select_db($db_name) or die(mysql_error());
+												$data = mysql_query("SELECT * FROM sessions WHERE owner='".$_SESSION['dbext']."' ORDER BY date ASC;");
 												$numrows = mysql_num_rows($data);
 												while($info = mysql_fetch_array($data)){
 													$quizuuid = $info['quiz'];
-													$data1 = mysql_query("SELECT * FROM quizes WHERE uuid='$quizuuid'");
+													$data1 = mysql_query("SELECT * FROM quizzes WHERE uuid='$quizuuid' AND owner='".$_SESSION['dbext']."'");
 													$info1 = mysql_fetch_array($data1);
 													?>
 													<option value="<? echo $info['uuid'];?>"><? echo $info['date']." - ".$info['sessionname']." - ".$info1['quizname']." - ".$info['house'];?> - <? if($info['status']==1){ echo "Open"; } else { echo "Closed"; }?></option>
@@ -123,8 +123,8 @@ function showElement(element_id) {
 													<a href="#" onclick="showElement('closed'); hideElement('open'); return false;"><img src="inc/icon_arrow_down.gif" />Hide Sessions</a><br />
 													<?
 													mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-													mysql_select_db($_SESSION['dbext']) or die(mysql_error());
-													$data = mysql_query("SELECT * FROM sessions ORDER BY date ASC;");
+													mysql_select_db($db_name) or die(mysql_error());
+													$data = mysql_query("SELECT * FROM sessions WHERE owner='".$_SESSION['dbext']."' ORDER BY date ASC;");
 													$numrows = mysql_num_rows($data);
 													?>
 													<table class="sessionstable">
@@ -141,7 +141,7 @@ function showElement(element_id) {
 													<?
 													while($info = mysql_fetch_array($data)){
 														$quizuuid = $info['quiz'];
-														$data1 = mysql_query("SELECT * FROM quizes WHERE uuid='$quizuuid'");
+														$data1 = mysql_query("SELECT * FROM quizzes WHERE uuid='$quizuuid' AND owner='".$_SESSION['dbext']."'");
 														$info1 = mysql_fetch_array($data1);
 														?>
 														<tr>
