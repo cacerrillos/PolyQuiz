@@ -56,12 +56,12 @@ function addCanvas(){
 													$uuid = $quiz->uuid;
 													
 													$mysqli = new mysqli($db_host, $db_user, $db_password);
-													$mysqli -> select_db($_SESSION['dbext']);
+													$mysqli -> select_db($db_name);
 													if(mysqli_connect_errno()) {
 														echo "Connection Failed: " . mysqli_connect_errno();
 														exit();
 													}
-													if($stmt = $mysqli -> prepare("SELECT * FROM quizes WHERE uuid = ?")){
+													if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
 															$stmt -> bind_param("s", $uuid);
 															$stmt -> execute();
 															$stmt -> store_result();
@@ -73,7 +73,7 @@ function addCanvas(){
 													if($num==0){
 														return false;
 													} else {
-														if($stmt = $mysqli -> prepare("SELECT * FROM quizes WHERE uuid = ?")){
+														if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
 															$stmt -> bind_param("s", $uuid);
 															$stmt -> execute();
 															$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status']);
@@ -187,7 +187,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 		//skipped question
 	} else {
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			//exit();
