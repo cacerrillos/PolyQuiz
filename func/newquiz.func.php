@@ -19,7 +19,7 @@ if(!isset($_SESSION["is_admin"])){
 			exit();
 		}
 		if($stmt = $mysqli -> prepare("INSERT INTO quizzes (uuid, quizname, quizsubject, status, owner) VALUES (?,?,'',?, ?)")){
-			$stmt -> bind_param("ssi", $uuid, $quizname, $status, $_SESSION['dbext']);
+			$stmt -> bind_param("ssis", $uuid, $quizname, $status, $_SESSION['dbext']);
 			$stmt -> execute();
 			$stmt -> close();
 		} else {
