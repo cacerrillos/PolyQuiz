@@ -34,8 +34,8 @@
     <div id="seeresults" style="margin-left:20px">
     <?
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
-	$overall = mysql_query("SELECT * FROM quizes ORDER BY quizname ASC"); 
+	mysql_select_db($db_name) or die(mysql_error()); 
+	$overall = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC"); 
 	$none[0]=false;
 	$none[1]=false;
 	$none[2]=false;
@@ -50,7 +50,7 @@
 		?>
         <?
 		for($x = 0; $x <= 4; $x++){
-			$dataquiz = mysql_query("SELECT * FROM results WHERE house='".$house[$x]."' AND quizuuid='".$overalldata['uuid']."' AND frgraded='0' ORDER BY lastname ASC");
+			$dataquiz = mysql_query("SELECT * FROM results WHERE house='".$house[$x]."' AND quizuuid='".$overalldata['uuid']."' AND frgraded='0' AND owner='".$_SESSION['dbext']."' ORDER BY lastname ASC");
 			
 			if(mysql_num_rows($dataquiz)>0){
 			echo "<h3>".$overalldata['quizname']." - ".$house[$x]."</h3>";	
@@ -163,18 +163,18 @@
     <?
 	if(isset($_GET['uuid'])){
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
 		$numrows = 0;
-		if($stmt = $mysqli -> prepare("SELECT * FROM results WHERE id=? AND frgraded=0")){
-			$stmt -> bind_param("s", $_GET['uuid']);
+		if($stmt = $mysqli -> prepare("SELECT * FROM results WHERE id=? AND frgraded=0 AND owner=?")){
+			$stmt -> bind_param("ss", $_GET['uuid'], $_SESSION['dbext']);
 			$stmt -> execute();
 			$stmt -> store_result();
 			$numrows = $stmt->num_rows;
-			$stmt -> bind_result($info['id'], $info['firstname'], $info['lastname'], $info['quizuuid'], $info['rawscore'], $info['possiblescore'], $info['percentage'], $info['datestamp'], $info['timestamp'], $info['ip'], $info['house'], $info['session'], $info['object'], $info['flag'], $info['frscore'], $info['frpossible'], $info['frgraded']);
+			$stmt -> bind_result($info['id'], $info['firstname'], $info['lastname'], $info['quizuuid'], $info['rawscore'], $info['possiblescore'], $info['percentage'], $info['datestamp'], $info['timestamp'], $info['ip'], $info['house'], $info['session'], $info['object'], $info['flag'], $info['frscore'], $info['frpossible'], $info['frgraded'], $info['owner']);
 			$stmt -> fetch();
 			$stmt -> close();
 		}

@@ -139,13 +139,13 @@ class quizFromMysql{
 	function getQuiz($studentuuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		if($stmt = $mysqli -> prepare("SELECT * FROM results WHERE id = ?")){
-				$stmt -> bind_param("s", $studentuuid);
+		if($stmt = $mysqli -> prepare("SELECT * FROM results WHERE id = ? AND owner = ?;")){
+				$stmt -> bind_param("ss", $studentuuid, $_SESSION['dbext']);
 				$stmt -> execute();
 				$stmt -> store_result();
 				$num = $stmt -> num_rows;
@@ -153,30 +153,35 @@ class quizFromMysql{
 		} else {
 			echo $mysqli->error;
 		}
-		$mysqli->close();
 		if($num==0){
 			return false;
 		} else {
-			mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-			mysql_select_db($_SESSION['dbext']) or die(mysql_error());
-			$data = mysql_query("SELECT * FROM results WHERE id='$studentuuid'");
-			while($info = mysql_fetch_array($data)){
-				$quiz = unserialize($info['object']);
+			if($stmt = $mysqli->prepare("SELECT object FROM results WHERE id = ? AND owner = ?;")){
+				$stmt->bind_param("is", $studentuuid, $_SESSION['dbext']);
+				$stmt->execute();
+				$stmt->bind_result($object);
+				while($stmt->fetch()){
+					$quiz = unserialize($object);
+				}
+				$stmt->close();
+			} else {
+				echo $mysqli->error;
 			}
-			mysql_close();
+			$mysqli->close();
 			return $quiz;
 		}
+		$mysqli->close();
 	}
 	function createQuiz($uuid){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		if($stmt = $mysqli -> prepare("SELECT * FROM quizes WHERE uuid = ?")){
-				$stmt -> bind_param("s", $uuid);
+		if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ? AND owner = ?")){
+				$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
 				$stmt -> execute();
 				$stmt -> store_result();
 				$num = $stmt -> num_rows;
@@ -187,10 +192,10 @@ class quizFromMysql{
 		if($num==0){
 			return false;
 		} else {
-			if($stmt = $mysqli -> prepare("SELECT * FROM quizes WHERE uuid = ?")){
-				$stmt -> bind_param("s", $uuid);
+			if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ? AND owner = ?")){
+				$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
 				$stmt -> execute();
-				$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status']);
+				$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status'], $result['owner']);
 				$stmt -> store_result();
 				$stmt -> fetch();
 				$stmt -> close();
@@ -198,21 +203,23 @@ class quizFromMysql{
 					return false;
 				} else {
 					$quiz = new quiz($result['uuid'], $result['quizname'], $result['quizsubject']);
-					if($stmt = $mysqli -> prepare("SELECT * FROM `".$result['uuid']."`")){
-						$stmt -> execute();
-						$stmt -> bind_result($resultq2['id'], $resultq2['object'], $resultq2['images']);
-						$stmt -> store_result();
-						while($stmt -> fetch()){
-							$thisquestion = unserialize($resultq2['object']);
-							if($resultq2['images']!=null && $resultq2['images']!=""){
-								$thisquestion -> imagegroup = unserialize($resultq2['images']);
+					if(hasPermissions($result['uuid'])){
+						if($stmt = $mysqli -> prepare("SELECT * FROM `".$result['uuid']."`")){
+							$stmt -> execute();
+							$stmt -> bind_result($resultq2['id'], $resultq2['object'], $resultq2['images']);
+							$stmt -> store_result();
+							while($stmt -> fetch()){
+								$thisquestion = unserialize($resultq2['object']);
+								if($resultq2['images']!=null && $resultq2['images']!=""){
+									$thisquestion -> imagegroup = unserialize($resultq2['images']);
+								}
+								$quiz -> addQuestion($thisquestion);
 							}
-							$quiz -> addQuestion($thisquestion);
+							$stmt -> close();
+						} else {
+							echo $mysqli->error;
 						}
-						$stmt -> close();
-					} else {
-						echo $mysqli->error;
-					}					
+					}
 				}
 			} else {
 				echo $mysqli->error;
@@ -226,7 +233,7 @@ class quizSessionFromMysql {
 	function getSession($db, $uuid, $pass){
 		global $db_host, $db_user, $db_password, $db_name;
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($db);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()) {
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
@@ -243,13 +250,13 @@ class quizSessionFromMysql {
 					if($stmt = $mysqli -> prepare("SELECT * FROM sessions WHERE uuid=?")){
 						$stmt -> bind_param("s", $uuid);
 						$stmt -> execute();
-						$stmt -> bind_result($session['uuid'], $session['key'], $session['house'], $session['status'], $session['quiz'], $session['date'], $session['name']);
+						$stmt -> bind_result($session['uuid'], $session['key'], $session['house'], $session['status'], $session['quiz'], $session['date'], $session['name'], $session['owner']);
 						$stmt -> store_result();
 						while($stmt -> fetch()){
 							if($session['key']==$pass){
 								if($session['status']==1){
 									$tempsession = new quizSession($session['uuid'], $session['house'], $session['quiz']);
-									$tempsession->db = $db;
+									$tempsession->db = $session['owner'];
 									return $tempsession;
 								}
 							}

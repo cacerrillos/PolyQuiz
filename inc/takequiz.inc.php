@@ -56,12 +56,12 @@ function addCanvas(){
 													$uuid = $quiz->uuid;
 													
 													$mysqli = new mysqli($db_host, $db_user, $db_password);
-													$mysqli -> select_db($_SESSION['dbext']);
+													$mysqli -> select_db($db_name);
 													if(mysqli_connect_errno()) {
 														echo "Connection Failed: " . mysqli_connect_errno();
 														exit();
 													}
-													if($stmt = $mysqli -> prepare("SELECT * FROM quizes WHERE uuid = ?")){
+													if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
 															$stmt -> bind_param("s", $uuid);
 															$stmt -> execute();
 															$stmt -> store_result();
@@ -73,10 +73,10 @@ function addCanvas(){
 													if($num==0){
 														return false;
 													} else {
-														if($stmt = $mysqli -> prepare("SELECT * FROM quizes WHERE uuid = ?")){
+														if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
 															$stmt -> bind_param("s", $uuid);
 															$stmt -> execute();
-															$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status']);
+															$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status'], $result['owner']);
 															$stmt -> store_result();
 															$stmt -> fetch();
 															$stmt -> close();
@@ -187,7 +187,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 		//skipped question
 	} else {
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
-		$mysqli -> select_db($_SESSION['dbext']);
+		$mysqli -> select_db($db_name);
 		if(mysqli_connect_errno()){
 			echo "Connection Failed: " . mysqli_connect_errno();
 			//exit();
@@ -201,7 +201,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 			} else {
 				$ecstatus = "";
 			}
-			echo "<h4>".$ecstatus.$thisquestion->question."</h4>";
+			echo "<h4 style='text-transform:none;'>".$ecstatus.$thisquestion->question."</h4>";
 			$thisquestion -> imagegroup -> printThumbnails("normal");
 			if(isset($_SESSION["answers"][$num])){
 				$curans = $_SESSION["answers"][$num];

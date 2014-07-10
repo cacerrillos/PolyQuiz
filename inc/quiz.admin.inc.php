@@ -47,10 +47,10 @@
         <table>
 		<?
         mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-        mysql_select_db($_SESSION['dbext']) or die(mysql_error()); 
-        $data = mysql_query("SELECT * FROM quizes ORDER BY quizname ASC;");
+        mysql_select_db($db_name) or die(mysql_error()); 
+        $data = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC;");
         if(mysql_num_rows($data)==0){
-            echo "You have no quizes!";
+            echo "You have no quizzes!";
         } else {
 			?>
             <tr>

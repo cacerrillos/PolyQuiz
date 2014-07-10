@@ -10,10 +10,15 @@ if(file_exists("func/permissions.obj.php")){
 } else if(file_exists("permissions.obj.php")){
 	include_once("permissions.obj.php");
 }
-$db_host = "localhost";
+if(file_exists("func/secret.obj.php")){
+	include_once("func/secret.obj.php");
+} else if(file_exists("secret.obj.php")){
+	include_once("secret.obj.php");
+}
+$db_host = "hostname";
 $db_user = "username";
 $db_password = "password";
-$db_name = "PolyQuiz";
+$db_name = "database";
 $db_array = array(
 		"db_host" => $db_host,
 		"db_user" => $db_user,
@@ -50,4 +55,49 @@ define("MULTIPLE", 0);
 define("FREERESPONSE", 1);
 define("MATCHING", 2);
 define("SURVEY", 3);
+function getDBExt($uuid){
+	global $db_host, $db_user, $db_password, $db_name;
+	$mysqli = new mysqli($db_host, $db_user, $db_password);
+	$mysqli -> select_db($db_name);
+	if(mysqli_connect_errno()) {
+		echo "Connection Failed: " . mysqli_connect_errno();
+		exit();
+	}
+	if($stmt = $mysqli->prepare("SELECT * FROM `globalsession` WHERE uuid = ?")){
+		$stmt->bind_param("s", $uuid);
+		$stmt->execute();
+		$stmt->bind_result($notdb, $db);
+		$stmt->store_result();
+		$stmt->fetch();
+		$stmt->close();
+	} else {
+		echo $mysqli->error;
+	}
+	$mysqli->close();
+	return $db;
+}
+function hasPermissions($uuid){
+	global $db_host, $db_user, $db_password, $db_name;
+	$mysqli = new mysqli($db_host, $db_user, $db_password);
+	$mysqli -> select_db($db_name);
+	if(mysqli_connect_errno()) {
+		echo "Connection Failed: " . mysqli_connect_errno();
+		exit();
+	}
+	$flag = false;
+	if($stmt = $mysqli->prepare("SELECT * FROM `quizzes` WHERE uuid = ? AND owner = ?")){
+		$stmt->bind_param("ss", $for, $_SESSION['dbext']);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->fetch();
+		if($stmt->num_rows==1){
+			$flag = true;
+		}
+		$stmt->close();
+	} else {
+		echo $mysqli->error;
+	}
+	$mysqli->close();
+	return $flag;
+}
 ?>
