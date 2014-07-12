@@ -144,8 +144,8 @@ class quizFromMysql{
 			echo "Connection Failed: " . mysqli_connect_errno();
 			exit();
 		}
-		if($stmt = $mysqli -> prepare("SELECT * FROM results WHERE id = ? AND owner = ?;")){
-				$stmt -> bind_param("ss", $studentuuid, $_SESSION['dbext']);
+		if($stmt = $mysqli -> prepare("SELECT id FROM results WHERE id = ? AND owner = ?;")){
+				$stmt -> bind_param("is", $studentuuid, $_SESSION['dbext']);
 				$stmt -> execute();
 				$stmt -> store_result();
 				$num = $stmt -> num_rows;
@@ -159,6 +159,7 @@ class quizFromMysql{
 			if($stmt = $mysqli->prepare("SELECT object FROM results WHERE id = ? AND owner = ?;")){
 				$stmt->bind_param("is", $studentuuid, $_SESSION['dbext']);
 				$stmt->execute();
+				$stmt->store_result();
 				$stmt->bind_result($object);
 				while($stmt->fetch()){
 					$quiz = unserialize($object);
