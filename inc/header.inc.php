@@ -82,7 +82,7 @@
 		 
 		/* close button positioned on upper right corner */
 		.simple_overlay .close {
-			background-image:url(images/close.png);
+			background-image:url(images/close_popup.png);
 			position:absolute;
 			right:-15px;
 			top:-15px;
