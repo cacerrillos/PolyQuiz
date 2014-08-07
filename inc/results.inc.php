@@ -86,7 +86,10 @@ $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
 <div id="open<? echo $tempString; ?>" style="display: none; margin-left:20px;">
         <a href="#" onclick="showElement('closed<? echo $tempString; ?>'); hideElement('open<? echo $tempString; ?>'); return false;"><img src="inc/icon_arrow_down.gif" />Hide <? echo $overalldata['quizname']." - ".$house[$x]; ?> Results</a><br />
            <br><br>
-<form name="deleteAllResultsInQuiz" action="func/resultdelete.func.php" method="post">
+           <div class="simple_overlay" id="<? echo $overalldata['uuid'].$house[$x]; ?>" style="width:250px; min-height:75px;">
+            		<p style="margin-left:10px; margin-top:10px;">
+                    <center>
+<form name="deleteAllResultsInQuiz" action="func/resultdelete.func.php" method="post" style="margin-left:10px; margin-bottom:10px;">
 <input type="hidden" name="uuid" value="<? echo $overalldata['uuid']; ?>">
 <input type="hidden" name="house" value="<? echo $house[$x]; ?>">
 <img id="captcha<? echo $tempString; ?>" src="/securimage/securimage_show.php" alt="CAPTCHA Image" /><br>
@@ -95,6 +98,10 @@ $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
 	<a href="#" onclick="document.getElementById('captcha<? echo $tempString; ?>').src = '/securimage/securimage_show.php?' + Math.random(); return false">[ Different Image ]</a>
 <br><input type="submit" value="Delete this Quiz/House">
 </form>
+</center>
+</p>
+</div>
+<a rel="#<? echo $overalldata['uuid'].$house[$x]; ?>"><font color="#FF0000">Delete Entire House</font></a>
 <? /*
 //<h4><a href="func/resultdelete.func.php?uuid=<? echo $overalldata['uuid']; ?>&house=<? echo $house[$x]?>&delete=1"><font color="#FF0000">Delete This Quiz/House</font></a></h4>
 */
@@ -131,13 +138,20 @@ $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
                     <?
 				}
 				?>
-                
+                <div class="simple_overlay" id="<? echo $perhousedata['id']; ?>" style="width:175px; min-height:75px;">
+            		<p style="margin-left:10px;">
+                    <center>
+                    	<h1 style="color:WHITE; padding-bottom:0px; margin-bottom:0px;">Are you sure?</h1>
+                    	<a href="func/resultdelete.func.php?uuid=<? echo $perhousedata['id']; ?>&delete=1"><font color="#FF0000">Delete</font></a>
+                    </center>
+                    </p>
+                </div>
                 
                 <? //<td><a href="?postquizadmin" target="_blank"><? echo $perhousedata['id'];
 				?>
 				<? //</a></td>
 				?>
-                <td><a href="func/resultdelete.func.php?uuid=<? echo $perhousedata['id']; ?>&delete=1"><font color="#FF0000">Delete</font></a></td>
+                <td><a rel="#<? echo $perhousedata['id']; ?>"><font color="#FF0000">Delete</font></a></td>
         		<td><a href="?p=postquizadmin&uuid=<? echo $perhousedata['id']; ?>" target="_blank"><? echo $perhousedata['lastname']; ?></a></td>
        			<td><a href="?p=postquizadmin&uuid=<? echo $perhousedata['id']; ?>" target="_blank"><? echo $perhousedata['firstname']; ?></a></td>
         		<td><? echo $perhousedata['rawscore']; ?></td>
@@ -197,7 +211,16 @@ $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
         <?
 	}
 	?>
-    <p><a href="func/resultdelete.func.php?uuid=all"><font color="#FF0000">Delete All</font></a></p>
+    <div class="simple_overlay" id="all" style="width:175px; min-height:75px;">
+            		<p style="margin-left:10px;">
+                    <center>
+                    	<h1 style="color:WHITE; padding-bottom:0px; margin-bottom:0px;">Are you sure?</h1>
+                    	<a href="func/resultdelete.func.php?uuid=all"><font color="#FF0000">Delete All</font></a>
+                    </center>
+                    </p>
+                </div>
+                <br /><br />
+    <p><a rel="#all"><font color="#FF0000">Delete All</font></a></p>
     </div>
     <?
 	}
