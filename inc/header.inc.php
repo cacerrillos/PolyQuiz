@@ -19,6 +19,7 @@
         <script src="js/jquery-1.7.2.min.js"></script>
 		<script src="js/lightbox.js"></script>
         <script src="js/sketch.js"></script>
+        <script src="js/overlay.js"></script>
         <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
         <script type="text/javascript">
         tinymce.init({
@@ -50,6 +51,46 @@
 				document.getElementById("canvasValue").value = dataURL;
 			}
 		</script>
+        <script type="text/javascript">
+		$(document).ready(function() {
+			$("a[rel]").overlay({
+				left: 'center',
+				top: 50,
+				fixed: false});
+		});
+		</script>
+        <style type="text/css">
+		.simple_overlay {
+		 
+			/* must be initially hidden */
+			display:none;
+		 	/*position:absolute;
+			/* place overlay on top of other elements */
+			/*top:50%;
+			left: 50%;*/
+			z-index:10000;
+			/* styling */
+			background-color:#333;
+			width:675px;
+			min-height:200px;
+			border:1px solid #666;
+			color:#FFF;
+			/* CSS3 styling for latest browsers */
+			-moz-box-shadow:0 0 90px 5px #000;
+			-webkit-box-shadow: 0 0 90px #000;
+		}
+		 
+		/* close button positioned on upper right corner */
+		.simple_overlay .close {
+			background-image:url(images/close.png);
+			position:absolute;
+			right:-15px;
+			top:-15px;
+			cursor:pointer;
+			height:35px;
+			width:35px;
+		}
+		</style>
         <link href="css/lightbox.css" rel="stylesheet" />
 		<noscript>
 			<link rel="stylesheet" href="css/skel-noscript.css" />
