@@ -28,7 +28,7 @@ if(isset($_SESSION["is_admin"])){
 				if($stmt = $mysqli->prepare("UPDATE `quizzes` SET status=? WHERE uuid=? AND owner=?;")){
 					$stmt->bind_param("iss", $status, $_POST['uuid'], $_SESSION['dbext']);
 					$stmt->execute();
-					$stmt->clsoe();
+					$stmt->close();
 				} else {
 					echo $mysqli->error;
 				}

@@ -39,6 +39,41 @@
 	<input type="radio" name="status" value="0" > Disabled<br>
     <input type="submit" name="submit" value="Create">
     </form>
+    <br />
+    Copy All Questions<br />
+    <form id="copy" action="func/copy.func.php" method="post">
+    From: <select name="fromuuid">
+    <option value=""></option>
+    <?
+    mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
+	mysql_select_db($db_name) or die(mysql_error()); 
+	$data = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC;");
+	if(mysql_num_rows($data)>0) {
+		while($info = mysql_fetch_array($data)){
+			?>
+            <option value="<? echo $info['uuid']; ?>"><? echo $info['quizname']; ?></option>
+			<?
+        }
+	}
+	?>
+    </select><br />
+    To: <select name="touuid">
+    <option value=""></option>
+    <?
+    mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
+	mysql_select_db($db_name) or die(mysql_error()); 
+	$data = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC;");
+	if(mysql_num_rows($data)>0) {
+		while($info = mysql_fetch_array($data)){
+			?>
+            <option value="<? echo $info['uuid']; ?>"><? echo $info['quizname']; ?></option>
+			<?
+        }
+	}
+	?>
+     </select>
+     <input type="submit" name="submit" value="Copy!" />
+     </form>
     </div>
     </div>
     <div id="quizmanageouter" style="display:inline-block; float:left; padding-left:10px; padding-right:10px;">
