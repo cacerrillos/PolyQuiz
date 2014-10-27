@@ -93,7 +93,7 @@ class quiz {
 					$totalscore += $question->getPoints();
 					$correctq++;
 				} else if($question->omitted()){
-					$ommitedq++;
+					$omittedq++;
 				}
 			}
 			if($question->type==1){
