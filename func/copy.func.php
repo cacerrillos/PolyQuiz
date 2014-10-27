@@ -4,16 +4,34 @@ include_once("config.func.php");
 function resetnumbers($uuidr){
 	global $db_host, $db_user, $db_password, $db_name;
 	if(hasPermissions($uuidr)){
-		mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-		mysql_select_db($db_name) or die(mysql_error());
-		$query = mysql_query("SELECT * FROM `".$uuidr."` ORDER BY id ASC;");
-		$number = mysql_num_rows($query);
-		$counter = 1;
-		while($info = mysql_fetch_array($query)){
-			$queryy = mysql_query("UPDATE `".$uuidr."` SET id='$counter' WHERE id='$info[id]'");
-			$counter++;
+		$mysqli = new mysqli($db_host, $db_user, $db_password);
+		$mysqli -> select_db($db_name);
+		if($stmt = $mysqli->prepare("SELECT id FROM `".mysqli_real_escape_string($mysqli, $uuidr)."` ORDER BY id ASC;")) {
+			$stmt -> execute();
+			$existingNumbers = array();
+			$stmt -> bind_result($id);
+			$counterOne = 0;
+			while($stmt -> fetch()) {
+				$existingNumbers[$counterOne] = $id;
+				$counterOne++;
+			}
+			$stmt -> close();
+			if(count($existingNumbers)>0) {
+				$counterTwo = 1;
+				for($x = 0; $x < count($existingNumbers); $x++) {
+					if($stmt = $mysqli->prepare("UPDATE `".mysqli_real_escape_string($mysqli, $uuidr)."` SET id=? WHERE id=?;")) {
+						$stmt -> bind_param("ii", $counterTwo, $existingNumbers[$x]);
+						$stmt -> execute();
+						$stmt -> close();
+					} else {
+						echo $mysqli->error;	
+					}
+				}
+			}
+		} else {
+			echo $mysqli->error;	
 		}
-		mysql_close();
+		$mysqli->close();
 	}
 }
 if(isset($_SESSION["is_admin"])){
