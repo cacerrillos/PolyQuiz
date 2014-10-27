@@ -31,7 +31,7 @@
 	?>
     <div id="maindivvvvvv" style="margin-top:0">
     <div id="createouter" style="display:inline-block; float:left; padding-left:10px; padding-right:10px;">
-    <h3>Create New Quiz</h3>
+    <h3 style="margin-bottom:0px;">Create New Quiz</h3>
     <div id="create" style="margin-left:20px">
     <form id="newquiz" action="func/newquiz.func.php" method="post">
     Quiz Name: <input type="text" name="quizname"><br>
@@ -40,7 +40,7 @@
     <input type="submit" name="submit" value="Create">
     </form>
     <br />
-    Copy All Questions<br />
+    <h3>Copy All Questions</h3>
     <form id="copy" action="func/copy.func.php" method="post">
     From: <select name="fromuuid">
     <option value=""></option>
@@ -74,6 +74,8 @@
      </select>
      <input type="submit" name="submit" value="Copy!" />
      </form>
+     <h3 style="margin-bottom:0px;">Create Quiz from Backup</h3>
+     Coming soon!
     </div>
     </div>
     <div id="quizmanageouter" style="display:inline-block; float:left; padding-left:10px; padding-right:10px;">
@@ -90,6 +92,7 @@
 			?>
             <tr>
             	<td>Quiz Name</td>
+                <td>PolyQuiz Backup</td>
                 <td>Delete</td>
             </tr>
             <?
@@ -98,6 +101,7 @@
 			?>
             <tr>
             	<td><a href='?p=managequiz&UUID=<? echo $info['uuid']; ?>'><? echo $info['quizname']; ?></a></td>
+                <td><a href='func/export.func.php?uuid=<? echo $info['uuid']; ?>' target="_blank">Download Quiz</a></td>
                 <td><a href='func/quiz.admin.php?delete=<? echo $info['uuid']; ?>' style="color:#F00;">Delete</a></td>
             </tr>
 		<?
