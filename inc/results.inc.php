@@ -101,6 +101,7 @@ $tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
 </center>
 </p>
 </div>
+<a href='func/export.func.php?quizuuid=<? echo $overalldata['uuid']; ?>' target="_blank">Download Quiz Results (All Houses)</a>
 <a rel="#<? echo $overalldata['uuid'].$house[$x]; ?>"><font color="#FF0000">Delete Entire House</font></a>
 <? /*
 //<h4><a href="func/resultdelete.func.php?uuid=<? echo $overalldata['uuid']; ?>&house=<? echo $house[$x]?>&delete=1"><font color="#FF0000">Delete This Quiz/House</font></a></h4>
