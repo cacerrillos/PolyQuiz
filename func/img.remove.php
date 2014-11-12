@@ -3,16 +3,15 @@ session_start();
 include_once("config.func.php");
 if(isset($_SESSION["is_admin"])){
 	include("img.class.php");
-	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-	mysql_select_db($db_name) or die(mysql_error());
+	$mysqli = new mysqli($db_host, $db_user, $db_password);
+	$mysqli -> select_db($db_name);
 	$quizuuid = $_GET['uuid'];
 	$question = $_GET['num'];
 	$imguuid = $_GET['img'];
-	$quizuuid = mysql_real_escape_string($quizuuid);
-	$question = mysql_real_escape_string($question);
-	$imguuid = mysql_real_escape_string($imguuid);
-	$mysqli = new mysqli($db_host, $db_user, $db_password);
-	$mysqli -> select_db($db_name);
+	$quizuuid = mysqli_real_escape_string($mysqli, $quizuuid);
+	$question = mysqli_real_escape_string($mysqli, $question);
+	$imguuid = mysqli_real_escape_string($mysqli, $imguuid);
+	
 	if(mysqli_connect_errno()) {
 		echo "Connection Failed: " . mysqli_connect_errno();
 		exit();
@@ -41,10 +40,10 @@ if(isset($_SESSION["is_admin"])){
 			} else {
 				echo $mysqli->error;
 			}
-			mysql_close();
 		} else {
 			echo $mysqli -> error;
 		}
+		$mysqli->close();
 	}
 }
 header('Location: ' . $_SERVER['HTTP_REFERER']);
