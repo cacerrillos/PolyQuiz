@@ -90,7 +90,7 @@ function showElement(element_id) {
 			if(isset($thisName)) {
 				array_push($info[1], $thisName);
 			} else {
-				array_push($info[1], "Unknown Quiz Name");	
+				array_push($info[1], "Unkown Quiz Name");	
 			}
 			$stmt->close();
 		} else {
@@ -98,16 +98,21 @@ function showElement(element_id) {
 		}
 	}
 	array_multisort($info[1], $info[0]);
-	$house[0] = "North";
-	$house[1] = "South";
-	$house[2] = "East";
-	$house[3] = "West";
-	$house[4] = "Other";
-	for($c = 0; $c < count($info[0]); $c++) {
+	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
+	mysql_select_db($db_name) or die(mysql_error()); 
+	$overall = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC"); 
+	while($overalldata = mysql_fetch_array($overall)){
+		$house[0] = "North";
+		$house[1] = "South";
+		$house[2] = "East";
+		$house[3] = "West";
+		$house[4] = "Other";
+		?>
+        <?
 		for($x = 0; $x <= 4; $x++){
-			$dataquiz = mysql_query("SELECT * FROM results WHERE house='".$house[$x]."' AND quizuuid='".$info[0][$c]."' AND owner='".$_SESSION['dbext']."' ORDER BY lastname ASC");
+			$dataquiz = mysql_query("SELECT * FROM results WHERE house='".$house[$x]."' AND quizuuid='".$overalldata['uuid']."' AND owner='".$_SESSION['dbext']."' ORDER BY lastname ASC");
 			if(mysql_num_rows($dataquiz)>0){
-$tempString = preg_replace('/\s+/', '', $info[0][$c].$house[$x]);
+$tempString = preg_replace('/\s+/', '', $overalldata['uuid'].$house[$x]);
 ?>
 
 <?
