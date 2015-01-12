@@ -305,6 +305,7 @@ class PolyQuestion {
 			?>
 			<? $this->paintGlobalQuestionOptions(); ?>
 			<br /><br />
+            <input type="hidden" name="answerNum" value="<? echo count($this->answerArray); ?>" />
 			<?
 			for($x = 0; $x < count($this->answerArray); $x++){
 				?>
@@ -394,7 +395,9 @@ class PolyQuestion {
 		}
 		if($this->type==4){
 			$this->response = intval($response);
-			$this->pointsEarned = $this->answerArray[intval($response)]->getPoints();
+			if(intval($response)!=-1) {
+				$this->pointsEarned = $this->answerArray[intval($response)]->getPoints();
+			}
 		}
 	}
 	function getResponse(){

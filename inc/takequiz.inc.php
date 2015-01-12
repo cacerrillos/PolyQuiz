@@ -70,9 +70,13 @@ function addCanvas(){
 													} else {
 														echo $mysqli->error;
 													}
-													if($num==0){
+													if($num==0 && false){
+														echo "000";
 														return false;
 													} else {
+														?>
+                                                        <!-- <? echo $uuid; ?> -->
+                                                        <?
 														if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
 															$stmt -> bind_param("s", $uuid);
 															$stmt -> execute();
@@ -81,6 +85,8 @@ function addCanvas(){
 															$stmt -> fetch();
 															$stmt -> close();
 															$quizname = $result['quizname'];
+														} else {
+															echo $mysqli->error;
 														}
 													}
 													

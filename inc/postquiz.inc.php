@@ -79,7 +79,11 @@ include_once("func/config.func.php");
 	echo "<b>".$quiz->lname.", ".$quiz->fname."</b><br><br>";
 	for($x = 0; $x <$numofq; $x++){
 		$thisquestion = $quiz->getQuestion($x);
-		echo ($x+1).") ".$thisquestion->question."<br>";
+		if($thisquestion->type!=4){
+			echo ($x+1).") (Student earned ".$thisquestion->getPoints()." points)".$thisquestion->question." <br>";
+		} else {
+			echo ($x+1).") (Student earned ".$thisquestion->answerArray[$thisquestion->response]->getPoints()." points)".$thisquestion->question." <br>";
+		}
 		if($thisquestion->includeCanvas){
 			?>
 			<img src="<? echo $thisquestion->getCanvasValue(); ?>" /><br />
@@ -89,14 +93,27 @@ include_once("func/config.func.php");
 			if($thisquestion->answer==$y){
 				echo "<b>";
 			}
-			if($thisquestion->response==$y && $thisquestion->answer!=$y){
-				echo "<font color='#FF0000'>";
-			}
-			if($thisquestion->response==$y && $thisquestion->answer==$y){
-				echo "<font color='#00FF00'>";
+			if($thisquestion->type!=4){
+				if($thisquestion->response==$y && $thisquestion->answer!=$y){
+					echo "<font color='#FF0000'>";
+				}
+				if($thisquestion->response==$y && $thisquestion->answer==$y){
+					echo "<font color='#00FF00'>";
+				}
+			} else {
+				if($thisquestion->response==$y){
+					echo "<font color='#0000AA'>";
+				}
 			}
 			echo $alphabet[$y];
-			echo ") ".$thisquestion->answerArray[$y];
+			if($thisquestion->type==4){
+				echo " (".$thisquestion->answerArray[$y]->getPoints()." points";	
+			}
+			if($thisquestion->type!=4){
+				echo ") ".$thisquestion->answerArray[$y];
+			} else {
+				echo ") ".$thisquestion->answerArray[$y]->getAnswer();
+			}
 			if($thisquestion->response==$y && $thisquestion->answer!=$y){
 				echo "</font>";
 			}
