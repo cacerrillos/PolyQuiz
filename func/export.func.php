@@ -37,7 +37,6 @@ if(isset($_SESSION["is_admin"]) && isset($_GET['quizuuid'])){
 		if($stmt = $mysqli->prepare("SELECT object FROM `results` WHERE quizuuid=?;")){
 			$stmt->bind_param("s", $uuid);
 			$stmt->execute();
-			//$stmt->bind_result($fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid , $quizobject, $frt, $frp,$frgraded, $owner);
 			$stmt->store_result();
 			$stmt->bind_result($object);
 			$array = array();
