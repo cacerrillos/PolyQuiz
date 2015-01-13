@@ -129,6 +129,7 @@
 													<li <? if($page=="home"){ echo 'class="current_page_item"'; } ?>><a href="?p=home"><i class="fa fa-home"></i> Home</a></li>
                                                     <li <? if($page=="register"){ echo 'class="current_page_item"'; } ?>><a href="?p=register"><i class="fa fa-plus-square"></i> Register</a></li>
                                                     <li <? if($page=="takequiz"){ echo 'class="current_page_item"'; } ?>><a href="?p=takequiz"><i class="fa fa-file"></i> Take a Quiz</a></li>
+                                                    <li <? if($page=="math"){ echo 'class="current_page_item"'; } ?>><a href="?p=math"><i class="fa fa-flask"></i> Math</a></li>
                                                     <li <? if($page=="admin"){ echo 'class="current_page_item"'; } ?>><a href="?p=admin"><i class="fa fa-cog"></i> The Core</a></li>
 												</ul>
 											</nav>

@@ -67,6 +67,8 @@ if($page=="home"){
 	include("inc/sessions.inc.php");
 } else if($page=="register"){
 	include("inc/register.inc.php");
+} else if($page=="math"){
+	include("inc/matrix.inc.php");
 } else if($page=="gradefr"){
 	$pagetype = "admin";
 	include("inc/freeresponsegrading.inc.php");
