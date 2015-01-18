@@ -103,8 +103,8 @@ function showElement(element_id) {
 												$xkcd[8]['alt'] = "Lease";
 												
 												$num = rand(0,8);
+												/* <img src="<? echo $xkcd[$num]['src']; ?>" title="<? echo $xkcd[$num]['title']; ?>" alt="<? echo $xkcd[$num]['alt']; ?>"> */
 												?>
-                                                <img src="<? echo $xkcd[$num]['src']; ?>" title="<? echo $xkcd[$num]['title']; ?>" alt="<? echo $xkcd[$num]['alt']; ?>">
 											</article>
 									</div>
 								</div>
