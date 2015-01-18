@@ -120,7 +120,7 @@ class PolyQuestion {
                         $color = "CCC";
                     }
                 ?>
-                <div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px;">
+                <div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px; word-wrap: break-word;">
                     <input type="radio" id="radio<? echo $x; ?>" name="answer" value="<? echo $x; ?>" <? if($this->response==$x) { echo "checked"; }?>>
                     <label for="radio<? echo $x; ?>">
                         <span><? echo $alphabet[$x].") "; ?></span>
@@ -150,7 +150,7 @@ class PolyQuestion {
                         $color = "CCC";
                     }
                 ?>
-                <div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px;">
+                <div class="questionLetter" style="background-color:#<? echo $color; ?>; padding-left:10px; padding-right:10px; width:100%; margin-top:10px; margin-bottom:10px; word-wrap:break-word;">
                     <input type="radio" id="radio<? echo $x; ?>" name="answer" value="<? echo $x; ?>" <? if($this->response==$x) { echo "checked"; }?>>
                     <label for="radio<? echo $x; ?>">
                         <span><? echo $alphabet[$x].") "; ?></span>
@@ -188,8 +188,8 @@ class PolyQuestion {
 			?>
             <div class="question">
                 <div class="questionLetter">
-                    <div style="background-color:#<? echo $color; ?>; margin-top:5px; margin-bottom:5px; padding-left:10px; padding-right:10px;">
-                        <div style="float:left;">
+                    <div style="background-color:#<? echo $color; ?>; margin-top:5px; margin-bottom:5px; padding-left:10px; padding-right:10px; word-wrap:break-word;">
+                        <div style="float:left; word-wrap:break-word; width:48%">
                             <div style="margin-bottom:0;">
                                 <span style="margin-bottom:0; color:#000;">
 									<? echo ($x+1).") "; ?>
@@ -206,16 +206,16 @@ class PolyQuestion {
                                     }
                                     ?>
                                 </select>
-                                <span style="text-transform:none; color:#000; font-size:1.2em;">
+                                <span style="text-transform:none; color:#000; font-size:1em;">
 									<? echo " ".$this->left[$x]; ?>
                                 </span>
                             </div>
                         </div>
-                        <div style="float:right;">
+                        <div style="float:right; word-wrap:break-word; width:48%">
                             <span style="margin-bottom:0; color:#000;">
                                 <? echo "<b>".$alphabet[$x]."</b>) ";?>
                             </span>
-                            <span style="text-transform:none; color:#000; font-size:1.2em;">
+                            <span style="text-transform:none; color:#000; font-size:1em;">
                                 <? echo $this->right[$x]; ?>
                             </span>
                         </div>
