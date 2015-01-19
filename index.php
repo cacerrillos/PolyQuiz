@@ -1,5 +1,10 @@
 <?
 $time_start = microtime(true);
+function convert($size)
+{
+    $unit=array('b','kb','mb','gb','tb','pb');
+    return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+}
 include_once("func/genquiz.func.php");
 include_once("func/config.func.php");
 session_start();
@@ -84,5 +89,5 @@ if($page=="home"){
 include("inc/footer.inc.php");
 $time_end = microtime(true);
 $execution_time = ($time_end - $time_start)/60;
-echo '<!-- Total Execution Time: '.$execution_time.' Mins -->';
+echo '<!-- Total Execution Time: '.$execution_time.' Mins '.convert(memory_get_usage(true)).' -->';
 ?>
