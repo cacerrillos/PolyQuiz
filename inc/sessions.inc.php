@@ -92,35 +92,8 @@ function showElement(element_id) {
 												</form>
 												</div>
 												<h3>Modify Session</h3>
-												<div id="modsess" style="margin-left:20px">
-												<form id="modsess" action="func/ses.func.php" method="post">
-												Session: <select name="uuid" size="1">
-												<?
-												mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
-												mysql_select_db($db_name) or die(mysql_error());
-												$data = mysql_query("SELECT * FROM sessions WHERE owner='".$_SESSION['dbext']."' ORDER BY date ASC;");
-												$numrows = mysql_num_rows($data);
-												while($info = mysql_fetch_array($data)){
-													$quizuuid = $info['quiz'];
-													$data1 = mysql_query("SELECT * FROM quizzes WHERE uuid='$quizuuid' AND owner='".$_SESSION['dbext']."'");
-													$info1 = mysql_fetch_array($data1);
-													?>
-													<option value="<? echo $info['uuid'];?>"><? echo $info['date']." - ".$info['sessionname']." - ".$info1['quizname']." - ".$info['house'];?> - <? if($info['status']==1){ echo "Open"; } else { echo "Closed"; }?></option>
-													<?
-												}
-												?>
-															</select><br />
-												<input type="submit" name="submit" value="Open" /><input type="submit" name="submit" value="Close" />
-												</form>
+												
                                                 </div>
-                                                </div>
-                                                
-                                                
-												<div id="closed" style="margin-left:20px">
-													<a href="#" onclick="showElement('open'); hideElement('closed'); return false;"><img src="inc/icon_arrow_right.gif" />View Sessions</a>
-												</div>
-												<div id="open" style="display: none; margin-left:20px;">
-													<a href="#" onclick="showElement('closed'); hideElement('open'); return false;"><img src="inc/icon_arrow_down.gif" />Hide Sessions</a><br />
 													<?
 													mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
 													mysql_select_db($db_name) or die(mysql_error());
@@ -151,7 +124,18 @@ function showElement(element_id) {
 														<td><? echo $info['date']; ?></td>
 														<td><? echo $info1['quizname']; ?></td>
 														<td><? echo $info['house']; ?></td>
-														<td><? if($info['status']==1){ echo "Open"; } else { echo "Closed"; }?></td>
+														<td>
+														<? if($info['status']==1){
+																?>
+																Open (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=close">Close</a>)
+																<?
+															} else {
+																?>
+																Closed (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=open">Open</a>)
+                                                                <?
+															}
+														?>
+                                                        </td>
 														<td><a href="func/sessiondelete.func.php?uuid=<? echo $info['uuid'];?>"><font color="#FF0000">Delete</font></a></td>
 														<tr>
 														<?
@@ -159,7 +143,6 @@ function showElement(element_id) {
 												?>
 												</table>
 												<a href="func/sessiondelete.func.php?uuid=all"><font color="#FF0000">Delete All Sessions</font></a>
-												</div>
                                                 </div>
 												<?
 												}

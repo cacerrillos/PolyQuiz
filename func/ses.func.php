@@ -99,8 +99,17 @@ if(isset($_SESSION["is_admin"])){
 			$QQ = new QQ();
 			$QQ -> close($uuid);
 		}
+	} else if(isset($_GET['uuid']) && isset($_GET['action'])) {
+		if($_GET['action']=="open"){
+			$uuid = $_GET['uuid'];
+			$QQ = new QQ();
+			$QQ -> open($uuid);
+		} else if($_GET['action']=="close"){
+			$uuid = $_GET['uuid'];
+			$QQ = new QQ();
+			$QQ -> close($uuid);
+		}
 	}
-
 }
 header('Location: ' . $_SERVER['HTTP_REFERER']);
 ?>
