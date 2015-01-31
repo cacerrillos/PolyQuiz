@@ -74,7 +74,6 @@ function showElement(element_id) {
 								</div>
 								<div class="8u skel-cell-important">
 									<div id="content">
-
 										<!-- Content -->
 									
 											<article>
