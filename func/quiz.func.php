@@ -178,6 +178,19 @@ if($thisquestion!="null"){
 		}
 		$sessionn = $_SESSION['session'];
 		$sessionuuid = $sessionn -> getUUID();
+		if($stmt = $mysqli -> prepare("SELECT `score` FROM `sessions` WHERE `uuid`=?;")) {
+			$stmt->bind_param("s", $sessionuuid);
+			$stmt->execute();
+			$stmt->bind_result($show);
+			$stmt->store_result();
+			$stmt->fetch();
+			if(!isset($show)){
+				$show = "1";
+			}
+			$stmt->close();
+		} else {
+			echo $mysqli-error;
+		}
 		$quiz->setStudentName($fn, $ln);
 		$frp = $quiz->freeresponsepossible;
 		$frt = $quiz->totalfreeresponse;
@@ -237,6 +250,7 @@ if($thisquestion!="null"){
 		$_SESSION['frt'] = $frt;
 		$_SESSION['frp'] = $frp;
 		$_SESSION['frgraded'] = $frgraded;
+		$_SESSION['show'] = $show;
 		$ps = new PolySession($quiz->uuidid);
 		$ps->remove();
 		header("Location: ../?p=done");

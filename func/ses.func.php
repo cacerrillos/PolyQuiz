@@ -22,7 +22,7 @@ class QQ {
 					$this->insert($name, $house, $quiz, $date, $status);
 				} else {
 					$statusint = intval($status);
-					if($stmt2 = $mysqli -> prepare("INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?, ?)")){
+					if($stmt2 = $mysqli -> prepare("INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?, ?, '1')")){
 						$stmt2 -> bind_param("sssissss", $uuid, $key, $house, $statusint, $quiz, $date, $name, $_SESSION['dbext']);
 						$stmt2 -> execute();
 						$stmt2 -> close();
@@ -75,6 +75,40 @@ class QQ {
 		}
 		$mysqli -> close();
 	}
+	function show($uuid){
+		global $db_host, $db_user, $db_password, $db_name;
+		$mysqli = new mysqli($db_host, $db_user, $db_password);
+		$mysqli -> select_db($db_name);
+		if(mysqli_connect_errno()){
+			echo "Connection Failed: " . mysqli_connect_errno();
+			exit();
+		}
+		if($stmt = $mysqli -> prepare("UPDATE sessions SET score='1' WHERE uuid=? AND owner=?")){
+			$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
+			$stmt -> execute();
+			$stmt -> close();
+		} else {
+			echo $mysqli->error;
+		}
+		$mysqli -> close();
+	}
+	function dontshow($uuid){
+		global $db_host, $db_user, $db_password, $db_name;
+		$mysqli = new mysqli($db_host, $db_user, $db_password);
+		$mysqli -> select_db($db_name);
+		if(mysqli_connect_errno()){
+			echo "Connection Failed: " . mysqli_connect_errno();
+			exit();
+		}
+		if($stmt = $mysqli -> prepare("UPDATE sessions SET score='0' WHERE uuid=? AND owner=?")){
+			$stmt -> bind_param("ss", $uuid, $_SESSION['dbext']);
+			$stmt -> execute();
+			$stmt -> close();
+		} else {
+			echo $mysqli->error;
+		}
+		$mysqli -> close();
+	}
 }
 session_start();
 if(isset($_SESSION["is_admin"])){
@@ -108,6 +142,14 @@ if(isset($_SESSION["is_admin"])){
 			$uuid = $_GET['uuid'];
 			$QQ = new QQ();
 			$QQ -> close($uuid);
+		} else if($_GET['action']=="show"){
+			$uuid = $_GET['uuid'];
+			$QQ = new QQ();
+			$QQ -> show($uuid);
+		} else if($_GET['action']=="dontshow"){
+			$uuid = $_GET['uuid'];
+			$QQ = new QQ();
+			$QQ -> dontshow($uuid);
 		}
 	}
 }

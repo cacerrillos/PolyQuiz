@@ -109,6 +109,7 @@ function showElement(element_id) {
 													<td>Quiz</td>
 													<td>House</td>
 													<td>Status</td>
+                                                    <td>Show Scores</td>
 													<td>Delete</td>
 													</tr>
 													<?
@@ -132,6 +133,18 @@ function showElement(element_id) {
 															} else {
 																?>
 																Closed (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=open">Open</a>)
+                                                                <?
+															}
+														?>
+                                                        </td>
+                                                        <td>
+														<? if($info['score']==1){
+																?>
+																Show Scores (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=dontshow">Don't Show</a>)
+																<?
+															} else {
+																?>
+																Don't Show (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=show">Show Scores</a>)
                                                                 <?
 															}
 														?>

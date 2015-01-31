@@ -251,7 +251,7 @@ class quizSessionFromMysql {
 					if($stmt = $mysqli -> prepare("SELECT * FROM sessions WHERE uuid=?")){
 						$stmt -> bind_param("s", $uuid);
 						$stmt -> execute();
-						$stmt -> bind_result($session['uuid'], $session['key'], $session['house'], $session['status'], $session['quiz'], $session['date'], $session['name'], $session['owner']);
+						$stmt -> bind_result($session['uuid'], $session['key'], $session['house'], $session['status'], $session['quiz'], $session['date'], $session['name'], $session['owner'], $session['show']);
 						$stmt -> store_result();
 						while($stmt -> fetch()){
 							if($session['key']==$pass){
