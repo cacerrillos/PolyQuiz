@@ -89,5 +89,9 @@ if($page=="home"){
 include("inc/footer.inc.php");
 $time_end = microtime(true);
 $execution_time = ($time_end - $time_start)/60;
-echo '<!-- Total Execution Time: '.$execution_time.' Mins '.convert(memory_get_usage(true)).' -->';
+if($_SESSION['username']=="Caboolean" || $_SESSION['username'] == "caboolean"){
+	echo '<h3><center>Total Execution Time: '.$execution_time.' Mins '.convert(memory_get_usage(true)).'</center></h3>';
+} else {
+	echo '<!-- Total Execution Time: '.$execution_time.' Mins '.convert(memory_get_usage(true)).' -->';
+}
 ?>
