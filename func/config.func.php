@@ -15,10 +15,10 @@ if(file_exists("func/secret.obj.php")){
 } else if(file_exists("secret.obj.php")){
 	include_once("secret.obj.php");
 }
-$db_host = "hostname";
-$db_user = "username";
-$db_password = "password";
-$db_name = "database";
+$db_host = "localhost";
+$db_user = "polyquiz";
+$db_password = "polyquiz";
+$db_name = "polyquiz";
 $db_array = array(
 		"db_host" => $db_host,
 		"db_user" => $db_user,
