@@ -1,13 +1,38 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- 1. Load platform support before any code that touches the DOM. -->
-    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
-    <!-- 2. Load the component using an HTML Import -->
-    <link rel="import" href="elements/test.html">
-  </head>
-  <body>
-    <!-- 3. Declare the element by its tag. -->
-    <my-element></my-element>
-  </body>
+    <head>
+        <!-- 1. Load platform support before any code that touches the DOM. -->
+        <script src="components/webcomponentsjs/webcomponents.min.js"></script>
+        <!-- 2. Load the component using an HTML Import -->
+        <link rel="import" href="elements/test.html">
+        <link rel="import" href="components/core-headder-panel/core-header-panel.html">
+        <link rel="import" href="components/core-toolbar/core-toolbar.html">
+        <link rel="import" href="components/font-roboto/roboto.html">
+        <style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			background-color: #E5E5E5;
+			font-family: 'RobotoDraft', sans-serif;
+		}
+		core-header-panel {
+			height: 100%;
+			overflow: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+		core-toolbar {
+			background: #03a9f4;
+			color: white;
+		}
+		</style>
+    </head>
+    <body>
+        <core-header-panel>
+            <core-toolbar>
+            	asddasdd
+            </core-toolbar>
+        </core-header-panel>
+            <!-- 3. Declare the element by its tag. -->
+        <my-element></my-element>
+    </body>
 </html>
