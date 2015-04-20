@@ -20,7 +20,7 @@ function theSecretMenu(){
 						$stmt->bind_result($data['id'], $data['username'], $data['passwordHash'], $data['permsid']);
 						while($stmt->fetch()){
 							?>
-                            <option value="<? echo $data['permsid']; ?>" <? if($_SESSION['dbext']=="_".$data['permsid']){ echo "selected"; } ?>><? echo $data['username']; ?></option>
+                            <option value="<? echo $data['permsid']; ?>" <? if($_SESSION['dbext']==$data['permsid']){ echo "selected"; } ?>><? echo $data['username']; ?></option>
                             <?
 						}
 					}

@@ -23,7 +23,7 @@ if($_POST['submit']=="Login"){
 	if($num==1){
 		$_SESSION['is_admin'] = "set";
 		$_SESSION['username'] = $_POST['user'];
-		$_SESSION['dbext'] = "_".$data['permsid'];
+		$_SESSION['dbext'] = $data['permsid'];
 		$_SESSION['admin_id_num'] = $data['id'];
 		$_SESSION['permsid'] = $data['permsid'];
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
