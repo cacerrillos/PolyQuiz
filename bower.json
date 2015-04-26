@@ -1,6 +1,7 @@
 {
   "name": "polyquiz",
   "version": "0.0.0",
+  "private": true,
   "authors": [
     "Carlos Cerrillos <carlos@cerrillostech.com>"
   ],
