@@ -200,11 +200,19 @@ if($thisquestion!="null"){
 			$frgraded = 0;
 		}
 		if($stmt = $mysqli -> prepare("INSERT INTO results
-		(id,firstname,lastname,quizuuid,rawscore,possiblescore,percentage,datestamp,timestamp,ip,house,session,object, frscore, frpossible,frgraded,owner)
-		VALUES ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
-			$stmt -> bind_param("sssiisssssssiiis", $fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid , serialize($quiz), $frt, $frp,$frgraded, $_SESSION['dbext']);
+		(firstname,lastname,quizuuid,rawscore,possiblescore,percentage,datestamp,timestamp,ip,house,session, frscore, frpossible,frgraded,owner)
+		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);")){
+			$stmt -> bind_param("sssiissssssiiis", $fn, $ln, $uuid, $rawscore, $possibleScore, $percentage, $ds, $ts, $ip, $house, $sessionuuid, $frt, $frp,$frgraded, $_SESSION['dbext']);
 			$stmt -> execute();
+			$idrow = $stmt->insert_id;
 			$stmt -> close();
+			if($stmt = $mysqli->prepare("INSERT INTO `quizobjects` (`id`, `object`, `owner`) VALUES (?, ?, ?);")){
+				$stmt->bind_param("iss", $idrow, gzcompress(serialize($quiz)), $_SESSION['dbext']);
+				$stmt -> execute();
+				$stmt -> close();
+			} else {
+				echo $mysqli->error;
+			}
 		} else {
 			echo $mysqli->error;
 		}

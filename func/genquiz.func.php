@@ -156,13 +156,13 @@ class quizFromMysql{
 		if($num==0){
 			return false;
 		} else {
-			if($stmt = $mysqli->prepare("SELECT object FROM results WHERE id = ? AND owner = ?;")){
+			if($stmt = $mysqli->prepare("SELECT `object` FROM `quizobjects` WHERE id = ? AND owner = ?;")){
 				$stmt->bind_param("is", $studentuuid, $_SESSION['dbext']);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->bind_result($object);
 				while($stmt->fetch()){
-					$quiz = unserialize($object);
+					$quiz = unserialize(gzuncompress($object));
 				}
 				$stmt->close();
 			} else {
