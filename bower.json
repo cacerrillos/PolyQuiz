@@ -1,0 +1,11 @@
+{
+  "name": "polyquiz",
+  "version": "0.0.0",
+  "authors": [
+    "Carlos Cerrillos <carlos@cerrillostech.com>"
+  ],
+  "license": "Closed Source",
+  "dependencies": {
+    "polymer": "Polymer/polymer#0.8.0-rc.2"
+  }
+}
