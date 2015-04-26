@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="../../../jquery-1.7.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../mathquill.css">
+<script src="../../../mathquill.min.js"></script>
+<script>
+window.onload = function(){
+	document.getElementById( 'submit-image-url' ).onclick = function(){
+		var imageUrl = '<span class="mathquill-embedded-latex">' + $(document.getElementById('toinsert')).mathquill().mathquill("latex") + '</span>';
+		window.parent.tinyMCE.activeEditor.execCommand( 'mceInsertContent', 0, imageUrl );
+		window.parent.tinyMCEPopup.close(); // this line gets me this error: "Uncaught TypeError: Cannot read property 'windowManager' of undefined "
+	};
+}
+</script>
+</head>
+
+<body>
+<span class="mathquill-embedded-latex">\frac{d}{dx}\sqrt{x}</span>
+<span class="mathquill-editable" id="toinsert">f(x)=?</span>
+<input type="button" id="submit-image-url" value="Ok" />
+Cheat Sheet
+<table class="table-default">
+  <thead>
+    <tr>
+      <th>Symbol</th><th>Input</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    	<td><span class="mathquill-embedded-latex">3\cdot4</span></td><td>3*4</td> 
+    </tr>
+    <tr>
+   	 <td><span class="mathquill-embedded-latex">\frac{3}{4}</span></td><td>3/4 </td> 
+    </tr>
+    <tr>
+   	 <td><span class="mathquill-embedded-latex">x^2</span></td><td>x^2</td>
+    </tr>
+    <tr>
+    	<td><span class="mathquill-embedded-latex">\le</span></td><td>\le</td>
+    </tr>
+    <tr>
+    	<td><span class="mathquill-embedded-latex">\ge</span></td><td>\ge</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\pi</span></td><td>\pi</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\inf</span></td><td>\inf</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\sqrt{x}</span></td><td>\sqrt</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\nthroot[n]{x}</span></td><td>\nthroot</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\union</span></td><td>\union</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\ne</span></td><td>\ne</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\pm</span></td><td>\pm</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">x_2</span></td><td>x_2</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\or</span></td><td>\or</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\and</span></td><td>\and</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\log_a</span></td><td>\log _a</td>
+    </tr>
+    <tr>
+    <td><span class="mathquill-embedded-latex">\ln</span></td><td>\ln</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

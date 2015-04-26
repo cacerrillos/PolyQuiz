@@ -207,7 +207,9 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 			} else {
 				$ecstatus = "";
 			}
-			echo "<h4 style='text-transform:none; word-wrap: break-word;'>".$ecstatus.$thisquestion->question."</h4>";
+			?>
+            <span style='text-transform:none; word-wrap: break-word; font-family: "Arvo", serif; font-size:1.5em; color: #000;'><? echo $ecstatus.$thisquestion->question; ?></span>
+            <?
 			$thisquestion -> imagegroup -> printThumbnails("normal");
 			if(isset($_SESSION["answers"][$num])){
 				$curans = $_SESSION["answers"][$num];
