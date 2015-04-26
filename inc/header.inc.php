@@ -11,6 +11,7 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800" rel="stylesheet" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery.dropotron.min.js"></script>
 		<script src="js/config.js"></script>
@@ -20,8 +21,11 @@
 		<script src="js/lightbox.js"></script>
         <script src="js/sketch.js"></script>
         <script src="js/overlay.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/mathquill.css">
+        <script src="js/mathquill.min.js"></script>
         <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
         <script type="text/javascript">
+		tinymce.PluginManager.load('equationeditor', '/build/js/plugin.min.js');
         tinymce.init({
             selector: "textarea",
             plugins: [
@@ -30,17 +34,19 @@
                 ?>
                  "autolink link lists charmap spellchecker",
                  "searchreplace wordcount fullscreen",
-                 "table contextmenu paste textcolor"
+                 "table contextmenu paste textcolor equationeditor"
                  <?
             } else {
                 ?>
                  "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
                  "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                 "save table contextmenu directionality emoticons template paste textcolor"
+                 "save table contextmenu directionality emoticons template paste textcolor equationeditor"
                 <?
             }
             ?>
-           ]
+           ],
+		   toolbar: ['undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | equationeditor'],
+		   content_css: 'build/mathquill.css'
          });
         </script>
         <script>
