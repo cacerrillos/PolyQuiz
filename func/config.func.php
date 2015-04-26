@@ -1,4 +1,6 @@
 <?
+//error_reporting(0);
+error_reporting(E_ERROR);
 date_default_timezone_set('America/Los_Angeles');
 if(file_exists("func/count.func.php")){
 	include_once("func/count.func.php");

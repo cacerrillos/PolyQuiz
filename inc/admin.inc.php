@@ -26,6 +26,34 @@ function showElement(element_id) {
     return false;
   }
 }
+function checkPass()
+{
+    //Store the password field objects into variables ...
+    var pass1 = document.getElementById('pass1');
+    var pass2 = document.getElementById('pass2');
+    //Store the Confimation Message Object ...
+    var message = document.getElementById('confirmMessage');
+    //Set the colors we will be using ...
+    var goodColor = "#66cc66";
+    var badColor = "#ff6666";
+    //Compare the values in the password field 
+    //and the confirmation field
+    if(pass1.value == pass2.value){
+        //The passwords match. 
+        //Set the color to the good color and inform
+        //the user that they have entered the correct password 
+        pass2.style.backgroundColor = goodColor;
+        message.style.color = goodColor;
+        message.innerHTML = "Passwords Match!"
+    }else{
+        //The passwords do not match.
+        //Set the color to the bad color and
+        //notify the user.
+        pass2.style.backgroundColor = badColor;
+        message.style.color = badColor;
+        message.innerHTML = "Passwords Do Not Match!"
+    }
+}  
 </script>
 		<!-- Main Wrapper -->
 			<div id="main-wrapper">
@@ -71,8 +99,25 @@ function showElement(element_id) {
 												</header>
                                             	<?
 												if(isset($_SESSION["is_admin"])){
-												}
 												?>
+                                                <h2>Password Management</h2>
+                                                <h4>You will be logged out if your password was changed successfully.</h4>
+                                                <form action="func/admin.password.php" method="post">
+                                                <div class="tutorialWrapper">
+                                                    <label for="oldpass">Old Password: </label>
+                                                    <input type="password" name="oldpass" id="oldpass" />
+                                                        <div class="fieldWrapper">
+                                                            <label for="pass1">New Password: </label>
+                                                            <input type="password" name="pass1" id="pass1">
+                                                        </div>
+                                                        <div class="fieldWrapper">
+                                                            <label for="pass2">Confirm New Password: </label>
+                                                            <input type="password" name="pass2" id="pass2" onkeyup="checkPass(); return false;">
+                                                            <span id="confirmMessage" class="confirmMessage"></span>
+                                                        </div>
+                                                </div>
+                                                <input type="submit" name="submit" value="Change" class="button alt fa fa-lock">
+                                                </form>
                                                 <?
 												$xkcd[0]['src'] = "http://imgs.xkcd.com/comics/computer_problems.png";
 												$xkcd[0]['title'] = "This is how I explain computer problems to my cat. My cat usually seems happier than me.";
@@ -104,6 +149,7 @@ function showElement(element_id) {
 												
 												$num = rand(0,8);
 												/* <img src="<? echo $xkcd[$num]['src']; ?>" title="<? echo $xkcd[$num]['title']; ?>" alt="<? echo $xkcd[$num]['alt']; ?>"> */
+												}
 												?>
 											</article>
 									</div>
