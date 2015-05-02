@@ -1,0 +1,46 @@
+{
+  "name": "paper-radio-group",
+  "version": "0.8.0",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer"
+  ],
+  "main": "index.html",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-radio-group"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/PolymerElements/paper-radio-group",
+  "ignore": [],
+  "dependencies": {
+    "iron-selector": "PolymerElements/iron-selector#^0.8.0",
+    "polymer": "polymer/polymer#v0.8.0-rc.7"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.6.1",
+    "web-component-tester": "Polymer/web-component-tester#^2.2.3",
+    "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.0",
+    "test-fixture": "PolymerElements/test-fixture#^0.8.0",
+    "paper-radio-button": "PolymerElements/paper-radio-button#^0.8.0",
+    "paper-styles": "PolymerElements/paper-styles#^0.8.0",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^0.8.0"
+  },
+  "resolutions": {
+    "polymer": "v0.8.0-rc.6"
+  },
+  "_release": "0.8.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.8.0",
+    "commit": "116c5e0ca15edc38deca46d3fe951972b950f108"
+  },
+  "_source": "git://github.com/PolymerElements/paper-radio-group.git",
+  "_target": "^0.8.0",
+  "_originalSource": "PolymerElements/paper-radio-group"
+}

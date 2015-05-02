@@ -1,0 +1,24 @@
+{
+  "name": "paper-toast",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#0.8.0-rc.7",
+    "paper-styles": "PolymerElements/paper-styles#^0.8.6"
+  },
+  "devDependencies": {
+    "iron-doc-viewer": "polymerelements/iron-doc-viewer#^0.8.0",
+    "paper-button": "polymerelements/paper-button#^0.8.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.6.1"
+  },
+  "homepage": "https://github.com/PolymerElements/paper-toast",
+  "version": "0.8.0",
+  "_release": "0.8.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.8.0",
+    "commit": "eac97c2973d76a8abbd95575478d10783573d2b4"
+  },
+  "_source": "git://github.com/PolymerElements/paper-toast.git",
+  "_target": "^0.8.0",
+  "_originalSource": "PolymerElements/paper-toast"
+}

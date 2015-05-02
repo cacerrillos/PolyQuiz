@@ -10,6 +10,8 @@
     "polymer": "Polymer/polymer#0.8.0-rc.2",
     "paper-elements": "PolymerElements/paper-elements",
     "iron-icon": "PolymerElements/iron-icon#~0.8.2",
-    "iron-icons": "PolymerElements/iron-icons#~0.8.3"
+    "iron-icons": "PolymerElements/iron-icons#~0.8.3",
+    "paper-input": "PolymerElements/paper-input#~0.8.1",
+    "paper-button": "PolymerElements/paper-button#~0.8.1"
   }
 }

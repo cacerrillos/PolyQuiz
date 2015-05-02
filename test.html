@@ -9,125 +9,152 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-  <title>core-header-panel</title>
+<title>core-header-panel</title>
 
 
 <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 
 
-  <link rel="import" href="bower_components/iron-icon/iron-icon.html">
-  <link rel="import" href="bower_components/iron-icons/iron-icons.html">
-  <link rel="import" href="bower_components/iron-icons/communication-icons.html">
-  <link rel="import" href="bower_components/paper-item/paper-icon-item.html">
-  <link rel="import" href="bower_components/paper-item/paper-item.html">
-  <link rel="import" href="bower_components/paper-item/paper-item-body.html">
-  <link rel="import" href="bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="bower_components/paper-item/paper-item.html">
+<link rel="import" href="bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
 <style>
-      /* TODO: these colors should come from paper-styles/default-theme.html
-      once Polymer/polymer#1415 is fixed. */
-      paper-drawer-panel #drawer {
-        background-color: #3f51b5;
-        border-right: 1px solid #ccc;
-      }
+/* TODO: these colors should come from paper-styles/default-theme.html
+once Polymer/polymer#1415 is fixed. */
+paper-drawer-panel #drawer {
+background-color: #3f51b5;
+border-right: 1px solid #ccc;
+}
 
-      paper-drawer-panel::shadow #drawer {
-        background-color: #3f51b5;
-        border-right: 1px solid #ccc;
-      }
+paper-drawer-panel::shadow #drawer {
+background-color: #3f51b5;
+border-right: 1px solid #ccc;
+}
 
-      paper-drawer-panel[right-drawer] #drawer {
-        border-left: 1px solid #ccc;
-        border-right: none;
-      }
-      paper-drawer-panel[right-drawer]::shadow #drawer {
-        border-left: 1px solid #ccc;
-        border-right: none;
-      }
+paper-drawer-panel[right-drawer] #drawer {
+border-left: 1px solid #ccc;
+border-right: none;
+}
+paper-drawer-panel[right-drawer]::shadow #drawer {
+border-left: 1px solid #ccc;
+border-right: none;
+}
 
-      paper-drawer-panel #main  { background-color: #c5cae9 }
-      paper-drawer-panel::shadow #main { background-color: #c5cae9; }
+paper-drawer-panel #main  { background-color: #c5cae9 }
+paper-drawer-panel::shadow #main { background-color: #c5cae9; }
 
-      button {
-        width: 160px;
-        height: 40px;
-        font-size: 16px;
-        margin: 8px;
-      }
-	  section {
-      padding: 20px 0;
+paper-button.hover:hover {
+      background: #3A50DE;
     }
+button {
+width: 160px;
+height: 40px;
+font-size: 16px;
+margin: 8px;
+}
+section {
+padding: 20px 0;
+}
 
-    section > div {
-      padding: 14px;
-      font-size: 16px;
-    }
+section > div {
+padding: 14px;
+font-size: 16px;
+}
 
-    .list {
-      display: inline-block;
-      padding: 8px 0;
-	  color: #FFF;
-    }
+.list {
+display: inline-block;
+padding: 8px 0;
+color: #FFF;
+}
 
-    .avatar {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #ccc;
-    }
-    </style>
+.avatar {
+display: inline-block;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+overflow: hidden;
+background: #ccc;
+}
+.hover {
+	width:90%;
+}
+</style>
 
-  </head>
+</head>
 
-  <body>
+<body>
+<template is="x-autobind" id="demo">
+<paper-drawer-panel id="coreDrawerPanel">
+<div drawer>
+<div class="list">
+<paper-button tabindex="0" class="hover" onclick="">
+	<paper-icon-item>
+    	<iron-icon icon="home" item-icon></iron-icon>Home
+    </paper-icon-item>
+</paper-button>
+<paper-button tabindex="0" class="hover">
+    <paper-icon-item>
+    	<iron-icon icon="create" item-icon></iron-icon>Take A Quiz
+    </paper-icon-item>
+</paper-button>
+<paper-button tabindex="0" class="hover">
+    <paper-icon-item>
+    	<iron-icon icon="settings" item-icon></iron-icon>Admin
+    </paper-icon-item>
+</paper-button>
+</div>
+</div>
+<div main>
+<div>
+<button onclick="flipDrawer()">flip drawer</button>
+</div>
+<div>
+<button paper-drawer-toggle>toggle drawer</button>
+</div>
+</div>
+</paper-drawer-panel>
 
-    <paper-drawer-panel id="coreDrawerPanel">
-      <div drawer>
-      <div class="list">
-      <paper-icon-item>
-        <iron-icon icon="inbox" item-icon></iron-icon> Inbox
-      </paper-icon-item>
-      <paper-icon-item>
-        <iron-icon icon="send" item-icon></iron-icon> Outbox
-      </paper-icon-item>
-      <paper-icon-item>
-        <iron-icon icon="delete" item-icon></iron-icon> Trash
-      </paper-icon-item>
-      <paper-icon-item>
-        <iron-icon icon="report" item-icon></iron-icon> Spam
-      </paper-icon-item>
-    </div>
-      </div>
-      <div main>
-        <div>
-          <button onclick="flipDrawer()">flip drawer</button>
-        </div>
-        <div>
-          <button paper-drawer-toggle>toggle drawer</button>
-        </div>
-      </div>
-    </paper-drawer-panel>
+<script>
+(function(global) {
 
-    <script>
-      (function(global) {
+'use strict';
 
-        'use strict';
+var DRAWER_ATTR = 'right-drawer';
 
-        var DRAWER_ATTR = 'right-drawer';
+var cdp = document.getElementById('coreDrawerPanel');
 
-        var cdp = document.getElementById('coreDrawerPanel');
+global.flipDrawer = function() {
+if (cdp.hasAttribute(DRAWER_ATTR)) {
+cdp.removeAttribute(DRAWER_ATTR);
+} else {
+cdp.setAttribute(DRAWER_ATTR, '');
+}
+}
 
-        global.flipDrawer = function() {
-          if (cdp.hasAttribute(DRAWER_ATTR)) {
-            cdp.removeAttribute(DRAWER_ATTR);
-          } else {
-            cdp.setAttribute(DRAWER_ATTR, '');
-          }
+}(this));
+
+demo.tapAction = function(e) {
+	alert("aleter");
+      var target = e.target;
+      if (!target.down) {
+        target.elevation += 1;
+        if (target.elevation === 5) {
+          target.down = true;
         }
+      } else {
+        target.elevation -= 1;
+        if (target.elevation === 0) {
+          target.down = false;
+        }
+      }
+    };
 
-      }(this));
-    </script>
-
-  </body>
+</script>
+</template>
+</body>
 </html>
