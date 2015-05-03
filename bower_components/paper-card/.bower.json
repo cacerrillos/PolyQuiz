@@ -1,25 +1,40 @@
 {
-  "name": "paper-card",
-  "version": "0.8.2",
+  "name": "paper-material",
+  "version": "0.8.3",
   "private": true,
   "authors": [
     "The Polymer Authors"
   ],
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer"
+  ],
+  "main": [
+    "paper-material.html"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-material"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/PolymerElements/paper-material",
+  "ignore": [],
   "dependencies": {
     "polymer": "polymer/polymer#v0.8.0-rc.7",
     "paper-styles": "polymerelements/paper-styles#^0.8.0"
   },
   "devDependencies": {
+    "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.0",
     "test-fixture": "polymerelements/test-fixture#^0.8.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.6.0",
-    "web-component-tester": "~2.2.6"
+    "web-component-tester": "*"
   },
-  "homepage": "https://github.com/PolymerElements/paper-card",
-  "_release": "0.8.2",
+  "_release": "0.8.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.8.2",
-    "commit": "ec06cea50b93ee58f0473cd2749e768aa63ff406"
+    "tag": "v0.8.3",
+    "commit": "a1a7b36d957020307e921bd86547ccc04423a9f5"
   },
   "_source": "git://github.com/PolymerElements/paper-card.git",
   "_target": "^0.8.0",
