@@ -101,6 +101,7 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  word-wrap:normal;
 }
 .mathquill-rendered-math .empty {
   background: #ccc;

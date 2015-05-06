@@ -79,10 +79,14 @@ include_once("func/config.func.php");
 	echo "<b>".$quiz->lname.", ".$quiz->fname."</b><br><br>";
 	for($x = 0; $x <$numofq; $x++){
 		$thisquestion = $quiz->getQuestion($x);
-		if($thisquestion->type!=4){
-			echo ($x+1).") (Student earned ".$thisquestion->getPoints()." points)".$thisquestion->question." <br>";
+		if($thisquestion->response == -1){
+			echo ($x+1).") (Student earned 0 points, Question skipped!)".$thisquestion->question." <br>";
 		} else {
-			echo ($x+1).") (Student earned ".$thisquestion->answerArray[$thisquestion->response]->getPoints()." points)".$thisquestion->question." <br>";
+			if($thisquestion->type!=4){
+				echo ($x+1).") (Student earned ".$thisquestion->getPoints()." points)".$thisquestion->question." <br>";
+			} else {
+				echo ($x+1).") (Student earned ".$thisquestion->answerArray[$thisquestion->response]->getPoints()." points)".$thisquestion->question." <br>";
+			}
 		}
 		if($thisquestion->includeCanvas){
 			?>
