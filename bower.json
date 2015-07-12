@@ -1,0 +1,29 @@
+{
+  "name": "PolyQuiz",
+  "version": "3.0",
+  "authors": [
+    "Carlos Cerrillos <carlos@cerrillostech.com>"
+  ],
+  "description": "A Quiz website.",
+  "main": "index.php",
+  "keywords": [
+    "PHP"
+  ],
+  "license": "All Rights Reserved",
+  "homepage": "https://polyquiz.net",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "private": true,
+  "dependencies": {
+    "polymer": "~1.0.6",
+    "paper-elements": "PolymerElements/paper-elements#~1.0.1",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.2",
+    "skel": "~3.0.0-dev",
+    "jquery": "~2.1.4"
+  }
+}
