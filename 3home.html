@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PolyQuiz</title>
+<script src="bower_components/skel/dist/skel.min.js"></script>
+<script src="bower_components/skel/dist/skel-layout.min.js"></script>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic">
+<script>
+skel.breakpoints({
+	xlarge: "(max-width: 1680px)",
+	large:  "(max-width: 1280px)",
+	medium: "(max-width: 980px)",
+	small:  "(max-width: 736px)",
+	xsmall: "(max-width: 480px)"
+});
+skel.layout({
+	grid: true,
+	containers: true
+});
+</script>
+<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="elements/polyquiz-page.html">
+<link rel="import" href="bower_components/paper-material/paper-material.html">
+<style is="custom-style">
+	body{
+		font-family: Roboto;
+	}
+	@import "skel";
+	@include skel-layout((
+		reset: "normalize",
+		containers: true,
+		grid: true,
+		breakpoints: (
+			medium: (
+				/*containers: 90%*/
+			),
+			small: (
+				/*containers: 95%,*/
+				grid: ( gutters: 20px )
+			),
+			xsmall: (
+				grid: ( gutters: 10px )
+			)
+		)
+	));
+	:root {
+		--dark-primary-color:       #1976D2;
+		--default-primary-color:    #2196F3;
+		--light-primary-color:      #BBDEFB;
+		--text-primary-color:       #FFFFFF;
+		--accent-color:             #8BC34A;
+		--primary-background-color: #BBDEFB;
+		--primary-text-color:       #212121;
+		--secondary-text-color:     #727272;
+		--disabled-text-color:      #BDBDBD;
+		--divider-color:            #B6B6B6;
+		
+		
+		/* Components */
+		
+		/* paper-drawer-panel */
+		--drawer-menu-color:           #ffffff;
+		--drawer-border-color:         1px solid #ccc;
+		--drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+		
+		/* paper-menu */
+		--paper-menu-background-color: #fff;
+		--menu-link-color:             #111111;
+		
+		/* paper-input */
+		--paper-input-container-color:       rgba(255, 255, 255, 0.64);
+		--paper-input-container-focus-color: rgba(255, 255, 255, 1);
+		--paper-input-container-input-color: #fff;
+	}
+	.list {
+		padding-top: 12px;
+		background-color: white;
+		display: inline-block;
+		width: 240px;
+		height: 228px;
+		margin: 12px;
+		@apply(--shadow-elevation-2dp);
+	}
+	.sidebarlist {
+		/* @apply(--shadow-elevation-2dp); */
+	}
+	.homepagecontent {
+		padding: 10px;
+		margin: 10px;
+	}
+</style>
+</head>
+
+<body>
+<polyquiz-page sidebarpage="0">
+<paper-material class="homepagecontent">
+<div class="container 50%">
+POLYQUIZ, THE ONLINE QUIZ SITE
+
+MADE FOR STUDENTS, TEACHERS, AND TREEHUGGERS
+IN ONLY 6472 LINES OF CODE!
+2989 QUIZZES TAKEN, AND COUNTING!
+
+NOW ACCPETING REGISTRATIONS!
+</div>
+
+</paper-material>
+
+</polyquiz-page>
+</body>
+</html>
