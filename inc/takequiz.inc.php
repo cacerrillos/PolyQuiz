@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="12u">
 		<paper-material>
-		<h2><i class="fa fa-info-circle"></i> Quiz Status</h2>
+		<h2 class="nomargins"><i class="fa fa-info-circle"></i> Quiz Status</h2>
 		<?
 		if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 			?>
@@ -74,75 +74,44 @@
 		</div>
 	</div>
 </div>
-<div class="container">
-<div class="row">
-<div class="12u">
-<paper-material>
-<h2><i class="fa fa-file"></i> Take a Quiz</h2>
-</paper-material>
-</div>
-</div>
-<div class="row">
 
 <?
 //quiz is good to go
 if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	?>
-<div class="6u">
+<div class="container">
+<div class="row">
+<div class="12u">
 <paper-material>
-	<h4>Start a Quiz</h4>
-	<form name="prequiz" method="post" action="func/prequiz.func.php">
-					<input type="hidden" name="type" value="session" />
-		<take-a-quiz-form></take-a-quiz-form>
-	<table>
-	<tr style="border:0">
-		<td style="border:0">First Name:</td>
-		<td style="border:0"><input type="text" name="firstname" autocorrect="off" autocomplete="off" autocapitalize="on"></td>
-	</tr>
-	<tr style="border:0">
-		<td style="border:0">Last Name:</td>
-		<td style="border:0"><input type="text" name="lastname" autocorrect="off" autocomplete="off" autocapitalize="on"></td>
-	</tr>
-	<tr style="border:0">
-		<td style="border:0">Session ID:</td>
-		<td style="border:0"><input type="text" name="sessionid" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
-	</tr>
-	<tr style="border:0">
-		<td style="border:0">Session Key:</td>
-		<td style="border:0"><input type="text" name="sessionkey" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
-	</tr>
-	</table>
-	<div align="center">
-	<input type="submit" name="submit" value="Begin" onclick="window.onbeforeunload = null;" class="button fa">
-	</div>
-	</form>
-		</paper-material>
-
-	</div>
-		<div class="6u">
+<h2 class="nomargins"><i class="fa fa-file"></i> Take a Quiz</h2>
+</paper-material>
+</div>
+</div>
+<div class="row">
+<div class="6u">
 	<paper-material>
-	<h4>Resume A Quiz</h4>
-	<form name="restorequiz" method="post" action="func/prequiz.func.php">
-	<table>
-	<tr>
-		<td style="border:0">Resume Id:</td>
-		<td style="border:0"><input type="text" name="id" autocorrect="off" autocomplete="off" autocapitalize="off"/></td>
-	</tr>
-	<tr>
-		<td style="border:0">Resume Key:</td>
-		<td style="border:0"><input type="text" name="key" autocorrect="off" autocomplete="off" autocapitalize="off" /></td>
-	</tr>
-	</table>
-	<div align="center">
-	<input type="submit" name="submit" value="Resume" onclick="window.onbeforeunload = null" class="button fa"/>
-	</div>
-	</form>
-	</div>
+		<h3 class="nomargins">Start a Quiz</h3>
+		<take-a-quiz-form></take-a-quiz-form>
 	</paper-material>
+</div>
+<div class="6u">
+	<paper-material>
+		<h3 class="nomargins">Resume A Quiz</h3>
+		<resume-a-quiz-form></resume-a-quiz-form>
+	</paper-material>
+</div>
+</div>
+</div>
 	<?
 	$mysqli -> close();
 } else {
+	?>
+	<div class="container">
+<div class="row">
+<div class="12u">
+<paper-material>
+	<?
 	$quiz = $_SESSION['quiz'];
 	if(!isset($_GET['num'])){
 		$num = 0;
@@ -161,7 +130,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 		$questions = $quiz -> questions;
 		if(isset($questions[intval($num)])){
 			$thisquestion = $quiz -> getQuestion(intval($num));
-			echo "<h2 style='margin-bottom:5px'>#".($num+1)."</h2>";
+			echo "<h2 style='margin-bottom:5px; margin-top: 0px;'>#".($num+1)."</h2>";
 			if($thisquestion->displayextracredit==true){
 				$ecstatus = "[Extra Credit] ";
 			} else {
