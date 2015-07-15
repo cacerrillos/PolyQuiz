@@ -5,7 +5,6 @@
 <title>PolyQuiz</title>
 <script src="bower_components/skel/dist/skel.min.js"></script>
 <script src="bower_components/skel/dist/skel-layout.min.js"></script>
-<script src="bower_components/skel/dist/skel-panels.min.js"></script>
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic">
 <script>
 skel.breakpoints({
@@ -21,9 +20,43 @@ skel.layout({
 	containers: true
 });
 </script>
+<script type="text/javascript">
+function findElement(element_id) {
+  if (document.getElementById && document.getElementById(element_id)) {
+   return document.getElementById(element_id);
+  } else {
+    return false;
+  }
+}
+
+function hideElement(element_id) {
+  element = findElement(element_id)
+  if (element) {
+    element.style.display = 'none';
+    return element;
+  } else {
+    return false;
+  }
+}
+
+function showElement(element_id) {
+  element = findElement(element_id)
+  if (element) {
+    element.style.display = '';
+    return element;
+  } else {
+    return false;
+  }
+}
+function addCanvas(){
+	var dataURL = canvas.toDataURL();
+	document.getElementById("canvasValue").value = dataURL;
+}
+</script>
 <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <link rel="import" href="elements/polyquiz-page.html">
+<link rel="import" href="elements/take-a-quiz-form.html">
 <link rel="import" href="bower_components/paper-material/paper-material.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />
