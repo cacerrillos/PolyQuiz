@@ -1,140 +1,100 @@
-<script type="text/javascript">
-function findElement(element_id) {
-  if (document.getElementById && document.getElementById(element_id)) {
-   return document.getElementById(element_id);
-  } else {
-    return false;
-  }
-}
+<div class="container">
+	<div class="row">
+		<div class="12u">
+		<paper-material>
+		<h2><i class="fa fa-info-circle"></i> Quiz Status</h2>
+		<?
+		if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
+			?>
+			<strong>You are not currently taking a quiz!</strong>
+			<?
+		} else {
+			$quiz = $_SESSION['quiz'];
+			$uuid = $quiz->uuid;
+			
+			$mysqli = new mysqli($db_host, $db_user, $db_password);
+			$mysqli -> select_db($db_name);
+			if(mysqli_connect_errno()) {
+				echo "Connection Failed: " . mysqli_connect_errno();
+				exit();
+			}
+			if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
+					$stmt -> bind_param("s", $uuid);
+					$stmt -> execute();
+					$stmt -> store_result();
+					$num = $stmt -> num_rows;
+					$stmt -> close();
+			} else {
+				echo $mysqli->error;
+			}
+			if($num==0 && false){
+				echo "000";
+				return false;
+			} else {
+				?>
+				<!-- <? echo $uuid; ?> -->
+				<?
+				if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
+					$stmt -> bind_param("s", $uuid);
+					$stmt -> execute();
+					$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status'], $result['owner']);
+					$stmt -> store_result();
+					$stmt -> fetch();
+					$stmt -> close();
+					$quizname = $result['quizname'];
+				} else {
+					echo $mysqli->error;
+				}
+			}
+			
+		?>
+		<table style="border-spacing: 10px;border-collapse: separate;">
+			<tr style="border:0">
+				<td style="border:0">First Name:</td>
+				<td style="color:#000;border:0"><? echo $_SESSION['firstname']; ?></td>
+			</tr>
+			<tr style="border:0">
+				<td style="border:0">Last Name:</td>
+				<td style="color:#000;border:0"><? echo $_SESSION['lastname']; ?></td>
+			</tr>
+			<tr style="border:0">
+				<td style="border:0">Quiz:</td>
+				<td style="color:#000;border:0"><? echo $quizname; ?></td>
+			</tr>
+			<tr style="border:0">
+				<td style="border:0">House:</td>
+				<td style="color:#000;border:0"><? echo $quiz->getHouse(); ?></td>
+			</tr>
+		</table>
+			<a href="?p=exit" <? if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){ echo "onclick='window.onbeforeunload = null;'";}?> class="button alt fa fa-trash-o">Exit Quiz</a>
+			<?
+		}
+		?>
+		</paper-material>
+		</div>
+	</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="12u">
+<paper-material>
+<h2><i class="fa fa-file"></i> Take a Quiz</h2>
+</paper-material>
+</div>
+</div>
+<div class="row">
 
-function hideElement(element_id) {
-  element = findElement(element_id)
-  if (element) {
-    element.style.display = 'none';
-    return element;
-  } else {
-    return false;
-  }
-}
-
-function showElement(element_id) {
-  element = findElement(element_id)
-  if (element) {
-    element.style.display = '';
-    return element;
-  } else {
-    return false;
-  }
-}
-function addCanvas(){
-	var dataURL = canvas.toDataURL();
-	document.getElementById("canvasValue").value = dataURL;
-}
-</script>
-		<!-- Main Wrapper -->
-			<div id="main-wrapper">
-				<div class="main-wrapper-style2">
-					<div class="inner">
-						<div class="container">
-							<div class="row">
-								<div class="3u">
-									<div id="sidebar">
-
-										<!-- Sidebar -->
-											<section>
-												<header class="major">
-													<h2><i class="fa fa-info-circle"></i> Quiz Status</h2>
-												</header>
-												<footer>
-                                                <?
-                                                if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
-													?>
-													<strong>You are not currently taking a quiz!</strong>
-                                                    <?
-												} else {
-													$quiz = $_SESSION['quiz'];
-													$uuid = $quiz->uuid;
-													
-													$mysqli = new mysqli($db_host, $db_user, $db_password);
-													$mysqli -> select_db($db_name);
-													if(mysqli_connect_errno()) {
-														echo "Connection Failed: " . mysqli_connect_errno();
-														exit();
-													}
-													if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
-															$stmt -> bind_param("s", $uuid);
-															$stmt -> execute();
-															$stmt -> store_result();
-															$num = $stmt -> num_rows;
-															$stmt -> close();
-													} else {
-														echo $mysqli->error;
-													}
-													if($num==0 && false){
-														echo "000";
-														return false;
-													} else {
-														?>
-                                                        <!-- <? echo $uuid; ?> -->
-                                                        <?
-														if($stmt = $mysqli -> prepare("SELECT * FROM quizzes WHERE uuid = ?")){
-															$stmt -> bind_param("s", $uuid);
-															$stmt -> execute();
-															$stmt -> bind_result($result['uuid'], $result['quizname'], $result['quizsubject'], $result['status'], $result['owner']);
-															$stmt -> store_result();
-															$stmt -> fetch();
-															$stmt -> close();
-															$quizname = $result['quizname'];
-														} else {
-															echo $mysqli->error;
-														}
-													}
-													
-												?>
-                                                <table style="border-spacing: 10px;border-collapse: separate;">
-                                                    <tr style="border:0">
-                                                        <td style="border:0">First Name:</td>
-                                                        <td style="color:#000;border:0"><? echo $_SESSION['firstname']; ?></td>
-                                                    </tr>
-                                                    <tr style="border:0">
-                                                        <td style="border:0">Last Name:</td>
-                                                        <td style="color:#000;border:0"><? echo $_SESSION['lastname']; ?></td>
-                                                    </tr>
-                                                    <tr style="border:0">
-                                                        <td style="border:0">Quiz:</td>
-                                                        <td style="color:#000;border:0"><? echo $quizname; ?></td>
-                                                    </tr>
-                                                    <tr style="border:0">
-                                                        <td style="border:0">House:</td>
-                                                        <td style="color:#000;border:0"><? echo $quiz->getHouse(); ?></td>
-                                                    </tr>
-                                                </table>
-                                                    <a href="?p=exit" <? if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){ echo "onclick='window.onbeforeunload = null;'";}?> class="button alt fa fa-trash-o">Exit Quiz</a>
-                                                    <?
-												}
-												?>
-												</footer>
-											</section>
-								
-									</div>
-								</div>
-								<div class="9u skel-cell-important">
-									<div id="content">
-                                        <article>
-                                            <header class="major">
-                                                <h2><i class="fa fa-file"></i> Take a Quiz</h2>
-                                            </header>
 <?
 //quiz is good to go
 if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	?>
-	<div style="overflow:auto; width:100%;">
-	<div style="display: inline-block; float:left; padding-left:10px; padding-right:10px;">
+<div class="6u">
+<paper-material>
 	<h4>Start a Quiz</h4>
 	<form name="prequiz" method="post" action="func/prequiz.func.php">
 					<input type="hidden" name="type" value="session" />
-	<span style="display:inline-block">            
+		<take-a-quiz-form></take-a-quiz-form>
 	<table>
 	<tr style="border:0">
 		<td style="border:0">First Name:</td>
@@ -156,13 +116,14 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 	<div align="center">
 	<input type="submit" name="submit" value="Begin" onclick="window.onbeforeunload = null;" class="button fa">
 	</div>
-	</span>
 	</form>
+		</paper-material>
+
 	</div>
-	<div style="display:inline-block; float:left; padding-left:10px; padding-right:10px;">
+		<div class="6u">
+	<paper-material>
 	<h4>Resume A Quiz</h4>
 	<form name="restorequiz" method="post" action="func/prequiz.func.php">
-	<span style="display:inline-block;">
 	<table>
 	<tr>
 		<td style="border:0">Resume Id:</td>
@@ -176,10 +137,9 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 	<div align="center">
 	<input type="submit" name="submit" value="Resume" onclick="window.onbeforeunload = null" class="button fa"/>
 	</div>
-	</span>
 	</form>
 	</div>
-	</div>
+	</paper-material>
 	<?
 	$mysqli -> close();
 } else {
@@ -249,12 +209,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 	}
 }
 ?>
-    </div>
-                                        </article>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+</paper-material>
+</div>
+</div>
+</div>
