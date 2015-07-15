@@ -3,8 +3,8 @@ session_start();
 include_once("genquiz.func.php");
 include_once("polysession.func.php");
 include_once("config.func.php");
-if(isset($_POST['submit'])){
-	if($_POST['submit']=="Begin"){
+if(count($_POST) > 0) {
+	if($_POST['type']=="session"){
 		$firstname = $_POST['firstname'];
 		$lastname = $_POST['lastname'];
 		if(strlen($firstname)>0 && strlen($lastname)>0 && strlen($_POST['sessionid'])>0 && strlen($_POST['sessionkey'])>0){
@@ -45,7 +45,7 @@ if(isset($_POST['submit'])){
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
-	} else if($_POST['submit']=="Resume"){
+	} else {
 		$resumeid = $_POST['id'];
 		$resumekey = $_POST['key'];
 		if(strlen($resumeid)>0 && strlen($resumekey)>0){
