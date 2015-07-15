@@ -18,8 +18,9 @@ skel.breakpoints({
 });
 skel.layout({
 	reset: "normalize",
-	grid: true,
-	containers: true,
+	grid: {
+		gutters: [ "40px", "20px" ]
+	},	containers: true,
 	breakpoints: {
 		medium: {
 			containers: "95%"
