@@ -89,13 +89,13 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 </div>
 </div>
 <div class="row">
-<div class="6u">
+<div class="6u 12u(xxxsmall)">
 	<paper-material>
 		<h3 class="nomargins">Start a Quiz</h3>
 		<take-a-quiz-form></take-a-quiz-form>
 	</paper-material>
 </div>
-<div class="6u">
+<div class="6u 12u(xxxsmall)">
 	<paper-material>
 		<h3 class="nomargins">Resume A Quiz</h3>
 		<resume-a-quiz-form></resume-a-quiz-form>

@@ -1,11 +1,11 @@
 	<div class="container">
 		<div class="row">
-			<div class="8u">
+			<div class="8u 12u(xxxsmall)">
 				<paper-material>
 				
 				</paper-material>
 			</div>
-			<div class="4u">
+			<div class="4u 12u(xxxsmall)">
 				<paper-material>
 					<div class="row">
 						<div class="6u">
