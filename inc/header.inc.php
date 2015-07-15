@@ -12,12 +12,25 @@ skel.breakpoints({
 	large:  "(max-width: 1280px)",
 	medium: "(max-width: 980px)",
 	small:  "(max-width: 736px)",
-	xsmall: "(max-width: 480px)"
+	xsmall: "(max-width: 560px)",
+	xxsmall: "(max-width: 480px)",
+	xxxsmall: "(max-width: 360px)"
 });
 skel.layout({
 	reset: "normalize",
 	grid: true,
-	containers: true
+	containers: true,
+	breakpoints: {
+		medium: {
+			containers: "95%"
+		},
+		small: {
+			containers: "95%"
+		},
+		xxxsmall: {
+			containers: "100%"
+		}
+	}
 });
 </script>
 <script type="text/javascript">
@@ -52,6 +65,34 @@ function addCanvas(){
 	var dataURL = canvas.toDataURL();
 	document.getElementById("canvasValue").value = dataURL;
 }
+function checkPass()
+{
+    //Store the password field objects into variables ...
+    var pass1 = document.getElementById('pass1');
+    var pass2 = document.getElementById('pass2');
+    //Store the Confimation Message Object ...
+    var message = document.getElementById('confirmMessage');
+    //Set the colors we will be using ...
+    var goodColor = "#66cc66";
+    var badColor = "#ff6666";
+    //Compare the values in the password field 
+    //and the confirmation field
+    if(pass1.value == pass2.value){
+        //The passwords match. 
+        //Set the color to the good color and inform
+        //the user that they have entered the correct password 
+        pass2.style.backgroundColor = goodColor;
+        message.style.color = goodColor;
+        message.innerHTML = "Passwords Match!"
+    } else {
+        //The passwords do not match.
+        //Set the color to the bad color and
+        //notify the user.
+        pass2.style.backgroundColor = badColor;
+        message.style.color = badColor;
+        message.innerHTML = "Passwords Do Not Match!"
+    }
+}  
 </script>
 <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
@@ -152,6 +193,9 @@ $(document).ready(function() {
 paper-material {
 	padding: 10px;
 }
+.nomargins {
+	margin: 0;
+}
 </style>
 <link href="css/lightbox.css" rel="stylesheet" />
 <noscript>
@@ -166,24 +210,6 @@ paper-material {
 	body{
 		font-family: Roboto;
 	}
-	@import "skel";
-	@include skel-layout((
-		reset: "normalize",
-		containers: true,
-		grid: true,
-		breakpoints: (
-			medium: (
-				/*containers: 90%*/
-			),
-			small: (
-				/*containers: 95%,*/
-				grid: ( gutters: 20px )
-			),
-			xsmall: (
-				grid: ( gutters: 10px )
-			)
-		)
-	));
 	:root {
 		--dark-primary-color:       #1976D2;
 		--default-primary-color:    #2196F3;
@@ -209,9 +235,10 @@ paper-material {
 		--menu-link-color:             #111111;
 		
 		/* paper-input */
-		--paper-input-container-color:       rgba(255, 255, 255, 0.64);
-		--paper-input-container-focus-color: rgba(255, 255, 255, 1);
-		--paper-input-container-input-color: #fff;
+		/*
+		--paper-input-container-color: rgba(0,0,0,0.75);
+		--paper-input-container-focus-color: #2196F3;
+		*/
 	}
 	.list {
 		padding-top: 12px;
