@@ -3,6 +3,7 @@
 	<link rel="import" href="../bower_components/polymer/polymer.html">
 	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 	<link rel="import" href="../bower_components/paper-button/paper-button.html">
+	<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 	<link rel="import" href="../bower_components/paper-material/paper-material.html">
 	<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 	<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -17,23 +18,33 @@
 	<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 	<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 	<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+	
+	<style is="custom-style">
+	paper-drawer-panel {
+		--paper-drawer-panel-main-container: {
+			background-color: #BBDEFB;
+		};
+	}
+	paper-fab {
+		position: absolute;
+		bottom: 16px;
+		right: 16px;
+	}
+	</style>
 	<template>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
 			<paper-header-panel drawer>
 				<paper-toolbar>
-					<div>Application</div>
+					<div style="color:#FFFFFF">Application</div>
 				</paper-toolbar>
 				<paper-menu id="sidebarMenu">
 					<paper-icon-item on-click="goHome">
 						<iron-icon icon="home" item-icon></iron-icon> Home
 					</paper-icon-item>
-					<paper-icon-item on-click="goTake">
+					<paper-icon-item on-click="goTakeAQuiz">
 						<iron-icon icon="add-circle-outline" item-icon></iron-icon> Take A Quiz
 					</paper-icon-item>
-					<paper-icon-item on-click="goRegister">
-						<iron-icon icon="icons:add-circle-outline" item-icon></iron-icon> Register
-					</paper-icon-item>
-					<paper-icon-item on-click="goSign">
+					<paper-icon-item on-click="goLogin">
 						<iron-icon icon="icons:add-circle-outline" item-icon></iron-icon> Sign In
 					</paper-icon-item>
 				</paper-menu>
@@ -41,14 +52,17 @@
 			<paper-scroll-header-panel main class="flex" id="scrollHeader" scrollAwayTopbar>
 				<paper-toolbar>
 					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-					<h2>PolyQuiz 3.0</h2>
+					<span class="title">PolyQuiz 3.0</span>
+					<paper-button on-click="goHome"><iron-icon icon="home"></iron-icon> Home</paper-button>
+					<paper-button on-click="goTakeAQuiz"><iron-icon icon="add-circle-outline"></iron-icon> Take A Quiz</paper-button>
+					<paper-button on-click="goLogin"><iron-icon icon="add-circle-outline"></iron-icon> Login</paper-button>
 				</paper-toolbar>
 					<content>
 					
 					</content>
-				<custom-calendar></custom-calendar>
 			</paper-scroll-header-panel>
 		</paper-drawer-panel>
+		<paper-fab icon="home"></paper-fab>
 	</template>
 	<script>
 	Polymer({
@@ -63,16 +77,13 @@
 			}
 		},
 		goHome: function(){
-			window.location = "3home.html";
+			window.location = "?p=home";
 		},
-		goTake: function(){
-			window.location = "3takeaquiz.html";
+		goTakeAQuiz: function(){
+			window.location = "?p=takequiz";
 		},
-		goRegister: function(){
-			window.location = "3register.html";
-		},
-		goSign: function(){
-			window.location = "3signin.html";
+		goLogin: function(){
+			window.location = "?p=admin";
 		},
 		fireToastNonEvent: function(text){
 			this.$.globalToast.text = text;
@@ -84,6 +95,7 @@
 		},
 		ready: function() {
 			this.$.mainPanel.responsiveWidth = "768px";
+			this.$.mainPanel.forceNarrow = true;
 			this.fire('iron-signal', {name: 'hideshowevent', data: { show: this.$.mainPanel.narrow } });
 			this.$.sidebarMenu.select(this.sidebarpage);
 			if(this.$.mainPanel.narrow){
@@ -91,6 +103,7 @@
 			} else {
 			//	this.$.scrollHeader.fixed = true;
 			}
+			
 		},
 		onresp: function(){
 			//this.fireToastNonEvent(this.$.mainPanel.narrow);

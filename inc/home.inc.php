@@ -16,23 +16,24 @@ if($stmt = $mysqli->prepare("SELECT value FROM stats WHERE id='totalresults';"))
 	echo $mysqli->error;
 }
 ?>
-		<!-- Main Wrapper -->
-			<div id="main-wrapper">
-				<div class="main-wrapper-style1">
-					<div class="inner">
-						<!-- Feature 1 -->
-							<section class="container box-feature1">
-								<div class="row">
-									<div class="12u">
-										<header class="first major">
-                                        
-											<h2>PolyQuiz, The Online Quiz Site</h2>
-											<span class="byline">Made for students, teachers, and <strong>treehuggers</strong><br />in only <? echo lines(); ?> lines of code!<br /><strong><? echo $count; ?></strong> quizzes taken, and <strong>counting</strong>!<br /><br />Now accpeting <a href="?p=register">registrations</a>!</span>
-                                            
-										</header>
-									</div>
-								</div>
-							</section>
-					</div>
+<div class="container">
+	<div class="row">
+		<img src="images/title.png" style="margin-left: auto; margin-right: auto;">
+	</div>
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<div class="container 30%">
+					<h2 style="margin: 0;">PolyQuiz, The Online Quiz Site</h2>
+					<span class="byline">
+						Made for students, teachers, and <strong>treehuggers</strong><br />
+						in only <? echo lines(); ?> lines of code!<br />
+						<strong><? echo $count; ?></strong> quizzes taken, and <strong>counting</strong>!<br />
+						<br />
+						Now accpeting <a href="?p=register">registrations</a>!
+					</span>
 				</div>
-			</div>
+			</paper-material>
+		</div>
+	</div>
+</div>
