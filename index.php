@@ -30,7 +30,41 @@ if(isset($_GET['p'])){
 if(!isset($_SESSION["total"]) && $page=="done"){
 	header("Location: ?p=home");
 }
-
+if($page=="home"){
+	$pagetype = "home";
+	$pagetype2 = "home";
+} else if($page=="admin"){
+	$pagetype = "admin";
+} else if($page=="quizadmin"){
+	$pagetype = "admin";
+} else if($page=="takequiz"){
+	$pagetype = "takequiz";
+} else if($page=="managequiz"){
+	$pagetype = "admin";
+} else if($page=="results"){
+	$pagetype = "admin";
+} else if($page=="done"){
+	$pagetype = "takequiz";
+} else if($page=="stats"){
+	
+} else if($page=="postquizadmin"){
+	$pagetype = "admin";
+} else if($page=="addquestion"){
+	$pagetype = "admin";
+} else if($page=="pendingsessions"){
+	$pagetype = "admin";
+} else if($page=="survey"){
+} else if($page=="sessions"){
+	$pagetype = "admin";
+} else if($page=="register"){
+} else if($page=="math"){
+} else if($page=="gradefr"){
+	$pagetype = "admin";
+} else {
+	$pagetype = "home";
+	$pagetype2 = "home";
+}
+$_SESSION['pagetype'] = $pagetype;
 include("inc/header.inc.php");
 ?>
 <?

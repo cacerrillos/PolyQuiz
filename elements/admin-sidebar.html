@@ -52,15 +52,16 @@ ready: function() {
 	</style>
 	<template>
 		<paper-menu>
-			<paper-item><i class="fa fa-cog"></i> Quick Start Guide</paper-item>
+			<paper-item on-click="goAdminHome"><i class="fa fa-cog"></i> Quick Start Guide</paper-item>
 			<paper-item disabled>Session Management</paper-item>
-			<paper-item><i class="fa fa-cog"></i> Edit Sessions</paper-item>
-			<paper-item><i class="fa fa-cog"></i> Quizzes In Progress</paper-item>
+			<paper-item on-click="goEditSessions"><i class="fa fa-cog"></i> Edit Sessions</paper-item>
+			<paper-item on-click="goPendingSessions"><i class="fa fa-cog"></i> Quizzes In Progress</paper-item>
 			<paper-item disabled>Quiz Management</paper-item>
-			<paper-item><i class="fa fa-cog"></i> Edit Quizzes</paper-item>
+			<paper-item on-click="goEditQuizzes"><i class="fa fa-cog"></i> Edit Quizzes</paper-item>
 			<paper-item disabled>Results & Grading</paper-item>
-			<paper-item><i class="fa fa-cog"></i> Quiz Results</paper-item>
-			<paper-item><i class="fa fa-cog"></i> Pending Free Response Grading</paper-item>
+			<paper-item on-click="goResults"><i class="fa fa-cog"></i> Quiz Results</paper-item>
+			<paper-item on-click="goGrading"><i class="fa fa-cog"></i> Pending Free Response Grading</paper-item>
+			<paper-item on-click="goLogout">Logout</paper-item>
 		</paper-menu>
 	</template>
 	<script>
@@ -75,14 +76,26 @@ ready: function() {
 				value: 0
 			}
 		},
-		goHome: function(){
-			window.location = "?p=home";
-		},
-		goTakeAQuiz: function(){
-			window.location = "?p=takequiz";
-		},
-		goLogin: function(){
+		goAdminHome: function(){
 			window.location = "?p=admin";
+		},
+		goEditSessions: function(){
+			window.location = "?p=sessions";
+		},
+		goPendingSessions: function(){
+			window.location = "?p=pendingsessions";
+		},
+		goEditQuizzes: function(){
+			window.location = "?p=quizadmin";
+		},
+		goResults: function(){
+			window.location = "?p=results";
+		},
+		goGrading: function(){
+			window.location = "?p=gradefr";
+		},
+		goLogout: function(){
+			window.location = "../func/admin.logout.php";
 		},
 		fireToastNonEvent: function(text){
 			this.$.globalToast.text = text;

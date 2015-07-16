@@ -1,46 +1,6 @@
 <div class="container">
 	<div class="row">
-		<div class="4u">
-			<paper-material>
-				<a href="?p=admin" style="text-decoration: none;"><h2><i class="fa fa-cog"></i> The Core</h2></a>
-				<?
-				if(function_exists("theSecretMenu")){
-					theSecretMenu();
-				}
-				?>
-				SEPARATOR
-				<?
-				if(isset($_SESSION["is_admin"])){
-				?>
-					<admin-sidebar></admin-sidebar>
-					<a href="?p=admin" style="margin-left:20px;"><i class="fa fa-cog"></i> Quick Start Guide</a>
-					<h4 style="margin-bottom:0;">Session Management</h4>
-					<a href="?p=sessions" style="margin-left:20px"><i class="fa fa-cog"></i> Edit Sessions</a><br>
-					<a href="?p=pendingsessions" style="margin-left:20px"><i class="fa fa-cog"></i> Quizzes In Progress</a>
-					<h4 style="margin-bottom:0;">Quiz Management</h4>
-					<a href="?p=quizadmin" style="margin-left:20px"><i class="fa fa-cog"></i> Edit Quizzes</a><br>
-					<h4 style="margin-bottom:0;">Results & Grading</h4>
-					<a href="?p=results" style="margin-left:20px"><i class="fa fa-cog"></i> Quiz Results</a><br />
-					<a href="?p=gradefr" style="margin-left:20px"><i class="fa fa-cog"></i> Pending Free Response Grading</a>
-
-				<?
-				}
-				?>
-				SEPARATOR
-				<?
-				if(isset($_SESSION["is_admin"])){
-				?>
-					<a href="func/admin.logout.php" class="button alt fa fa-lock">Logout</a>
-				<?
-				} else {  
-				?>
-					<admin-login></admin-login>
-				<?
-				}
-				?>
-			</paper-material>
-		</div>
-		<div class="8u">
+		<div class="12u">
 			<div class="row">
 				<div class="12u">
 					<paper-material>

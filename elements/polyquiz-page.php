@@ -1,5 +1,9 @@
+<?
+session_start();
+?>
 <!doctype html>
 <dom-module id="polyquiz-page">
+	<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 	<link rel="import" href="../bower_components/paper-input/paper-input.html">
 	<link rel="import" href="../bower_components/polymer/polymer.html">
 	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
@@ -31,6 +35,9 @@
 		bottom: 16px;
 		right: 16px;
 	}
+	:host {
+		--paper-item-min-height: 32px;
+	}
 	</style>
 	<template>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
@@ -40,23 +47,40 @@
 				</paper-toolbar>
 				<paper-menu id="sidebarMenu">
 					<paper-icon-item on-click="goHome">
-						<iron-icon icon="home" item-icon></iron-icon> Home
+						<iron-icon icon="icons:home" item-icon></iron-icon> Home
 					</paper-icon-item>
 					<paper-icon-item on-click="goTakeAQuiz">
-						<iron-icon icon="add-circle-outline" item-icon></iron-icon> Take A Quiz
+						<iron-icon icon="icons:content-paste" item-icon></iron-icon> Take A Quiz
 					</paper-icon-item>
 					<paper-icon-item on-click="goLogin">
-						<iron-icon icon="icons:add-circle-outline" item-icon></iron-icon> Sign In
+						<iron-icon icon="icons:settings" item-icon></iron-icon> Manage
 					</paper-icon-item>
 				</paper-menu>
+				<?
+				if(function_exists("theSecretMenu")){
+					theSecretMenu();
+				}
+				?>
+				<?
+				if(isset($_SESSION["is_admin"])){
+				?>
+					<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
+					<admin-sidebar></admin-sidebar>
+				<?
+				} else if($_SESSION['pagetype'] != "takequiz") {  
+				?>
+					<admin-login></admin-login>
+				<?
+				}
+				?>
 			</paper-header-panel>
 			<paper-scroll-header-panel main class="flex" id="scrollHeader" scrollAwayTopbar>
 				<paper-toolbar>
 					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
 					<span class="title">PolyQuiz 3.0</span>
-					<paper-button on-click="goHome"><iron-icon icon="home"></iron-icon> Home</paper-button>
-					<paper-button on-click="goTakeAQuiz"><iron-icon icon="add-circle-outline"></iron-icon> Take A Quiz</paper-button>
-					<paper-button on-click="goLogin"><iron-icon icon="add-circle-outline"></iron-icon> Login</paper-button>
+					<paper-button on-click="goHome"><iron-icon icon="icons:home"></iron-icon> Home</paper-button>
+					<paper-button on-click="goTakeAQuiz"><iron-icon icon="icons:content-paste"></iron-icon> Take A Quiz</paper-button>
+					<paper-button on-click="goLogin"><iron-icon icon="icons:settings"></iron-icon> MAnage</paper-button>
 				</paper-toolbar>
 					<content>
 					

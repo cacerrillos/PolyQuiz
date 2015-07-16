@@ -261,6 +261,7 @@ paper-material {
 			color: #2196F3;
 		}
 	}
+
 	.list {
 		padding-top: 12px;
 		background-color: white;
@@ -286,4 +287,14 @@ paper-material {
 </style>
 </head>
 <body>
-<polyquiz-page sidebarpage="0">
+<?
+$pageIdNum = 0;
+if($pagetype == "home"){
+	$pageIdNum = 0;
+} else if($pagetype == "takequiz"){
+	$pageIdNum = 1;
+} else if($pagetype == "admin"){
+	$pageIdNum = 2;
+}
+?>
+<polyquiz-page sidebarpage="<? echo $pageIdNum; ?>">
