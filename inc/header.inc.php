@@ -23,6 +23,9 @@ skel.layout({
 	},
 	containers: true,
 	breakpoints: {
+		large: {
+			containers: "95%"
+		},
 		medium: {
 			containers: "95%",
 			grid: {

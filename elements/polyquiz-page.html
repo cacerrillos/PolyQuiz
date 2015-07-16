@@ -95,8 +95,8 @@
 			this.$.globalToast.show();
 		},
 		ready: function() {
-			this.$.mainPanel.responsiveWidth = "768px";
-			this.$.mainPanel.forceNarrow = true;
+			this.$.mainPanel.responsiveWidth = "980px";
+			//this.$.mainPanel.forceNarrow = true;
 			this.fire('iron-signal', {name: 'hideshowevent', data: { show: this.$.mainPanel.narrow } });
 			this.$.sidebarMenu.select(this.sidebarpage);
 			if(this.$.mainPanel.narrow){
