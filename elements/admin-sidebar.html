@@ -1,0 +1,85 @@
+<!doctype html>
+<dom-module id="admin-sidebar">
+	<link rel="import" href="../bower_components/paper-input/paper-input.html">
+	<link rel="import" href="../bower_components/polymer/polymer.html">
+	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+	<link rel="import" href="../bower_components/paper-button/paper-button.html">
+	<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+	<link rel="import" href="../bower_components/paper-material/paper-material.html">
+	<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+	<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+	<link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+	<link rel="import" href="../bower_components/paper-item/paper-item.html">
+	<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+	<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+	<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+	<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+	<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+	<style>
+		:host {
+			--paper-item-min-height: 32px;
+		}
+	</style>
+	<template>
+		<paper-menu>
+			<paper-item><i class="fa fa-cog"></i> Quick Start Guide</paper-item>
+			<paper-item disabled>Session Management</paper-item>
+			<paper-item><i class="fa fa-cog"></i> Edit Sessions</paper-item>
+			<paper-item><i class="fa fa-cog"></i> Quizzes In Progress</paper-item>
+			<paper-item disabled>Quiz Management</paper-item>
+			<paper-item><i class="fa fa-cog"></i> Edit Quizzes</paper-item>
+			<paper-item disabled>Results & Grading</paper-item>
+			<paper-item><i class="fa fa-cog"></i> Quiz Results</paper-item>
+			<paper-item><i class="fa fa-cog"></i> Pending Free Response Grading</paper-item>
+		</paper-menu>
+	</template>
+	<script>
+	Polymer({
+		is: "admin-sidebar",
+		listeners: {
+			"toastEvent": "fireToast"
+		},
+		properties: {
+			sidebarpage: {
+				type: Number,
+				value: 0
+			}
+		},
+		goHome: function(){
+			window.location = "?p=home";
+		},
+		goTakeAQuiz: function(){
+			window.location = "?p=takequiz";
+		},
+		goLogin: function(){
+			window.location = "?p=admin";
+		},
+		fireToastNonEvent: function(text){
+			this.$.globalToast.text = text;
+			this.$.globalToast.show();
+		},
+		fireToast: function(vars){
+			this.$.globalToast.text = vars.detail.toastString;
+			this.$.globalToast.show();
+		},
+		ready: function() {
+			
+		},
+		onresp: function(){
+			//this.fireToastNonEvent(this.$.mainPanel.narrow);
+			this.fire('iron-signal', {name: 'hideshowevent', data: { show: this.$.mainPanel.narrow } });
+			if(this.$.mainPanel.narrow){
+				
+			//	this.$.scrollHeader.scrollAwayTopbar = true;
+			} else {
+			//	this.$.scrollHeader.fixed = true;
+			}
+		}
+	});
+	</script>
+	
+</dom-module>
