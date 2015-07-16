@@ -56,33 +56,6 @@ skel.layout({
 });
 </script>
 <script type="text/javascript">
-function findElement(element_id) {
-  if (document.getElementById && document.getElementById(element_id)) {
-   return document.getElementById(element_id);
-  } else {
-    return false;
-  }
-}
-
-function hideElement(element_id) {
-  element = findElement(element_id)
-  if (element) {
-    element.style.display = 'none';
-    return element;
-  } else {
-    return false;
-  }
-}
-
-function showElement(element_id) {
-  element = findElement(element_id)
-  if (element) {
-    element.style.display = '';
-    return element;
-  } else {
-    return false;
-  }
-}
 function addCanvas(){
 	var dataURL = canvas.toDataURL();
 	document.getElementById("canvasValue").value = dataURL;
