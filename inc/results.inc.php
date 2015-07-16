@@ -24,58 +24,38 @@ function deleteSessionOverlay($uuid){
     <?
 }
 ?>
-		<!-- Main Wrapper -->
-			<div id="main-wrapper">
-				<div class="main-wrapper-style2">
-					<div class="inner">
-						<div class="container">
-							<div class="row">
-								<div class="4u">
-									<div id="sidebar">
-
-										<!-- Sidebar -->
-											<section>
-                                                <?
-												include("inc/adminleftsidebar.inc.php");
-												?>
-											</section>
-								
-									</div>
-								</div>
-								<div class="8u skel-cell-important">
-									<div id="content">
-										<!-- Content -->
-									
-											<article>
-												<header class="major">
-													<h2>Results & Grading</h2>
-                                                    <?
-													$sortbysession = false;
-													if(isset($_GET['sortby'])) {
-														if($_GET['sortby']=="session"){
-															$sortbysession = true;
-															?>
-                                                            <span class="byline">Sort by <a href="?p=results">Quiz & House</a> | Session</span>
-                                                            <?
-														} else {
-															?>
-                                                            <span class="byline">Sort by <a href="?p=results">Quiz & House</a> | <a href="?p=results&sortby=session">Session</a></span>
-                                                            <?
-														}
-													} else {
-														?>
-														<span class="byline">Sort by Quiz & House | <a href="?p=results&sortby=session">Session</a></span>
-														<?
-                                                    }
-													?>
-													
-                                                    
-												</header>
-<?
-	if(isset($_SESSION["is_admin"])){
-	?>
-    <div id="seeresults" style="margin-left:20px">
-    <?
+<div class="container">
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<h2 class="nomargins">Results & Grading</h2>
+				<?
+				$sortbysession = false;
+				if(isset($_GET['sortby'])) {
+					if($_GET['sortby']=="session"){
+						$sortbysession = true;
+						?>
+						Sort by <a href="?p=results">Quiz & House</a> | Session
+						<?
+					} else {
+						?>
+						Sort by <a href="?p=results">Quiz & House</a> | <a href="?p=results&sortby=session">Session</a>
+						<?
+					}
+				} else {
+					?>
+					Sort by Quiz & House | <a href="?p=results&sortby=session">Session</a>
+					<?
+				}
+				?>
+			</paper-material>
+		</div>
+	</div>
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<? if(isset($_SESSION["is_admin"])){ ?>
+				<?
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	$mysqli -> select_db($db_name);
 	
@@ -134,17 +114,7 @@ function deleteSessionOverlay($uuid){
 					if($stmt->num_rows > 0){
 						//DISPLAY HERE
 						?>
-<h3 style='display:inline;'><? echo $info[1][$xQuiz]; ?> - <? echo $house[$xHouse]; ?> - <? echo $stmt->num_rows; ?> Result(s)</h3>
-<div id="closed<? echo $UUIDANDHOUSE; ?>" style="margin-left:20px">
-    <a href="#" onclick="showElement('open<? echo $UUIDANDHOUSE; ?>'); hideElement('closed<? echo $UUIDANDHOUSE; ?>'); return false;">
-        <img src="inc/icon_arrow_right.gif" />View Results
-    </a>
-</div>
-<div id="open<? echo $UUIDANDHOUSE; ?>" style="display: none; margin-left:20px;">
-    <a href="#" onclick="showElement('closed<? echo $UUIDANDHOUSE; ?>'); hideElement('open<? echo $UUIDANDHOUSE; ?>'); return false;">
-        <img src="inc/icon_arrow_down.gif" />Hide Results
-    </a>
-    <br />
+<h3><? echo $info[1][$xQuiz]; ?> - <? echo $house[$xHouse]; ?> - <? echo $stmt->num_rows; ?> Result(s)</h3>
     <?
     deleteHouseOverlay($info[0][$xQuiz], $house[$xHouse], "delete".$UUIDANDHOUSE);
     ?>
@@ -198,7 +168,6 @@ function deleteSessionOverlay($uuid){
 		}
 		?>
     </table>
-</div>
                         <?
 					}
 				}
@@ -260,16 +229,6 @@ function deleteSessionOverlay($uuid){
 				if($num>0){
 					echo "<h3 style='display:inline;'>".$info[1][$xSession]." - ".$info[2][$xSession]." - ".$num." Result(s)</h3>";
 					?>
-                    <div id="closed<? echo $info[0][$xSession]; ?>" style="margin-left:20px">
-                        <a href="#" onclick="showElement('open<? echo $info[0][$xSession]; ?>'); hideElement('closed<? echo $info[0][$xSession]; ?>'); return false;">
-                            <img src="inc/icon_arrow_right.gif" />View Results
-                        </a>
-                    </div>
-                    <div id="open<? echo $info[0][$xSession]; ?>" style="display: none; margin-left:20px;">
-					<a href="#" onclick="showElement('closed<? echo $info[0][$xSession]; ?>'); hideElement('open<? echo $info[0][$xSession]; ?>'); return false;">
-						<img src="inc/icon_arrow_down.gif" />Hide Results
-					</a>
-					<br />
 					<?
 					deleteSessionOverlay($info[0][$xSession]);
 					?>
@@ -326,7 +285,6 @@ function deleteSessionOverlay($uuid){
                         }
 						?>
                         	</table>
-			</div>
                     <?
 				}
 				$stmt->close();
@@ -336,27 +294,20 @@ function deleteSessionOverlay($uuid){
 		}
 	}
 	?>
-    <div class="simple_overlay" id="all" style="width:175px; min-height:75px;">
-            		<p style="margin-left:10px;">
-                    <center>
-                    	<h1 style="color:WHITE; padding-bottom:0px; margin-bottom:0px;">Are you sure?</h1>
-                    	<a href="func/resultdelete.func.php?uuid=all"><font color="#FF0000">Delete All</font></a>
-                    </center>
-                    </p>
-                </div>
+	<div class="simple_overlay" id="all" style="width:175px; min-height:75px;">
+		<p style="margin-left:10px;">
+		<center>
+			<h1 style="color:WHITE; padding-bottom:0px; margin-bottom:0px;">Are you sure?</h1>
+			<a href="func/resultdelete.func.php?uuid=all"><font color="#FF0000">Delete All</font></a>
+		</center>
+		</p>
+	</div>
                 <br /><br />
     <p><a rel="#all"><font color="#FF0000">Delete All</font></a></p>
-    </div>
-    <?
+	    <?
 	}
 ?>
-
-											</article>
-								
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			</paper-material>
+		</div>
+	</div>
+</div>
