@@ -122,7 +122,7 @@ function deleteSessionOverlay($uuid){
     <a href='func/export.func.php?quizuuid=<? echo $info[0][$xQuiz]; ?>' target="_blank">Download Quiz Results</a>
     <a rel="#delete<? echo $UUIDANDHOUSE; ?>"><font color="#FF0000">Delete Entire House</font></a>
     <br /><br />
-    <table cellpadding="5px" border="2px">
+    <table cellpadding="5px" border="2px" width="100%">
         <tr>
             <td>Delete</td>
             <td>Last</td>
@@ -242,7 +242,7 @@ function deleteSessionOverlay($uuid){
 					<? //<a href='func/export.func.php?sessionuuid=<? echo $info[0][$xSession]; >' target="_blank">Download Quiz Results</a> ?>
 					<a rel="#<? echo $info[0][$xSession]; ?>"><font color="#FF0000">Delete Entire Session</font></a>
 					<br /><br />
-					<table cellpadding="5px" border="2px">
+					<table cellpadding="5px" border="2px" width="100%">
 						<tr>
 							<? //<td>#</td> 
 							?>
