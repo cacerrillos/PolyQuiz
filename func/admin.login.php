@@ -1,7 +1,7 @@
 <?
 session_start();
 include_once("config.func.php");
-if($_POST['submit']=="Login"){
+if(count($_POST) > 0){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	$mysqli -> select_db($db_name);
 	if(mysqli_connect_errno()) {

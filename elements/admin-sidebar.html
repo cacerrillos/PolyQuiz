@@ -1,4 +1,30 @@
 <!doctype html>
+<dom-module id="admin-login">
+<template>
+<form id="adminlogin" action="../func/admin.login.php" method="post">
+	<paper-input name="user" label="Username"></paper-input>
+	<paper-input name="pass" label="Password" type="password"></paper-input>
+	<paper-button on-click="submitLogin" raised>Login</paper-button>
+</form>
+</template>
+<script>
+Polymer({
+is: "admin-login",
+properties: {
+	sidebarpage: {
+		type: Number,
+		value: 0
+	}
+},
+submitLogin: function() {
+	document.getElementById('adminlogin').submit();
+},
+ready: function() {
+	
+},
+});
+</script>
+</dom-module>
 <dom-module id="admin-sidebar">
 	<link rel="import" href="../bower_components/paper-input/paper-input.html">
 	<link rel="import" href="../bower_components/polymer/polymer.html">

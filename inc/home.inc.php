@@ -18,7 +18,7 @@ if($stmt = $mysqli->prepare("SELECT value FROM stats WHERE id='totalresults';"))
 ?>
 <div class="container">
 	<div class="row" style="margin:0;">
-		<img src="images/title.png" style="margin-left: auto; margin-right: auto; width: 100%">
+		<img src="images/title.png" style="margin-left: auto; margin-right: auto; width: 100%; padding-left: 0px;">
 	</div>
 	<div class="row" style="margin-top:0px;">
 		<div class="12u">
