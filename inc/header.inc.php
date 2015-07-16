@@ -187,7 +187,7 @@ $(document).ready(function() {
 	height:35px;
 	width:35px;
 }
-.row {
+.rowwithmargins {
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
@@ -240,6 +240,9 @@ paper-material {
 		--paper-input-container-color: rgba(0,0,0,0.75);
 		--paper-input-container-focus-color: #2196F3;
 		*/
+		--paper-menu-selected-item: {
+			color: #2196F3;
+		}
 	}
 	.list {
 		padding-top: 12px;
