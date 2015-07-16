@@ -38,6 +38,9 @@ session_start();
 	:host {
 		--paper-item-min-height: 32px;
 	}
+	.smallbuttons {
+		min-width: 2em;
+	}
 	</style>
 	<template>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
@@ -78,13 +81,13 @@ session_start();
 				<paper-toolbar>
 					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
 					<span class="title">PolyQuiz 3.0</span>
-					<paper-button on-click="goHome"><iron-icon icon="icons:home"></iron-icon> Home</paper-button>
-					<paper-button on-click="goTakeAQuiz"><iron-icon icon="icons:content-paste"></iron-icon> Take A Quiz</paper-button>
-					<paper-button on-click="goLogin"><iron-icon icon="icons:settings"></iron-icon> MAnage</paper-button>
+					<paper-button on-click="goHome" class="smallbuttons"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
+					<paper-button on-click="goTakeAQuiz" class="smallbuttons"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
+					<paper-button on-click="goLogin" class="smallbuttons"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 				</paper-toolbar>
-					<content>
-					
-					</content>
+				<content>
+				
+				</content>
 			</paper-scroll-header-panel>
 		</paper-drawer-panel>
 		<paper-fab icon="home"></paper-fab>
