@@ -52,8 +52,6 @@ function deleteSessionOverlay($uuid){
 		</div>
 	</div>
 	<div class="row">
-		<div class="12u">
-			<paper-material>
 				<? if(isset($_SESSION["is_admin"])){ ?>
 				<?
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
@@ -114,6 +112,8 @@ function deleteSessionOverlay($uuid){
 					if($stmt->num_rows > 0){
 						//DISPLAY HERE
 						?>
+						<div class="12u">
+			<paper-material>
 <h3><? echo $info[1][$xQuiz]; ?> - <? echo $house[$xHouse]; ?> - <? echo $stmt->num_rows; ?> Result(s)</h3>
     <?
     deleteHouseOverlay($info[0][$xQuiz], $house[$xHouse], "delete".$UUIDANDHOUSE);
@@ -168,6 +168,8 @@ function deleteSessionOverlay($uuid){
 		}
 		?>
     </table>
+				</paper-material>
+		</div>
                         <?
 					}
 				}
@@ -227,6 +229,10 @@ function deleteSessionOverlay($uuid){
 				$stmt->store_result();
 				$num = $stmt->num_rows;
 				if($num>0){
+					?>
+					<div class="12u">
+					<paper-material>
+					<?
 					echo "<h3 style='display:inline;'>".$info[1][$xSession]." - ".$info[2][$xSession]." - ".$num." Result(s)</h3>";
 					?>
 					<?
@@ -285,6 +291,8 @@ function deleteSessionOverlay($uuid){
                         }
 						?>
                         	</table>
+							</paper-material>
+							</div>
                     <?
 				}
 				$stmt->close();
@@ -307,7 +315,6 @@ function deleteSessionOverlay($uuid){
 	    <?
 	}
 ?>
-			</paper-material>
-		</div>
+
 	</div>
 </div>
