@@ -12,7 +12,7 @@ skel.breakpoints({
 	large:  "(max-width: 1280px)",
 	medium: "(max-width: 980px)",
 	small:  "(max-width: 736px)",
-	xsmall: "(max-width: 560px)",
+	xsmall: "(max-width: 580px)",
 	xxsmall: "(max-width: 480px)",
 	xxxsmall: "(max-width: 360px)"
 });
@@ -22,6 +22,7 @@ skel.layout({
 		gutters: "40px"
 	},
 	containers: true,
+	conditionals: true,
 	breakpoints: {
 		large: {
 			containers: "95%"
