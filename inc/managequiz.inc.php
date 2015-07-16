@@ -14,39 +14,6 @@ if(isset($_GET['page'])){
 }
 $limitedq = mysql_query("SELECT * FROM `".$uuid."` ORDER BY id ASC LIMIT ".$offset.", 10;");
 ?>
-<script type="text/javascript">
-	function findElement(element_id) {
-	  if (document.getElementById && document.getElementById(element_id)) {
-	   return document.getElementById(element_id);
-	  } else {
-		return false;
-	  }
-	}
-	
-	function hideElement(element_id) {
-	  element = findElement(element_id)
-	  if (element) {
-		element.style.display = 'none';
-		return element;
-	  } else {
-		return false;
-	  }
-	}
-	
-	function showElement(element_id) {
-	  element = findElement(element_id)
-	  if (element) {
-		element.style.display = '';
-		return element;
-	  } else {
-		return false;
-	  }
-	}
-	window.onload=function() {
-	   hideElement('loading');
-	   showElement('quizz');
-	}
-</script>
 <div id="main-wrapper">
 	<div class="main-wrapper-style2">
 		<div class="inner">
