@@ -110,7 +110,7 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 	<div class="container">
 <div class="row">
 <div class="12u">
-<paper-material>
+<paper-material style="padding-top:0px;">
 	<?
 	$quiz = $_SESSION['quiz'];
 	if(!isset($_GET['num'])){
@@ -128,6 +128,22 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 			//exit();
 		}
 		$questions = $quiz -> questions;
+		$progVal = 5;
+		if(isset($_SESSION["answers"])){
+			$progVal = floor(count($_SESSION["answers"]) / count($questions) * 100);
+			if($progVal < 5){
+				$progVal = 5;
+			}
+		}
+		$posVal = 5;
+		$posVal = floor(intval($num) / count($questions) * 100);
+		if($posVal < 5){
+			$posVal = 5;
+		}
+		?>
+		<paper-progress value="<? echo $progVal; ?>" style="width:100%;"></paper-progress>
+		<paper-progress value="<? echo $posVal; ?>" style="width:100%;"></paper-progress>
+		<?
 		if(isset($questions[intval($num)])){
 			$thisquestion = $quiz -> getQuestion(intval($num));
 			echo "<h2 style='margin-bottom:5px; margin-top: 0px;'>#".($num+1)."</h2>";
