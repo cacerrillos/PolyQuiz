@@ -19,14 +19,31 @@ skel.breakpoints({
 skel.layout({
 	reset: "normalize",
 	grid: {
-		gutters: [ "40px", "20px" ]
-	},	containers: true,
+		gutters: "40px"
+	},
+	containers: true,
 	breakpoints: {
 		medium: {
-			containers: "95%"
+			containers: "95%",
+			grid: {
+				gutters: "30px"
+			}
 		},
 		small: {
-			containers: "95%"
+			containers: "95%",
+			grid: {
+				gutters: "20px"
+			}
+		},
+		xsmall: {
+			grid: {
+				gutters: "10px"
+			}
+		},
+		xxsmall: {
+			grid: {
+				gutters: "5px"
+			}
 		},
 		xxxsmall: {
 			containers: "100%"
@@ -188,10 +205,6 @@ $(document).ready(function() {
 	height:35px;
 	width:35px;
 }
-.rowwithmargins {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
 paper-material {
 	padding: 10px;
 }
@@ -262,6 +275,8 @@ paper-material {
 		margin: 10px;
 	}
 	paper-material {
+		margin-top: 10px;
+		margin-bottom: 10px;
 		background-color: white;
 	}
 		
