@@ -30,6 +30,7 @@ if(isset($_GET['p'])){
 if(!isset($_SESSION["total"]) && $page=="done"){
 	header("Location: ?p=home");
 }
+$_SESSION['page'] = $page;
 if($page=="home"){
 	$pagetype = "home";
 	$pagetype2 = "home";

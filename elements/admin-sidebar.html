@@ -1,5 +1,11 @@
 <!doctype html>
 <dom-module id="admin-login">
+<style is="custom-style">
+	form {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+</style>
 <template>
 <form id="adminlogin" action="../func/admin.login.php" method="post">
 	<paper-input name="user" label="Username"></paper-input>
@@ -51,7 +57,7 @@ ready: function() {
 		}
 	</style>
 	<template>
-		<paper-menu>
+		<paper-menu id="sidebarAdminMenu">
 			<paper-item on-click="goAdminHome"><i class="fa fa-cog"></i> Quick Start Guide</paper-item>
 			<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
 			<paper-item on-click="goEditSessions"><i class="fa fa-cog"></i> Edit Sessions</paper-item>
@@ -74,6 +80,10 @@ ready: function() {
 			sidebarpage: {
 				type: Number,
 				value: 0
+			},
+			page: {
+				type: String,
+				value: ""
 			}
 		},
 		goAdminHome: function(){
@@ -106,6 +116,29 @@ ready: function() {
 			this.$.globalToast.show();
 		},
 		ready: function() {
+			if(this.page != ""){
+				switch(this.page){
+					case "admin":
+						this.$.sidebarAdminMenu.select(0);
+						break;
+					case "sessions":
+						this.$.sidebarAdminMenu.select(2);
+						break;
+					case "pendingsessions":
+						this.$.sidebarAdminMenu.select(3);
+						break;
+					case "quizadmin":
+					case "managequiz":
+						this.$.sidebarAdminMenu.select(5);
+						break;
+					case "results":
+						this.$.sidebarAdminMenu.select(7);
+						break;
+					case "gradefr":
+						this.$.sidebarAdminMenu.select(8);
+						break;
+				}
+			}
 			
 		},
 		onresp: function(){

@@ -65,7 +65,7 @@ session_start();
 				if(isset($_SESSION["is_admin"])){
 				?>
 					<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
-					<admin-sidebar></admin-sidebar>
+					<admin-sidebar page="<? echo $_SESSION['page']; ?>"></admin-sidebar>
 				<?
 				} else if($_SESSION['pagetype'] != "takequiz") {  
 				?>
