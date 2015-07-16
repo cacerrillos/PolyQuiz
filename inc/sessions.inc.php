@@ -82,6 +82,7 @@
 													<td>Status</td>
                                                     <td>Show Scores</td>
 													<td>Delete</td>
+													<td>Take</td>
 													</tr>
 													<?
 													while($info = mysql_fetch_array($data)){
@@ -121,6 +122,7 @@
 														?>
                                                         </td>
 														<td><a href="func/sessiondelete.func.php?uuid=<? echo $info['uuid'];?>"><font color="#FF0000">Delete</font></a></td>
+														<td>Take</td>
 														<tr>
 														<?
 													}
