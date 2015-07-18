@@ -1,58 +1,7 @@
 <!doctype html>
-<dom-module id="admin-quiz-results-delete-overlay">
-	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
-	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
-<template>
-<paper-dialog id="thisDialog">
-	<paper-spinner active></paper-spinner>
-	<div class="buttons">
-		<paper-button dialog-dismiss raised>Cancel</paper-button>
-		<paper-button dialog-confirm raised>Delete</paper-button>
-	</div>
-</paper-dialog>
-</template>
-<script>
-Polymer({
-	is: "admin-quiz-results-delete-overlay",
-	properties: {
-		uuid: {
-			type: String,
-			value: null
-		},
-		house: {
-			type: String,
-			value: null
-		},
-		type: {
-			type: String,
-			value: null
-		},
-		url: {
-			type: String,
-			value: null
-		}
-	},
-	open: function() {
-		this.$.thisDialog.open();
-	},
-	onConfirm: function() {
-		switch(this.type){
-			case "HOUSE":
-					//func/resultdelete.func.php?uuid=<? echo $uuid; ?>&house=<? echo $house; ?>&delete=1"
-				break;
-			case "SESSION":
-					//func/resultdelete.func.php?session=<? echo $uuid; ?>&delete=1
-				break;
-		}
-	}
-});
-</script>
-</dom-module>
-<dom-module id="admin-quiz-results-row">
+<dom-module id="admin-quiz-results-page">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
 	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
@@ -61,141 +10,112 @@ Polymer({
 	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 	<style is="custom-style">
 		paper-material {
-			margin-bottom: 10px;
-			padding: 5px;
-		}
-		.smallbuttons {
-			min-width: 2em;
-			min-height: 1em;
-		}
-		.virtalign {
-			vertical-align: middle;
-		}
-		paper-dialog {
-			
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
 		}
 	</style>
 	<template>
 		<iron-ajax
-				id="ajaxQ"
-				url="../func/rawresult.php?uuid=4523"
-				handle-as="text"
+				id="resultsAjax"
+				url="../api/1.0/results.php"
+				handle-as="json"
 				on-response="resultContentReceived">	
 			</iron-ajax>
-		<paper-dialog
-		id="resultDialog"
-		entry-animation="scale-up-animation"
-		exit-animation="fade-out-animation"
-		on-iron-overlay-closed="">
-			<h2 class="nomargins">Result</h2>
-			<paper-spinner id="loadingSpinner" alt="Loading results!" active></paper-spinner>
-			<paper-dialog-scrollable>
-				<div id="contentArea"></div>
-			</paper-dialog-scrollable>
-			<div class="buttons">
-				<paper-button dialog-dismiss raised>Close</paper-button>
+		<div class="container" id="thisPageContainer">
+			<div class="row">
+				<div class="12u">
+					<paper-material>
+						<h2 class="nomargins">Results & Grading</h2>
+						Sort By: <paper-button id="quizandhouse" on-click="onSortByQuizAndHouse" raised>Quiz & House</paper-button><paper-button id="session" on-click="onSortBySession" raised>Session</paper-button>
+					</paper-material>
+				</div>
+				<div class="12u">
+					<paper-material id="loadPaper">
+						<center><paper-spinner id="loadSpinner" active></paper-spinner></center>
+					</paper-material>
+				</div>
 			</div>
-		</paper-dialog>
-		<paper-dialog
-		id="deleteDialog"
-		entry-animation="scale-up-animation"
-		exit-animation="fade-out-animation"
-		on-iron-overlay-closed="deleteDialogClosed">
-			<h2>Delete?</h2>
-			<div class="buttons">
-				<paper-button dialog-dismiss raised>Cancel</paper-button>
-				<paper-button dialog-confirm raised>Delete</paper-button>
-			</div>
-		</paper-dialog>
-		<admin-quiz-results-delete-overlay id="deleteSpecificQuiz"></admin-quiz-results-delete-overlay>
-		<div class="row">
-			<div class="12u">
-				<paper-material>
+				<template is="dom-repeat" items="{{_transformData(resultsObject)}}" as="quizzes">
 					<div class="row">
-						<div class="4u">
-							<div class="row">
-								<div class="12u">{{lastname}}</div>
-								<div class="12u"><span style="padding-left:20px;">{{firstname}}</span></div>
-							</div>
-						</div>
-						<div class="3u">
-							<div class="row">
-								<div class="6u">Regular:</div>
-								<div class="6u">{{score}}</div>
-								<div class="6u">Free Response</div>
-								<div class="6u">{{freeresponsescore}}</div>
-							</div>
-						</div>
-						<div class="3u">{{datetime}}</div>
-						<div class="2u" id="actionButtons">
-							<paper-icon-button id="viewResultOverlayButton" on-click="viewResultOverlay" icon="icons:open-in-browser"></paper-icon-button>
-							<paper-icon-button id="viewResultNewTabButton" on-click="viewResultNewTab" icon="icons:open-in-new"></paper-icon-button>
-							<paper-icon-button id="gradeFreeResponseButton" on-click="gradeFreeResponse" icon="icons:content-paste"></paper-icon-button>
-							<paper-icon-button id="viewDeleteDialogButton" icon="icons:delete" on-click="viewDeleteDialog"></paper-icon-button>
+						<div class="12u">
+							<paper-material>
+								<h2>{{quizzes.name}}</h2>
+								<template is="dom-repeat" items="{{_transformData(quizzes.results)}}" as="houses">
+									<div class="row">
+										<div class="12u">
+											<admin-quiz-results-row
+												uuid=""
+												firstname="First Name"
+												lastname="Last Name"
+												score="Score"
+												freeresponsescore="Free Response Score"
+												datetime="Date & Time"
+												></admin-quiz-results-row>
+											<template is="dom-repeat" items="{{_transformData(houses)}}" as="quizresults">
+												<admin-quiz-results-row
+													uuid="{{quizresults.uuid}}"
+													firstname="{{quizresults.firstname}}"
+													lastname="{{quizresults.lastname}}"
+													score="{{quizresults.rawscore}}"
+													possiblescore="{{quizresults.possiblescore}}"
+													freeresponsescore="{{quizresults.frscore}}"
+													freeresponsescorepossible="{{quizresults.frpossible}}"
+													datetime="{{quizresults.timestamp}}"
+													></admin-quiz-results-row>
+											</template>
+										</div>
+									</div>
+								</template>
+							</paper-material>
 						</div>
 					</div>
-				</paper-material>
-			</div>
-				
+				</template>
 		</div>
 	</template>
 	<script>
 		Polymer({
-			is: "admin-quiz-results-row",
+			is: "admin-quiz-results-page",
 			properties: {
-				uuid: {
-					type: String,
-					value: ""
+				_get: {
+					type: Object
 				},
-				lastname: {
-					type: String,
-					value: "null"
-				},
-				firstname: {
-					type: String,
-					value: "null"
-				},
-				resultContent: {
-					type: String,
-					value: ""
-				},
-				parentToFit: {
-					type: Object,
-					value: null
+				resultsObject: {
+					type: Array
 				}
 			},
-			ready: function() {
-				if(this.uuid == ""){
-					this.$.actionButtons.style.visibility = "hidden";
-				}
+			resultContentReceived: function(response) {
+				this._transformData(this.$.resultsAjax.lastResponse);
+				this.resultsObject = this.$.resultsAjax.lastResponse;
 			},
-			viewDeleteDialog: function() {
-				this.$.deleteSpecificQuiz.open();
-				//this.$.deleteDialog.open();
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				console.log(arr);
+				return arr;
 			},
-			deleteDialogClosed: function() {
+			_convertTimeStamp: function(data) {
 				
 			},
-			viewResultOverlay: function() {
-				this.$.resultDialog.open();
-				this.$.resultDialog.notifyResize();
-				if(!this.$.ajaxQ.lastResponse){
-					this.$.ajaxQ.generateRequest();
-				}
+			_count: function(data){
+				return data.length;
 			},
-			resultContentReceived: function(request) {
-				this.$.loadingSpinner.active = false;
-				this.$.contentArea.innerHTML = this.$.ajaxQ.lastResponse;
-				this.$.resultDialog.notifyResize();
-				this.$.resultDialog.center();
+			onSortByQuizAndHouse: function() {
+				window.location = "?p=results";
 			},
-			viewResultNewTab: function() {
-				var win = window.open("?p=postquizadmin&uuid=" + this.uuid, "_blank");
-				if(win){
-					win.focus();
+			onSortBySession: function(){
+				window.location = "?p=results&sortby=session";
+			},
+			ready: function() {
+				if(this._get.hasOwnProperty("sortby")){
+					if(this._get["sortby"] == "session"){
+						this.$.session.disabled = true;
+					} else {
+						this.$.quizandhouse.disabled = true;
+					}
 				} else {
-					alert("Please allow popups for this site, we promise its not spam/ads :D");
+					this.$.quizandhouse.disabled = true;
 				}
+				this.$.resultsAjax.generateRequest();
 			}
 		});
 	</script>
