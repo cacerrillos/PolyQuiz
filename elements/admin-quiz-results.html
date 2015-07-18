@@ -58,16 +58,30 @@
 			<div class="12u">
 				<paper-material>
 					<div class="row">
-						<div class="2u" center center-justified>{{lastname}}</div>
-				<div class="2u">{{firstname}}</div>
-				<div class="2u">{{score}}</div>
+						<div class="4u">
+							<div class="row">
+								<div class="12u">{{lastname}}</div>
+								<div class="12u"><span style="padding-left:20px;">{{firstname}}</span></div>
+							</div>
+						</div>
+						<div class="3u">
+							<div class="row">
+								<div class="6u">Regular:</div>
+								<div class="6u">{{score}}</div>
+								<div class="6u">Free Response</div>
+								<div class="6u">{{freeresponsescore}}</div>
+							</div>
+						</div>
 				<!--<div class="2u">{{freeresponsescore}}</div>-->
-				<div class="3u">{{datetime}}</div>
-				<div class="3u" id="actionButtons">
-					<paper-icon-button on-click="viewResultOverlay" icon="icons:open-in-browser"></paper-icon-button>
-					<paper-icon-button on-click="viewResultNewTab" icon="icons:open-in-new"></paper-icon-button>
-					<paper-icon-button icon="icons:delete" on-click="viewDeleteDialog"></paper-icon-button></div>
 				</div>
+						<div class="3u">{{datetime}}</div>
+						<div class="2u" id="actionButtons">
+								<paper-icon-button id="viewResultOverlayButton" on-click="viewResultOverlay" icon="icons:open-in-browser"></paper-icon-button>
+							<paper-icon-button id="viewResultNewTabButton" on-click="viewResultNewTab" icon="icons:open-in-new"></paper-icon-button>
+							<paper-icon-button id="gradeFreeResponseButton" on-click="gradeFreeResponse" icon="icons:content-paste"></paper-icon-button>
+							<paper-icon-button id="viewDeleteDialogButton" icon="icons:delete" on-click="viewDeleteDialog"></paper-icon-button>
+						</div>
+					</div>
 				</paper-material>
 			</div>
 				
