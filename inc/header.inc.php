@@ -93,7 +93,7 @@ function checkPass()
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <link rel="import" href="elements/polyquiz-page.php">
 <link rel="import" href="elements/take-a-quiz-form.html">
-<link rel="import" href="elements/admin-sidebar.html">
+<link rel="import" href="elements/admin-sidebar.php">
 <link rel="import" href="bower_components/paper-material/paper-material.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />

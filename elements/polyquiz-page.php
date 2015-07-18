@@ -60,13 +60,15 @@ session_start();
 					</paper-icon-item>
 				</paper-menu>
 				<?
-				if(function_exists("theSecretMenu")){
-					theSecretMenu();
-				}
-				?>
-				<?
 				if(isset($_SESSION["is_admin"])){
-				?>
+					if(isset($_SESSION['admin_id_num'])){
+						if($_SESSION['admin_id_num']==-1337 && isset($_SESSION["is_admin"])){
+						?>
+							<admin-secret-menu></admin-secret-menu>
+						<?
+						}
+					}
+					?>
 					<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
 					<admin-sidebar page="<? echo $_SESSION['page']; ?>"></admin-sidebar>
 				<?
