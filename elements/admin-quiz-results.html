@@ -1,0 +1,49 @@
+<!doctype html>
+<dom-module id="admin-quiz-results-row">
+	<style is="custom-style">
+		.smallbuttons {
+			min-width: 2em;
+			min-height: 1em;
+		}
+		.virtalign {
+			vertical-align: middle;
+		}
+	</style>
+	<template>
+		<div class="row">
+			<div class="12u">
+				<paper-material>
+					<div class="row">
+						<div class="2u virtalign" center center-justified>{{lastname}}</div>
+				<div class="2u">{{firstname}}</div>
+				<div class="2u">{{score}}</div>
+				<!--<div class="2u">{{freeresponsescore}}</div>-->
+				<div class="3u">{{datetime}}</div>
+				<div class="3u"><paper-button class="smallbuttons" raised>V</paper-button><paper-button class="smallbuttons" raised>T</paper-button></div>
+					</div>
+				</paper-material>
+			</div>
+				
+		</div>
+	</template>
+	<script>
+		Polymer({
+			is: "admin-quiz-results-row",
+			properties: {
+				uuid: {
+					type: String,
+					value: ""
+				},
+				lastname: {
+					type: String,
+					value: "null"
+				},
+				firstname: {
+					type: String,
+					value: "null"
+				}
+			}
+		});
+	</script>
+
+</dom-module>
