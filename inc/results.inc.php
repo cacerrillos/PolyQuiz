@@ -130,7 +130,7 @@ function deleteSessionOverlay($uuid){
 											<td>Date & Time</td>
 										</tr>
 										<admin-quiz-results-row
-										uuid="0"
+										uuid=""
 										firstname="First Name"
 										lastname="Last Name"
 										score="Score"
@@ -262,7 +262,7 @@ function deleteSessionOverlay($uuid){
 										<? //<td>Session</td> ?>
 									</tr>
 									<admin-quiz-results-row
-									uuid="0"
+									uuid=""
 									firstname="First Name"
 									lastname="Last Name"
 									score="Score"

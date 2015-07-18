@@ -1,6 +1,11 @@
 <!doctype html>
 <dom-module id="admin-quiz-results-row">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 	<style is="custom-style">
+		paper-material {
+			margin-bottom: 10px;
+			padding: 5px;
+		}
 		.smallbuttons {
 			min-width: 2em;
 			min-height: 1em;
@@ -10,16 +15,23 @@
 		}
 	</style>
 	<template>
+		<paper-dialog id="deleteDialog">
+			<h2>Delete?</h2>
+			<div class="buttons">
+				<paper-button dialog-dismiss>Cancel</paper-button>
+				<paper-button dialog-confirm>Delete</paper-button>
+			</div>
+		</paper-dialog>
 		<div class="row">
 			<div class="12u">
 				<paper-material>
 					<div class="row">
-						<div class="2u virtalign" center center-justified>{{lastname}}</div>
+						<div class="2u" center center-justified>{{lastname}}</div>
 				<div class="2u">{{firstname}}</div>
 				<div class="2u">{{score}}</div>
 				<!--<div class="2u">{{freeresponsescore}}</div>-->
 				<div class="3u">{{datetime}}</div>
-				<div class="3u"><paper-button class="smallbuttons" raised>V</paper-button><paper-button class="smallbuttons" raised>T</paper-button></div>
+				<div class="3u" id="actionButtons"><paper-icon-button on-click="viewResult" icon="icons:open-in-new"></paper-icon-button><paper-icon-button icon="icons:delete" on-click="viewDeleteDialog"></paper-icon-button></div>
 					</div>
 				</paper-material>
 			</div>
@@ -41,6 +53,22 @@
 				firstname: {
 					type: String,
 					value: "null"
+				}
+			},
+			ready: function() {
+				if(this.uuid == ""){
+					this.$.actionButtons.style.visibility = "hidden";
+				}
+			},
+			viewDeleteDialog: function() {
+				this.$.deleteDialog.open();
+			},
+			viewResult: function() {
+				var win = window.open("?p=postquizadmin&uuid=" + this.uuid, "_blank");
+				if(win){
+					win.focus();
+				} else {
+					alert("Please allow popups for this site, we promise its not spam/ads :D");
 				}
 			}
 		});
