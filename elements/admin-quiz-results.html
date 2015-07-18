@@ -30,7 +30,7 @@
 						Sort By: <paper-button id="quizandhouse" on-click="onSortByQuizAndHouse" raised>Quiz & House</paper-button><paper-button id="session" on-click="onSortBySession" raised>Session</paper-button>
 					</paper-material>
 				</div>
-				<div class="12u">
+				<div class="12u" id="loadPaperDiv">
 					<paper-material id="loadPaper">
 						<center><paper-spinner id="loadSpinner" active></paper-spinner></center>
 					</paper-material>
@@ -87,10 +87,11 @@
 			resultContentReceived: function(response) {
 				this._transformData(this.$.resultsAjax.lastResponse);
 				this.resultsObject = this.$.resultsAjax.lastResponse;
+				this.$.loadPaperDiv.style.display = "none";
 			},
 			_transformData: function(data){
 				var arr = $.map(data, function(el) { return el; })
-				console.log(arr);
+				//console.log(arr);
 				return arr;
 			},
 			_convertTimeStamp: function(data) {
