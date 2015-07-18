@@ -1,4 +1,57 @@
 <!doctype html>
+<dom-module id="admin-quiz-results-delete-overlay">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<template>
+<paper-dialog id="thisDialog">
+	<paper-spinner active></paper-spinner>
+	<div class="buttons">
+		<paper-button dialog-dismiss raised>Cancel</paper-button>
+		<paper-button dialog-confirm raised>Delete</paper-button>
+	</div>
+</paper-dialog>
+</template>
+<script>
+Polymer({
+	is: "admin-quiz-results-delete-overlay",
+	properties: {
+		uuid: {
+			type: String,
+			value: null
+		},
+		house: {
+			type: String,
+			value: null
+		},
+		type: {
+			type: String,
+			value: null
+		},
+		url: {
+			type: String,
+			value: null
+		}
+	},
+	open: function() {
+		this.$.thisDialog.open();
+	},
+	onConfirm: function() {
+		switch(this.type){
+			case "HOUSE":
+					//func/resultdelete.func.php?uuid=<? echo $uuid; ?>&house=<? echo $house; ?>&delete=1"
+				break;
+			case "SESSION":
+					//func/resultdelete.func.php?session=<? echo $uuid; ?>&delete=1
+				break;
+		}
+	}
+});
+</script>
+</dom-module>
 <dom-module id="admin-quiz-results-row">
 	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -54,6 +107,7 @@
 				<paper-button dialog-confirm raised>Delete</paper-button>
 			</div>
 		</paper-dialog>
+		<admin-quiz-results-delete-overlay id="deleteSpecificQuiz"></admin-quiz-results-delete-overlay>
 		<div class="row">
 			<div class="12u">
 				<paper-material>
@@ -104,6 +158,10 @@
 				resultContent: {
 					type: String,
 					value: ""
+				},
+				parentToFit: {
+					type: Object,
+					value: null
 				}
 			},
 			ready: function() {
@@ -112,7 +170,8 @@
 				}
 			},
 			viewDeleteDialog: function() {
-				this.$.deleteDialog.open();
+				this.$.deleteSpecificQuiz.open();
+				//this.$.deleteDialog.open();
 			},
 			deleteDialogClosed: function() {
 				
