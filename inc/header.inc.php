@@ -106,7 +106,6 @@ function checkPass()
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/lightbox.js"></script>
 <script src="js/sketch.js"></script>
-<script src="js/overlay.js"></script>
 <link rel="stylesheet" type="text/css" href="js/mathquill.css">
 <script src="js/mathquill.min.js"></script>
 <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
