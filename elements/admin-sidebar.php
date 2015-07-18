@@ -1,7 +1,7 @@
 <!doctype html>
 <dom-module id="admin-secret-menu">
 <template>
-<form id="secret" action="func/secret.func.php" method="post">
+<form id="secret" action="../func/secret.func.php" method="post">
 	Browse As:
 	<select name="uuid">
 		<?
