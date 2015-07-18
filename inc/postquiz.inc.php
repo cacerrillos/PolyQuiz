@@ -25,62 +25,77 @@ if(isset($_SESSION["is_admin"])){
 				</div>
 				<?
 			for($x = 0; $x <$numofq; $x++){
+				$thisquestion = $quiz->getQuestion($x);
 				?>
 				<div class="12u">
 				<paper-material>
-				<?
-				$thisquestion = $quiz->getQuestion($x);
-				if($thisquestion->response == -1){
-					echo ($x+1).") (Student earned 0 points, Question skipped!)".$thisquestion->question." <br>";
-				} else {
-					if($thisquestion->type!=4){
-						echo ($x+1).") (Student earned ".$thisquestion->getPoints()." points)".$thisquestion->question." <br>";
-					} else {
-						echo ($x+1).") (Student earned ".$thisquestion->answerArray[$thisquestion->response]->getPoints()." points)".$thisquestion->question." <br>";
-					}
-				}
-				if($thisquestion->includeCanvas){
-					?>
-					<img src="<? echo $thisquestion->getCanvasValue(); ?>" /><br />
-					<?
-				}
-				for($y = 0; $y <count($thisquestion->answerArray); $y++){
-					if($thisquestion->answer==$y){
-						echo "<b>";
-					}
-					if($thisquestion->type!=4){
-						if($thisquestion->response==$y && $thisquestion->answer!=$y){
-							echo "<font color='#FF0000'>";
+					<div class="row">
+						<div class="12u">
+							<?
+							if($thisquestion->response == -1){
+								echo ($x+1).") (Student earned 0 points, Question skipped!)".$thisquestion->question;
+							} else {
+								if($thisquestion->type!=4){
+									echo ($x+1).") (Student earned ".$thisquestion->getPoints()." points)".$thisquestion->question;
+								} else {
+									echo ($x+1).") (Student earned ".$thisquestion->answerArray[$thisquestion->response]->getPoints()." points)".$thisquestion->question;
+								}
+							}
+							?>
+						</div>
+						<?
+						if($thisquestion->includeCanvas){
+						?>
+							<div class="12u">
+								<paper-material><img src="<? echo $thisquestion->getCanvasValue(); ?>" /></paper-material>
+							</div>
+						<?
 						}
-						if($thisquestion->response==$y && $thisquestion->answer==$y){
-							echo "<font color='#00FF00'>";
+						?>
+						<?
+						for($y = 0; $y <count($thisquestion->answerArray); $y++){
+							?>
+							<div class="12u">
+							<?
+							if($thisquestion->answer==$y){
+								echo "<b>";
+							}
+							if($thisquestion->type!=4){
+								if($thisquestion->response==$y && $thisquestion->answer!=$y){
+									echo "<font color='#FF0000'>";
+								}
+								if($thisquestion->response==$y && $thisquestion->answer==$y){
+									echo "<font color='#00FF00'>";
+								}
+							} else {
+								if($thisquestion->response==$y){
+									echo "<font color='#0000AA'>";
+								}
+							}
+							echo $alphabet[$y];
+							if($thisquestion->type==4){
+								echo " (".$thisquestion->answerArray[$y]->getPoints()." points";	
+							}
+							if($thisquestion->type!=4){
+								echo ") ".$thisquestion->answerArray[$y];
+							} else {
+								echo ") ".$thisquestion->answerArray[$y]->getAnswer();
+							}
+							if($thisquestion->response==$y && $thisquestion->answer!=$y){
+								echo "</font>";
+							}
+							if($thisquestion->response==$y && $thisquestion->answer==$y){
+								echo "</font>";
+							}
+							if($thisquestion->answer==$y){
+								echo "</b>";
+							}
+							echo "</div>";
 						}
-					} else {
-						if($thisquestion->response==$y){
-							echo "<font color='#0000AA'>";
-						}
-					}
-					echo $alphabet[$y];
-					if($thisquestion->type==4){
-						echo " (".$thisquestion->answerArray[$y]->getPoints()." points";	
-					}
-					if($thisquestion->type!=4){
-						echo ") ".$thisquestion->answerArray[$y];
-					} else {
-						echo ") ".$thisquestion->answerArray[$y]->getAnswer();
-					}
-					if($thisquestion->response==$y && $thisquestion->answer!=$y){
-						echo "</font>";
-					}
-					if($thisquestion->response==$y && $thisquestion->answer==$y){
-						echo "</font>";
-					}
-					if($thisquestion->answer==$y){
-						echo "</b>";
-					}
-					echo "<br>";
-				}
-				?>
+						?>
+						<div class="12u"></div>
+					</div>
+				
 				</paper-material>
 				</div>
 				<?
