@@ -1,30 +1,4 @@
-<?
-function deleteHouseOverlay($uuid, $house, $tempString){
-	?>
-    <div class="simple_overlay" id="<? echo $tempString; ?>" style="width:175px; min-height:75px;">
-        <p style="margin-left:10px;">
-        <center>
-            <h1 style="color:WHITE; padding-bottom:0px; margin-bottom:0px;">Are you sure?</h1>
-            <a href="func/resultdelete.func.php?uuid=<? echo $uuid; ?>&house=<? echo $house; ?>&delete=1"><font color="#FF0000">Delete</font></a>
-        </center>
-        </p>
-    </div>
-    <?
-}
-function deleteSessionOverlay($uuid){
-	?>
-    <div class="simple_overlay" id="<? echo $uuid; ?>" style="width:175px; min-height:75px;">
-        <p style="margin-left:10px;">
-        <center>
-            <h1 style="color:WHITE; padding-bottom:0px; margin-bottom:0px;">Are you sure?</h1>
-            <a href="func/resultdelete.func.php?session=<? echo $uuid; ?>&delete=1"><font color="#FF0000">Delete</font></a>
-        </center>
-        </p>
-    </div>
-    <?
-}
-?>
-<div class="container">
+<div class="container" id="thisPageContainer">
 	<div class="row">
 		<div class="12u">
 			<paper-material>
@@ -112,9 +86,6 @@ function deleteSessionOverlay($uuid){
 							<div class="12u">
 								<paper-material>
 									<h3><? echo $info[1][$xQuiz]; ?> - <? echo $house[$xHouse]; ?> - <? echo $stmt->num_rows; ?> Result(s)</h3>
-									<?
-									deleteHouseOverlay($info[0][$xQuiz], $house[$xHouse], "delete".$UUIDANDHOUSE);
-									?>
 									<br />
 									<a href='func/export.func.php?quizuuid=<? echo $info[0][$xQuiz]; ?>' target="_blank">Download Quiz Results</a>
 									<a rel="#delete<? echo $UUIDANDHOUSE; ?>"><font color="#FF0000">Delete Entire House</font></a>
@@ -239,9 +210,6 @@ function deleteSessionOverlay($uuid){
 							<paper-material>
 								<?
 								echo "<h3 style='display:inline;'>".$info[1][$xSession]." - ".$info[2][$xSession]." - ".$num." Result(s)</h3>";
-								?>
-								<?
-								deleteSessionOverlay($info[0][$xSession]);
 								?>
 								<br />
 								<? //<a href='func/export.func.php?sessionuuid=<? echo $info[0][$xSession]; >' target="_blank">Download Quiz Results</a> ?>
