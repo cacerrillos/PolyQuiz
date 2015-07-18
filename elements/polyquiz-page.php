@@ -87,7 +87,7 @@ session_start();
 					<paper-button on-click="goTakeAQuiz" class="smallbuttons"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
 					<paper-button on-click="goLogin" class="smallbuttons"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 				</paper-toolbar>
-				<content>
+				<content id="globalMainContainer">
 				
 				</content>
 			</paper-scroll-header-panel>
