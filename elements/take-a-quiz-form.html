@@ -20,7 +20,7 @@
 	<link rel="import" href="../bower_components/paper-input/paper-input.html">
 	<template>
 	<form name="restorequiz" id="restorequiz" method="post" action="../func/prequiz.func.php">
-		<paper-input label="Resume Id" id="id" name="id" autocomplete="off" autocapitalize="off" is="iron-input"></paper-input>
+		<paper-input label="Resume Id" id="id" name="id" autocomplete="off" autocapitalize="off"></paper-input>
 		<paper-input label="Resume Key" id="key" name="key" autocomplete="off" autocapitalize="off"></paper-input>
 		<paper-button raised class="my-button" value="Resume" onclick="submitResume()">Begin</paper-button>
 		<paper-button raised on-click="resetForm">Reset</paper-button>
@@ -83,7 +83,7 @@
 	<template>
 	<form name="prequiz" id="prequiz" method="post" action="../func/prequiz.func.php">
 		<input type="hidden" name="type" value="session" />
-		<paper-input label="First Name" id="firstname" name="firstname" autocomplete="off" autocapitalize="on" is="iron-input"></paper-input>
+		<paper-input label="First Name" id="firstname" name="firstname" autocomplete="off" autocapitalize="on"></paper-input>
 		<paper-input label="Last Name" id="lastname" name="lastname" autocomplete="off" autocapitalize="on"></paper-input>
 		<paper-input label="Session Id" id="sessionid" name="sessionid" autocomplete="off" autocapitalize="off"></paper-input>
 		<paper-input label="Session Key" id="sessionkey" name="sessionkey" autocomplete="off" autocapitalize="off"></paper-input>
