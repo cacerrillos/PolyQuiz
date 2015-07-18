@@ -1,6 +1,11 @@
 <!doctype html>
 <dom-module id="admin-quiz-results-row">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 	<style is="custom-style">
 		paper-material {
 			margin-bottom: 10px;
@@ -13,13 +18,40 @@
 		.virtalign {
 			vertical-align: middle;
 		}
+		paper-dialog {
+			
+		}
 	</style>
 	<template>
-		<paper-dialog id="deleteDialog">
+		<iron-ajax
+				id="ajaxQ"
+				url="../func/rawresult.php?uuid=4523"
+				handle-as="text"
+				on-response="resultContentReceived">	
+			</iron-ajax>
+		<paper-dialog
+		id="resultDialog"
+		entry-animation="scale-up-animation"
+		exit-animation="fade-out-animation"
+		on-iron-overlay-closed="">
+			<h2 class="nomargins">Result</h2>
+			<paper-spinner id="loadingSpinner" alt="Loading results!" active></paper-spinner>
+			<paper-dialog-scrollable>
+				<div id="contentArea"></div>
+			</paper-dialog-scrollable>
+			<div class="buttons">
+				<paper-button dialog-dismiss raised>Close</paper-button>
+			</div>
+		</paper-dialog>
+		<paper-dialog
+		id="deleteDialog"
+		entry-animation="scale-up-animation"
+		exit-animation="fade-out-animation"
+		on-iron-overlay-closed="deleteDialogClosed">
 			<h2>Delete?</h2>
 			<div class="buttons">
-				<paper-button dialog-dismiss>Cancel</paper-button>
-				<paper-button dialog-confirm>Delete</paper-button>
+				<paper-button dialog-dismiss raised>Cancel</paper-button>
+				<paper-button dialog-confirm raised>Delete</paper-button>
 			</div>
 		</paper-dialog>
 		<div class="row">
@@ -31,8 +63,11 @@
 				<div class="2u">{{score}}</div>
 				<!--<div class="2u">{{freeresponsescore}}</div>-->
 				<div class="3u">{{datetime}}</div>
-				<div class="3u" id="actionButtons"><paper-icon-button on-click="viewResult" icon="icons:open-in-new"></paper-icon-button><paper-icon-button icon="icons:delete" on-click="viewDeleteDialog"></paper-icon-button></div>
-					</div>
+				<div class="3u" id="actionButtons">
+					<paper-icon-button on-click="viewResultOverlay" icon="icons:open-in-browser"></paper-icon-button>
+					<paper-icon-button on-click="viewResultNewTab" icon="icons:open-in-new"></paper-icon-button>
+					<paper-icon-button icon="icons:delete" on-click="viewDeleteDialog"></paper-icon-button></div>
+				</div>
 				</paper-material>
 			</div>
 				
@@ -53,6 +88,10 @@
 				firstname: {
 					type: String,
 					value: "null"
+				},
+				resultContent: {
+					type: String,
+					value: ""
 				}
 			},
 			ready: function() {
@@ -63,7 +102,23 @@
 			viewDeleteDialog: function() {
 				this.$.deleteDialog.open();
 			},
-			viewResult: function() {
+			deleteDialogClosed: function() {
+				
+			},
+			viewResultOverlay: function() {
+				this.$.resultDialog.open();
+				this.$.resultDialog.notifyResize();
+				if(!this.$.ajaxQ.lastResponse){
+					this.$.ajaxQ.generateRequest();
+				}
+			},
+			resultContentReceived: function(request) {
+				this.$.loadingSpinner.active = false;
+				this.$.contentArea.innerHTML = this.$.ajaxQ.lastResponse;
+				this.$.resultDialog.notifyResize();
+				this.$.resultDialog.center();
+			},
+			viewResultNewTab: function() {
 				var win = window.open("?p=postquizadmin&uuid=" + this.uuid, "_blank");
 				if(win){
 					win.focus();

@@ -1,16 +1,16 @@
 <?
+session_start();
+include_once("config.func.php");
+include_once("genquiz.func.php");
 $studentuuid = $_GET['uuid'];
 ?>
 <?
 $qfm = new quizFromMysql();
 $quiz = $qfm->getQuiz($studentuuid);
 $numofq = $quiz->numberofquestions;
-include_once("func/config.func.php");
 if(isset($_SESSION["is_admin"])){
-	if(!isset($_GET["raw"])){
 		?>
-		<div class="container">
-			<div class="row">
+		<div class="row">
 				<div class="12u">
 					<paper-material>
 						<h1>Detailed Results</h1>
@@ -23,9 +23,11 @@ if(isset($_SESSION["is_admin"])){
 						?>
 					</paper-material>
 				</div>
+			</div>
 				<?
 			for($x = 0; $x <$numofq; $x++){
 				?>
+				<div class="row">
 				<div class="12u">
 				<paper-material>
 				<?
@@ -83,16 +85,11 @@ if(isset($_SESSION["is_admin"])){
 				?>
 				</paper-material>
 				</div>
+				</div>
 				<?
 			}
 			?>	
 			</div>
-		</div>
 		<?
-	} else {
-		?>
-		content
-		<?
-	}
 }
 ?>
