@@ -40,7 +40,7 @@
 					<div class="row">
 						<div class="12u">
 							<paper-material>
-								<template is="dom-repeat" items="{{_transformData(quizzes.results)}}" as="houses">
+								<template is="dom-repeat" items="[[_transformData(quizzes.results)]]" as="houses">
 								<h2>[[quizzes.name]]</h2>
 									<div class="row">
 										<div class="12u">
@@ -52,7 +52,7 @@
 												freeresponsescore="Free Response Score"
 												datetime="Date & Time"
 												></admin-quiz-results-row>
-											<template is="dom-repeat" items="{{_transformData(houses)}}" as="quizresults">
+											<template is="dom-repeat" items="[[_transformData(houses)]]" as="quizresults">
 												<admin-quiz-results-row
 													uuid="[[quizresults.uuid]]"
 													firstname="[[quizresults.firstname]]"
