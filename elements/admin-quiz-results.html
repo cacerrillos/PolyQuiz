@@ -36,12 +36,12 @@
 					</paper-material>
 				</div>
 			</div>
-				<template is="dom-repeat" items="{{_transformData(resultsObject)}}" as="quizzes">
+				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
 					<div class="row">
 						<div class="12u">
 							<paper-material>
-								<h2>{{quizzes.name}}</h2>
 								<template is="dom-repeat" items="{{_transformData(quizzes.results)}}" as="houses">
+								<h2>[[quizzes.name]]</h2>
 									<div class="row">
 										<div class="12u">
 											<admin-quiz-results-row
@@ -54,14 +54,14 @@
 												></admin-quiz-results-row>
 											<template is="dom-repeat" items="{{_transformData(houses)}}" as="quizresults">
 												<admin-quiz-results-row
-													uuid="{{quizresults.uuid}}"
-													firstname="{{quizresults.firstname}}"
-													lastname="{{quizresults.lastname}}"
-													score="{{quizresults.rawscore}}"
-													possiblescore="{{quizresults.possiblescore}}"
-													freeresponsescore="{{quizresults.frscore}}"
-													freeresponsescorepossible="{{quizresults.frpossible}}"
-													datetime="{{quizresults.timestamp}}"
+													uuid="[[quizresults.uuid]]"
+													firstname="[[quizresults.firstname]]"
+													lastname="[[quizresults.lastname]]"
+													score="[[quizresults.rawscore]]"
+													possiblescore="[[quizresults.possiblescore]]"
+													freeresponsescore="[[quizresults.frscore]]"
+													freeresponsescorepossible="[[quizresults.frpossible]]"
+													datetime="[[quizresults.timestamp]]"
 													></admin-quiz-results-row>
 											</template>
 										</div>
