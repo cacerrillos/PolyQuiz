@@ -78,7 +78,9 @@ if($page=="home"){
 	include("inc/admin.inc.php");
 } else if($page=="quizadmin"){
 	$pagetype = "admin";
-	include("inc/quiz.admin.inc.php");
+	?>
+	<admin-quiz-management-page _get='<? echo json_encode($_GET); ?>'></admin-quiz-management-page>
+	<?
 } else if($page=="takequiz"){
 	$pagetype = "takequiz";
 	include("inc/takequiz.inc.php");

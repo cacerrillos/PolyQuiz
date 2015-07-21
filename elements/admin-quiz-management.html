@@ -1,0 +1,181 @@
+<!doctype html>
+<dom-module id="admin-quiz-management-page">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<iron-ajax
+				id="resultsAjax"
+				url="../api/1.0/quiz/quizinfo.php"
+				handle-as="json"
+				on-response="resultContentReceived">	
+			</iron-ajax>
+		<div class="container" id="thisPageContainer">
+			<div class="row">
+				<div class="12u">
+					<paper-material>
+						<h2 class="nomargins">My Quizzes</h2>
+					</paper-material>
+				</div>
+				<div class="12u" id="loadPaperDiv">
+					<paper-material id="loadPaper">
+						<center><paper-spinner id="loadSpinner" active></paper-spinner></center>
+					</paper-material>
+				</div>
+			</div>
+				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
+					
+					<div class="row">
+						<div class="12u">
+							<paper-material>
+								<h2 class="nomargins">[[quizzes.name]]</h2>
+								<h6 class="nomargins">[[quizzes.uuid]]</h6>
+								<div class="row">
+									<div class="1u">
+										<span>[[quizzes.totalcount]]</span> Results
+									</div>
+									<div class="1u">
+										5 North
+									</div>
+									<div class="1u">
+										5 South
+									</div>
+									<div class="1u">
+										5 East
+									</div>
+									<div class="1u">
+										5 West
+									</div>
+									<div class="1u">
+										5 Other
+									</div>
+									<div class="1u">
+										asdd
+									</div>
+									<div class="1u">
+										asdd
+									</div>
+									<div class="1u">
+										asd
+									</div>
+									<div class="3u">
+										<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
+										<paper-icon-button icon="image:remove-red-eye" alt="Preview"></paper-icon-button>
+										<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
+									</div>
+								</div>
+							</paper-material>
+						</div>
+					</div>
+				</template>
+				<!--
+				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
+					<div class="row">
+						<div class="12u">
+							<paper-material>
+								<template is="dom-repeat" items="[[_transformData(quizzes.results)]]" as="houses">
+								<h2>[[quizzes.name]]</h2>
+								<h3>[[quizzes]]</h3>
+									<div class="row">
+										<div class="12u">
+											<admin-quiz-results-row
+												uuid=""
+												firstname="First Name"
+												lastname="Last Name"
+												score="Score"
+												freeresponsescore="Free Response Score"
+												datetime="Date & Time"
+												></admin-quiz-results-row>
+											<template is="dom-repeat" items="[[_transformData(houses)]]" as="quizresults">
+												<admin-quiz-results-row
+													uuid="[[quizresults.uuid]]"
+													firstname="[[quizresults.firstname]]"
+													lastname="[[quizresults.lastname]]"
+													score="[[quizresults.rawscore]]"
+													possiblescore="[[quizresults.possiblescore]]"
+													freeresponsescore="[[quizresults.frscore]]"
+													freeresponsescorepossible="[[quizresults.frpossible]]"
+													datetime="[[quizresults.timestamp]]"
+													></admin-quiz-results-row>
+											</template>
+										</div>
+									</div>
+								</template>
+							</paper-material>
+						</div>
+					</div>
+				</template>
+				-->
+		</div>
+	</template>
+	<script>
+		Polymer({
+			is: "admin-quiz-management-page",
+			properties: {
+				_get: {
+					type: Object
+				},
+				resultsObject: {
+					type: Array
+				}
+			},
+			resultContentReceived: function(response) {
+				this._transformData(this.$.resultsAjax.lastResponse);
+				//console.log(this.$.resultsAjax.lastResponse);
+				this.resultsObject = this.$.resultsAjax.lastResponse;
+				this.$.loadPaperDiv.style.display = "none";
+			},
+			resultCountReceivedTotal: function(response) {
+				console.log(response);
+				response.model.set('quizzes.count', response.detail.response['count']);
+			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				console.log(arr);
+				return arr;
+			},
+			_convertTimeStamp: function(data) {
+				
+			},
+			_goEditQuiz: function(e){
+				window.location = "?p=managequiz&UUID=" + e.model.get('quizzes.uuid');
+			},
+			_count: function(data){
+				return data.length;
+			},
+			onSortByQuizAndHouse: function() {
+				window.location = "?p=results";
+			},
+			onSortBySession: function(){
+				window.location = "?p=results&sortby=session";
+			},
+			ready: function() {
+				if(this._get.hasOwnProperty("sortby")){
+					if(this._get["sortby"] == "session"){
+						this.$.session.disabled = true;
+					} else {
+						this.$.quizandhouse.disabled = true;
+					}
+				} else {
+					this.$.quizandhouse.disabled = true;
+				}
+				this.$.resultsAjax.generateRequest();
+			}
+		});
+	</script>
+
+</dom-module>
