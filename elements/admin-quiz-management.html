@@ -164,15 +164,6 @@
 				window.location = "?p=results&sortby=session";
 			},
 			ready: function() {
-				if(this._get.hasOwnProperty("sortby")){
-					if(this._get["sortby"] == "session"){
-						this.$.session.disabled = true;
-					} else {
-						this.$.quizandhouse.disabled = true;
-					}
-				} else {
-					this.$.quizandhouse.disabled = true;
-				}
 				this.$.resultsAjax.generateRequest();
 			}
 		});
