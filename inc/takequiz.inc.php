@@ -137,24 +137,23 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 		}
 		$posVal = 5;
 		$posVal = floor(intval($num) / count($questions) * 100);
-		if($posVal < 5){
-			$posVal = 5;
-		}
 		?>
 		<paper-progress value="<? echo $progVal; ?>" style="width:100%;"></paper-progress>
 		<paper-progress value="<? echo $posVal; ?>" style="width:100%;"></paper-progress>
 		<?
 		if(isset($questions[intval($num)])){
 			$thisquestion = $quiz -> getQuestion(intval($num));
+			?>
+			<?
 			echo "<h2 style='margin-bottom:5px; margin-top: 0px;'>#".($num+1)."</h2>";
 			if($thisquestion->displayextracredit==true){
 				$ecstatus = "[Extra Credit] ";
 			} else {
 				$ecstatus = "";
 			}
-			?>
-            <span style='text-transform:none; word-wrap: break-word; font-family: "Arvo", serif; font-size:1.5em; color: #000;'><? echo $ecstatus.$thisquestion->question; ?></span>
-            <?
+			
+            //<span style='text-transform:none; word-wrap: break-word; font-family: "Arvo", serif; font-size:1.5em; color: #000;'><? echo $ecstatus.$thisquestion->question;></span>
+            
 			$thisquestion -> imagegroup -> printThumbnails("normal");
 			if(isset($_SESSION["answers"][$num])){
 				$curans = $_SESSION["answers"][$num];
@@ -162,15 +161,16 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 				if($thisquestion->type==1){
 					$curans = "";
 				} else {
-				$curans = -2;
+				$curans = -1;
 				}
 			}
 			?>
 			<form name="<? echo $num; ?>" method="post" action="func/quiz.func.php" onsubmit="addCanvas()">
 			<input type="hidden" name="uuid" value="<? if($use==false){ echo mysqli_real_escape_string($mysqli, $_GET['UUID']); } else { echo $quiz->uuid(); } ?>">
 			<input type="hidden" name="num" value="<? echo $num; ?>">
+			<quiz-question qobject="<? echo htmlspecialchars(json_encode($thisquestion)); ?>" selectedanswer="<? echo $curans; ?>"></quiz-question>
 			<?
-			$thisquestion->paint($alphabet, $curans);
+			//$thisquestion->paint($alphabet, $curans);
 			if($num!=0){
 				?>
 				<input type="submit" name="submit" value="Previous" onclick="window.onbeforeunload = null;" class="button fa alt fa-arrow-circle-o-left">

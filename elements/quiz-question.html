@@ -6,6 +6,7 @@
 	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
 	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 	<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
@@ -21,11 +22,19 @@
 	<template>
 		<paper-material>
 			<div class="row">
-				<div class="10u">
+				<div class="8u">
 					<div id="answerTextContainer"></div>
 				</div>
-				<div class="2u">
-					<paper-button raised></paper-button>
+				<div class="4u">
+					<paper-menu-button>
+						<paper-button class="dropdown-trigger" id="current" style="font-weight: bold; color: #2196F3;">________</paper-button>
+						<paper-menu class="dropdown-content" id="rightText" on-iron-select="onSelectedChange">
+							<paper-item>________</paper-item>
+							<template is="dom-repeat" items="[[right]]" as="thisright">
+								<paper-item>[[thisright]]</paper-item>
+							</template>
+						</paper-menu>
+					</paper-menu-button>
 				</div>
 			</div>
 		</paper-material>
@@ -34,6 +43,7 @@
 		Polymer({
 			is: "quiz-question-answer-matching",
 			properties: {
+				right: Object,
 				answerid: Number,
 				answertext: String,
 				questionparent: Object,
@@ -43,21 +53,24 @@
 				}
 			},
 			doClick: function() {
-				console.log(this.questionparent);
+				//console.log(this.questionparent);
 				this.questionparent.requestSelectAnswer(this.answerid);
 			},
 			doReset: function() {
-				
+				this.$.rightText.select('0');
 			},
-			onSelectedChange: function() {
-				if(this.selected){
-					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
-				} else {
-					this.$.answerMaterial.style.backgroundColor = "white";
-				}
+			_bleh: function(d){
+				//console.log(d);
+			},
+			onSelectedChange: function(details) {
+				this.$.current.innerHTML = details.detail.item.textContent;
+			},
+			gen: function() {
+				this.$.rightText.select('0');
 			},
 			ready: function() {
 				this.$.answerTextContainer.innerHTML = this.answertext;
+				
 			}
 		});
 	</script>
@@ -85,7 +98,7 @@
 		<paper-material>
 			<div class="row">
 				<div class="12u">
-					<paper-textarea label="Response" id="response"></paper-textarea>
+					<paper-textarea label="Response" id="response">{{answertext}}</paper-textarea>
 				</div>
 			</div>
 		</paper-material>
@@ -180,6 +193,7 @@
 				}
 			},
 			ready: function() {
+				
 				this.$.answerTextContainer.innerHTML = this.answertext;
 			}
 		});
@@ -207,6 +221,7 @@
 		<paper-material>
 			<div id="questiontext"></div>
 			<div id="answers"></div>
+			<input type="hidden" name="answer" value="[[selectedanswer]]">
 			<paper-button raised on-click="doReset">Reset</paper-button>
 		</paper-material>
 	</template>
@@ -215,8 +230,9 @@
 			is: "quiz-question",
 			properties: {
 				qobject: Object,
-				selectedAnswer: {
-					type: Number,
+				selectedanswer: {
+					type: String,
+					value: "-1"
 				},
 				preview: {
 					type: Boolean,
@@ -224,29 +240,57 @@
 				}
 			},
 			doReset: function() {
-				this.selectedAnswer = -1;
+				this.selectedanswer = "-1";
 				for(var x = 0; x < this.$.answers.childNodes.length; x++){
 					this.$.answers.childNodes[x].doReset();
 				}
 			},
-			requestSelectAnswer: function(details) {
-				this.selectedAnswer = details.answerid;
-				for(var x = 0; x < this.$.answers.childNodes.length; x++){
-					this.$.answers.childNodes[x].selected = false;
+			setSelected: function(num) {
+				this.selectedanswer = num;
+				if(this.qobject.type != 1 && this.qobject.type != "1"){
+					for(var x = 0; x < this.$.answers.childNodes.length; x++){
+						console.log(this.$.answers.childNodes[x]);
+						if(this.$.answers.childNodes[x].answerid == this.selectedanswer) {
+							this.$.answers.childNodes[x].selected = true;
+						} else {
+							this.$.answers.childNodes[x].selected = false;
+						}
+						
+					}
+				} else {
+					this.$.answers.firstChild.answertext = this.selectedanswer;
 				}
-				details.selected = true;
+				
+			},
+			requestSelectAnswer: function(details) {
+				if(this.qobject.type != 1 && this.qobject.type != "1"){
+					this.selectedanswer = details.answerid;
+					for(var x = 0; x < this.$.answers.childNodes.length; x++){
+						this.$.answers.childNodes[x].selected = false;
+					}
+					details.selected = true;
+				} else {
+					console.log("fromfreee");
+				}
+			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				//console.log(arr);
+				return arr;
 			},
 			ready: function() {
 				console.log(this.qobject);
-				this.$.questiontext.innerHTML = this.qobject.questiontextfull;
-				switch(this.qobject.questiontype){
+				this.$.questiontext.innerHTML = this.qobject.question;
+				switch(this.qobject.type){
 					case "0":
 					case "4":
-						var aa = this.qobject.answerArray;
+					case 0:
+					case 4:
+						var aa = this._transformData(this.qobject.answerArray);
 						for(var y = 0; y < aa.length; y++){
 							var thisAnswer = document.createElement("quiz-question-answer-standard");
 							thisAnswer.answerid = y;
-							if(this.qobject.questiontype == "0"){
+							if(this.qobject.type == "0" || this.qobject.type == 0){
 								thisAnswer.answertext = aa[y];
 							} else {
 								thisAnswer.answertext = aa[y].answer;
@@ -258,24 +302,30 @@
 						}
 						break;
 					case "1":
+					case 1:
 						var textfieldAnswer = document.createElement("quiz-question-answer-textfield");
 						textfieldAnswer.questionparent = this;
 						textfieldAnswer.ready();
 						this.$.answers.appendChild(textfieldAnswer);
 						break;
 					case "2":
-						var left = this.qobject.rawObject.left;
+					case 2:
+						var left = this.qobject.left;
 						for(var y = 0; y < left.length; y++){
 							var thisAnswer = document.createElement("quiz-question-answer-matching");
 							thisAnswer.answerid = y;
 							thisAnswer.answertext = left[y];
+							thisAnswer.right = this.qobject.right;
 							thisAnswer.questionparent = this;
 							thisAnswer.ready();
+							thisAnswer.gen();
 							this.$.answers.appendChild(thisAnswer);
 						}
 						break;
 				}
-				
+				if(this.selectedanswer != "-1" && this.selectedanswer != ""){
+					this.setSelected(this.selectedanswer);
+				}
 			}
 		});
 	</script>
