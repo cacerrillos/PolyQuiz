@@ -17,7 +17,7 @@ skel.breakpoints({
 	xxxsmall: "(max-width: 360px)"
 });
 skel.layout({
-	reset: "normalize",
+	reset: "full",
 	grid: {
 		gutters: "40px"
 	},
@@ -96,6 +96,7 @@ function checkPass()
 <link rel="import" href="elements/admin-sidebar.php">
 <link rel="import" href="elements/admin-quiz-results.html">
 <link rel="import" href="elements/admin-quiz-management.html">
+<link rel="import" href="elements/admin-edit-quiz.html">
 <link rel="import" href="bower_components/paper-material/paper-material.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />
