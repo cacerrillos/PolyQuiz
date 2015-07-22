@@ -1,0 +1,282 @@
+<!doctype html>
+<dom-module id="quiz-question-answer-matching">
+<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material>
+			<div class="row">
+				<div class="10u">
+					<div id="answerTextContainer"></div>
+				</div>
+				<div class="2u">
+					<paper-button raised></paper-button>
+				</div>
+			</div>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-answer-matching",
+			properties: {
+				answerid: Number,
+				answertext: String,
+				questionparent: Object,
+				selected: {
+					type: Boolean,
+					observer: "onSelectedChange"
+				}
+			},
+			doClick: function() {
+				console.log(this.questionparent);
+				this.questionparent.requestSelectAnswer(this.answerid);
+			},
+			doReset: function() {
+				
+			},
+			onSelectedChange: function() {
+				if(this.selected){
+					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
+				} else {
+					this.$.answerMaterial.style.backgroundColor = "white";
+				}
+			},
+			ready: function() {
+				this.$.answerTextContainer.innerHTML = this.answertext;
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question-answer-textfield">
+<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material>
+			<div class="row">
+				<div class="12u">
+					<paper-textarea label="Response" id="response"></paper-textarea>
+				</div>
+			</div>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-answer-textfield",
+			properties: {
+				answerid: Number,
+				answertext: String,
+				questionparent: Object,
+				selected: {
+					type: Boolean,
+					observer: "onSelectedChange"
+				}
+			},
+			doClick: function() {
+				console.log(this.questionparent);
+				this.questionparent.requestSelectAnswer(this.answerid);
+			},
+			doReset: function() {
+				this.$.response.value = "";
+				
+			},
+			onSelectedChange: function() {
+				if(this.selected){
+					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
+				} else {
+					this.$.answerMaterial.style.backgroundColor = "white";
+				}
+			},
+			ready: function() {
+				//this.$.answerTextContainer.innerHTML = this.answertext;
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question-answer-standard">
+<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		.notselected {
+			background-color: white;
+		}
+		.selected {
+			background-color: blue;
+		}
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material id="answerMaterial" on-click="doClick">
+			<div class="row">
+				<div class="12u" id="answerTextContainer"></div>
+			</div>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-answer-standard",
+			properties: {
+				answerid: Number,
+				answertext: String,
+				questionparent: Object,
+				selected: {
+					type: Boolean,
+					observer: "onSelectedChange"
+				}
+			},
+			doClick: function() {
+				this.questionparent.requestSelectAnswer(this);
+			},
+			doReset: function() {
+				this.selected = false;
+			},
+			onSelectedChange: function() {
+				if(this.selected){
+					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
+				} else {
+					this.$.answerMaterial.style.backgroundColor = "white";
+				}
+			},
+			ready: function() {
+				this.$.answerTextContainer.innerHTML = this.answertext;
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material>
+			<div id="questiontext"></div>
+			<div id="answers"></div>
+			<paper-button raised on-click="doReset">Reset</paper-button>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question",
+			properties: {
+				qobject: Object,
+				selectedAnswer: {
+					type: Number,
+				},
+				preview: {
+					type: Boolean,
+					value: false
+				}
+			},
+			doReset: function() {
+				this.selectedAnswer = -1;
+				for(var x = 0; x < this.$.answers.childNodes.length; x++){
+					this.$.answers.childNodes[x].doReset();
+				}
+			},
+			requestSelectAnswer: function(details) {
+				this.selectedAnswer = details.answerid;
+				for(var x = 0; x < this.$.answers.childNodes.length; x++){
+					this.$.answers.childNodes[x].selected = false;
+				}
+				details.selected = true;
+			},
+			ready: function() {
+				console.log(this.qobject);
+				this.$.questiontext.innerHTML = this.qobject.questiontextfull;
+				switch(this.qobject.questiontype){
+					case "0":
+					case "4":
+						var aa = this.qobject.answerArray;
+						for(var y = 0; y < aa.length; y++){
+							var thisAnswer = document.createElement("quiz-question-answer-standard");
+							thisAnswer.answerid = y;
+							if(this.qobject.questiontype == "0"){
+								thisAnswer.answertext = aa[y];
+							} else {
+								thisAnswer.answertext = aa[y].answer;
+							}
+							
+							thisAnswer.questionparent = this;
+							thisAnswer.ready();
+							this.$.answers.appendChild(thisAnswer);
+						}
+						break;
+					case "1":
+						var textfieldAnswer = document.createElement("quiz-question-answer-textfield");
+						textfieldAnswer.questionparent = this;
+						textfieldAnswer.ready();
+						this.$.answers.appendChild(textfieldAnswer);
+						break;
+					case "2":
+						var left = this.qobject.rawObject.left;
+						for(var y = 0; y < left.length; y++){
+							var thisAnswer = document.createElement("quiz-question-answer-matching");
+							thisAnswer.answerid = y;
+							thisAnswer.answertext = left[y];
+							thisAnswer.questionparent = this;
+							thisAnswer.ready();
+							this.$.answers.appendChild(thisAnswer);
+						}
+						break;
+				}
+				
+			}
+		});
+	</script>
+</dom-module>
