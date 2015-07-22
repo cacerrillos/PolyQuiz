@@ -1,0 +1,87 @@
+<!doctype html>
+<dom-module id="admin-session-action-buttons">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.active {
+			color: #8BC34A;
+		}
+		.inactive {
+			color: #D32F2F;
+		}
+	</style>
+	<template>
+		<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
+		<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
+		<paper-icon-button icon="icons:delete" on-click="delete"></paper-icon-button>
+	
+	</template>
+	<script>
+		Polymer({
+			is: "admin-session-action-buttons",
+			properties: {
+				_get: {
+					type: Object
+				},
+				sessionid: String,
+				sessionopen: Boolean,
+				sessionshow: Boolean,
+				resultsObject: {
+					type: Array
+				}
+			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				//console.log(arr);
+				return arr;
+			},
+			toggleLock: function() {
+				if(this.sessionopen){
+					window.location = "func/ses.func.php?uuid=" + this.sessionid + "&action=close";
+				} else {
+					window.location = "func/ses.func.php?uuid=" + this.sessionid + "&action=open";
+				}
+			},
+			toggleShow: function() {
+				if(this.sessionshow){
+					window.location = "func/ses.func.php?uuid=" + this.sessionid + "&action=dontshow";
+				} else {
+					window.location = "func/ses.func.php?uuid=" + this.sessionid + "&action=show";
+				}
+			},
+			onSortBySession: function(){
+				window.location = "?p=results&sortby=session";
+			},
+			ready: function() {
+				if(this.sessionopen){
+					this.$.openstat.icon = "icons:lock-open";
+					this.$.openstat.style.color = "#8BC34A";
+				} else {
+					this.$.openstat.icon = "icons:lock-outline";
+					this.$.openstat.style.color = "#D32F2F";
+				}
+				if(this.sessionshow){
+					this.$.showscore.style.color = "#8BC34A";
+				} else {
+					this.$.showscore.style.color = "#D32F2F";
+				}
+				//this.$.resultsAjax.generateRequest();
+			}
+		});
+	</script>
+
+</dom-module>

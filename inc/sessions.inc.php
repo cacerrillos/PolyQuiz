@@ -152,9 +152,7 @@
 											<? echo $info['house']; ?>
 										</div>
 										<div class="3u">
-											<paper-icon-button icon="icons:lock-open"></paper-icon-button>
-											<paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
-											<paper-icon-button icon="icons:delete"></paper-icon-button>
+											<admin-session-action-buttons sessionid='<? echo $info['uuid']; ?>' <? if($info['status']==1) echo "sessionopen"; ?> <? if($info['score']==1) echo "sessionshow"; ?>></admin-session-action-buttons>
 										</div>
 									</div>
 								</paper-material>
@@ -187,9 +185,7 @@
 											<? echo $info['house']; ?>
 										</div>
 										<div class="2u">
-											<paper-icon-button icon="icons:lock-open"></paper-icon-button>
-											<paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
-											<paper-icon-button icon="icons:delete"></paper-icon-button>
+											<admin-session-action-buttons sessionid='<? echo $info['uuid']; ?>' <? if($info['status']==1) echo "sessionopen"; ?> <? if($info['score']==1) echo "sessionshow"; ?>></admin-session-action-buttons>
 										</div>
 									</div>
 								</paper-material>
