@@ -38,16 +38,16 @@ if(isset($_SESSION["is_admin"])){
 			//exit();
 			
 			//$thisQuestion['object'] = $thisObject;
-			$thisQuestion['questiontype'] = $thisObject->type;
-			$thisQuestion['questiontext'] = substr($thisObject->question, 0, 40);
-			$thisQuestion['questiontextfull'] = $thisObject->question;
-			$thisQuestion['answerArray'] = $thisObject->answerArray;
+			//$thisQuestion['questiontype'] = $thisObject->type;
+			//$thisQuestion['questiontext'] = substr($thisObject->question, 0, 40);
+			//$thisQuestion['questiontextfull'] = $thisObject->question;
+			//$thisQuestion['answerArray'] = $thisObject->answerArray;
 			$thisQuestion['rawObject'] = $thisObject;
 			//$test = array_merge($thisQuestion, array($thisObject));
 			//echo "<pre>".json_encode($test, JSON_PRETTY_PRINT)."</pre>";
 			//array_push($thisQuestion, $thisObject);
 			//$thisQuestion['objectjson'] = json_encode($object);
-			array_push($resultObject, $thisQuestion);
+			array_push($resultObject, $thisObject);
 		}
 		$stmt->close();
 	} else {
