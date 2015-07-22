@@ -99,7 +99,7 @@ ready: function() {
 			<paper-item on-click="goEditSessions"><i class="fa fa-cog"></i> Edit Sessions</paper-item>
 			<paper-item on-click="goPendingSessions"><i class="fa fa-cog"></i> Quizzes In Progress</paper-item>
 			<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
-			<paper-item on-click="goEditQuizzes"><i class="fa fa-cog"></i> Edit Quizzes</paper-item>
+			<paper-item on-click="goEditQuizzes"><i class="fa fa-cog"></i> My Quizzes</paper-item>
 			<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
 			<paper-item on-click="goResults"><i class="fa fa-cog"></i> Quiz Results</paper-item>
 			<paper-item on-click="goGrading"><i class="fa fa-cog"></i> Pending Free Response Grading</paper-item>
