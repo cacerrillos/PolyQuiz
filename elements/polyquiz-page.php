@@ -72,10 +72,12 @@ session_start();
 					<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
 					<admin-sidebar page="<? echo $_SESSION['page']; ?>"></admin-sidebar>
 				<?
-				} else if($_SESSION['pagetype'] != "takequiz") {  
+				} else if(isset($_SESSION['pagetype'])){
+					if($_SESSION['pagetype'] != "takequiz") {  
 				?>
 					<admin-login></admin-login>
 				<?
+					}
 				}
 				?>
 			</paper-header-panel>
