@@ -9,13 +9,8 @@
 			<paper-material>
 				<?
 				if(isset($_SESSION["is_admin"])){
+					include_once("func/pending.func.php");
 				?>
-				<p>
-				<script src="js/ajaxpending.js"></script>
-					<script type="text/javascript">refreshdiv2();</script>
-				<div id="timediv2" style="margin-left:20px">
-				
-				</div>
 				<?
 				}
 				?>
