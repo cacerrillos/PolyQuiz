@@ -140,19 +140,19 @@
 				this.$.loadPaperDiv.style.display = "none";
 			},
 			resultCountReceivedTotal: function(response) {
-				console.log(response);
+				//console.log(response);
 				response.model.set('quizzes.count', response.detail.response['count']);
 			},
 			_transformData: function(data){
 				var arr = $.map(data, function(el) { return el; })
-				console.log(arr);
+				//console.log(arr);
 				return arr;
 			},
 			_convertTimeStamp: function(data) {
 				
 			},
 			_goEditQuiz: function(e){
-				window.location = "?p=managequiz&UUID=" + e.model.get('quizzes.uuid');
+				window.location = "?p=editquiz&uuid=" + e.model.get('quizzes.uuid');
 			},
 			_count: function(data){
 				return data.length;

@@ -84,9 +84,11 @@ if($page=="home"){
 } else if($page=="takequiz"){
 	$pagetype = "takequiz";
 	include("inc/takequiz.inc.php");
-} else if($page=="managequiz"){
+} else if($page=="editquiz"){
 	$pagetype = "admin";
-	include("inc/managequiz.inc.php");
+	?>
+	<admin-quiz-edit-page _get='<? echo json_encode($_GET); ?>'></admin-quiz-edit-page>
+	<?
 } else if($page=="results"){
 	$pagetype = "admin";
 	?>
