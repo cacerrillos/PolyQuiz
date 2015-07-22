@@ -2,14 +2,20 @@
 session_start();
 include_once("../../func/config.func.php");
 $debug = false;
+if(isset($_GET['uuid'])){
+	$uuid = $_GET['uuid'];
+} else {
+	echo "asddasd";
+	exit();
+}
 if(isset($_SESSION["is_admin"])){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	$mysqli -> select_db($db_name);
 	$resultObject = array();
 	if($stmt = $mysqli->prepare(
-		"SELECT `quizzes`.`uuid`, `quizzes`.`quizname`, `results`.`id`, `results`.`house`, `results`.`lastname`, `results`.`firstname`, `results`.`rawscore`, `results`.`possiblescore`, `results`.`timestamp`, `results`.`ip`, `results`.`session`, `results`.`flag`, `results`.`frscore`, `results`.`frpossible`, `results`.`frgraded` FROM `quizzes` INNER JOIN `results` ON `quizzes`.`uuid` = `results`.`quizuuid` WHERE (`quizzes`.`owner` = ? AND `results`.`owner` = ?) ORDER BY `quizzes`.`quizname` ASC, `results`.`house` ASC, `results`.`lastname` ASC;"
+		"SELECT `quizzes`.`uuid`, `quizzes`.`quizname`, `results`.`id`, `results`.`house`, `results`.`lastname`, `results`.`firstname`, `results`.`rawscore`, `results`.`possiblescore`, `results`.`timestamp`, `results`.`ip`, `results`.`session`, `results`.`flag`, `results`.`frscore`, `results`.`frpossible`, `results`.`frgraded` FROM `quizzes` INNER JOIN `results` ON `quizzes`.`uuid` = `results`.`quizuuid` WHERE (`quizzes`.`owner` = ? AND `results`.`owner` = ? AND `quizzes`.`uuid` = ?) ORDER BY `quizzes`.`quizname` ASC, `results`.`house` ASC, `results`.`lastname` ASC;"
 	)){
-		$stmt->bind_param("ss", $_SESSION['dbext'], $_SESSION['dbext']);
+		$stmt->bind_param("sss", $_SESSION['dbext'], $_SESSION['dbext'], $uuid);
 		$stmt->execute();
 		$stmt->bind_result($quizuuid, $quizname, $resultid, $resulthouse, $lastname, $firstname, $rawscore, $possiblescore, $timestamp, $ip, $session, $flag, $frscore, $frpossible, $frgraded);
 		$stmt->store_result();
