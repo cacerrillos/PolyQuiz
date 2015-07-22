@@ -77,6 +77,7 @@
 		Polymer({
 			is: "admin-quiz-results-page",
 			properties: {
+				uuid: String,
 				_get: {
 					type: Object
 				},
@@ -85,7 +86,6 @@
 				}
 			},
 			resultContentReceived: function(response) {
-				this._transformData(this.$.resultsAjax.lastResponse);
 				this.resultsObject = this.$.resultsAjax.lastResponse;
 				this.$.loadPaperDiv.style.display = "none";
 			},
@@ -107,6 +107,11 @@
 				window.location = "?p=results&sortby=session";
 			},
 			ready: function() {
+				if(this._get.hasOwnProperty("uuid")){
+					this.uuid = this._get["uuid"];
+				} else {
+					console.log("no uuid!");
+				}
 				if(this._get.hasOwnProperty("sortby")){
 					if(this._get["sortby"] == "session"){
 						this.$.session.disabled = true;
@@ -116,6 +121,7 @@
 				} else {
 					this.$.quizandhouse.disabled = true;
 				}
+				this.$.resultsAjax.params = { "uuid": this.uuid };
 				this.$.resultsAjax.generateRequest();
 			}
 		});
