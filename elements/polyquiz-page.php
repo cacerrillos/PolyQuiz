@@ -79,7 +79,7 @@ session_start();
 				}
 				?>
 			</paper-header-panel>
-			<paper-scroll-header-panel main class="flex" id="scrollHeader" scrollAwayTopbar>
+			<paper-scroll-header-panel main class="flex" id="scrollHeader" fixed>
 				<paper-toolbar>
 					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
 					<span class="title">PolyQuiz 3.0</span>
