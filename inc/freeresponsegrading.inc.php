@@ -1,38 +1,21 @@
-		<!-- Main Wrapper -->
-			<div id="main-wrapper">
-				<div class="main-wrapper-style2">
-					<div class="inner">
-						<div class="container">
-							<div class="row">
-								<div class="4u">
-									<div id="sidebar">
-
-										<!-- Sidebar -->
-											<section>
-                                                <?
-												include("inc/adminleftsidebar.inc.php");
-												?>
-											</section>
-								
-									</div>
-								</div>
-								<div class="8u skel-cell-important">
-									<div id="content">
-
-										<!-- Content -->
-									
-											<article>
-												<header class="major">
-													<h2>Results & Grading</h2>
-													<span class="byline"><h3>Free Response Grading</h3></span>
-												</header>
-    <?
+<div class="container">
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<h3>Free Response Grading</h3>
+			</paper-material>
+		</div>
+		    <?
 	if(isset($_SESSION["is_admin"])){
 	?>
-    <? if(!isset($_GET['uuid'])){
-		?>
-    <div id="seeresults" style="margin-left:20px">
-    <?
+		<div class="12u">
+			<paper-material>
+			 <?
+	if(!isset($_GET['uuid'])){
+	?>
+	
+   
+				<?
 	mysql_connect($db_host, $db_user, $db_password) or die(mysql_error()); 
 	mysql_select_db($db_name) or die(mysql_error()); 
 	$overall = mysql_query("SELECT * FROM quizzes WHERE owner='".$_SESSION['dbext']."' ORDER BY quizname ASC"); 
@@ -155,12 +138,10 @@
 		 <h3>All free response questions have been graded!</h3>
 <?
 	}
+	
 	?>
-    </div>
-    <?
+	 <?
 	}
-	?>
-    <?
 	if(isset($_GET['uuid'])){
 		$mysqli = new mysqli($db_host, $db_user, $db_password);
 		$mysqli -> select_db($db_name);
@@ -224,14 +205,12 @@
         <?	
 		}
 	}
+	?>
+			</paper-material>
+		</div>
+		<?
+		
 	}
-?>
-											</article>
-								
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+	?>
+	</div>
+</div>
