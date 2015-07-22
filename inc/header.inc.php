@@ -97,6 +97,7 @@ function checkPass()
 <link rel="import" href="elements/admin-quiz-results.html">
 <link rel="import" href="elements/admin-quiz-management.html">
 <link rel="import" href="elements/admin-edit-quiz.html">
+<link rel="import" href="bower_components/iron-icons/image-icons.html">
 <link rel="import" href="bower_components/paper-material/paper-material.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />

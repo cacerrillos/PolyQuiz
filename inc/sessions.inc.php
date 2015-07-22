@@ -53,64 +53,151 @@
 					$data = mysql_query("SELECT * FROM sessions WHERE owner='".$_SESSION['dbext']."' ORDER BY date ASC;");
 					$numrows = mysql_num_rows($data);
 					?>
-					<table class="sessionstable">
-					<tr>
-					<td>Name</td>
-					<td>ID</td>
-					<td>Key</td>
-					<td>Date</td>
-					<td>Quiz</td>
-					<td>House</td>
-					<td>Status</td>
-					<td>Show Scores</td>
-					<td>Delete</td>
-					<td>Take</td>
-					</tr>
+					<div class="row not-small">
+						<div class="12u">
+							<paper-material>
+								<div class="row">
+									<div class="4u">
+										<div class="row">
+											<div class="12u">
+												Session Name
+											</div>
+											<div class="-2u 10u">
+												Quiz Name
+											</div>
+										</div>
+									</div>
+									<div class="2u">
+										<div class="row">
+											<div class="12u">Id</div>
+											<div class="12u">Key</div>
+										</div>
+									</div>
+									<div class="2u">
+										Date
+									</div>
+									<div class="1u">
+										House
+									</div>
+									<div class="3u">
+										
+									</div>
+								</div>
+							</paper-material>
+						</div>
+					</div>
+					<div class="row only-small">
+						<div class="12u">
+							<paper-material>
+								<div class="row">
+									<div class="4u">
+										<div class="row">
+											<div class="12u">
+												Session Name
+											</div>
+											<div class="-2u 10u">
+												Quiz Name
+											</div>
+										</div>
+									</div>
+									<div class="2u">
+										<div class="row">
+											<div class="12u">Id</div>
+											<div class="12u">Key</div>
+										</div>
+									</div>
+									<div class="2u">
+										DDate
+									</div>
+									<div class="1u">
+										House
+									</div>
+									<div class="1u">
+										
+									</div>
+								</div>
+							</paper-material>
+						</div>
+					</div>
 					<?
 					while($info = mysql_fetch_array($data)){
 						$quizuuid = $info['quiz'];
 						$data1 = mysql_query("SELECT * FROM quizzes WHERE uuid='$quizuuid' AND owner='".$_SESSION['dbext']."'");
 						$info1 = mysql_fetch_array($data1);
 						?>
-						<tr>
-						<td><? echo $info['sessionname']; ?></td>
-						<td><? echo $info['uuid'];?></td>
-						<td><? echo $info['key']; ?></td>
-						<td><? echo $info['date']; ?></td>
-						<td><? echo $info1['quizname']; ?></td>
-						<td><? echo $info['house']; ?></td>
-						<td>
-						<? if($info['status']==1){
-								?>
-								Open (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=close">Close</a>)
-								<?
-							} else {
-								?>
-								Closed (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=open">Open</a>)
-								<?
-							}
-						?>
-						</td>
-						<td>
-						<? if($info['score']==1){
-								?>
-								Show Scores (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=dontshow">Don't Show</a>)
-								<?
-							} else {
-								?>
-								Don't Show (<a href="func/ses.func.php?uuid=<? echo $info['uuid']; ?>&action=show">Show Scores</a>)
-								<?
-							}
-						?>
-						</td>
-						<td><a href="func/sessiondelete.func.php?uuid=<? echo $info['uuid'];?>"><font color="#FF0000">Delete</font></a></td>
-						<td>Take</td>
-						<tr>
+						<div class="row not-small">
+							<div class="12u">
+								<paper-material>
+									<div class="row">
+										<div class="4u">
+											<div class="row">
+												<div class="12u">
+													<? echo $info['sessionname']; ?>
+												</div>
+												<div class="-2u 10u">
+													<? echo $info1['quizname']; ?>
+												</div>
+											</div>
+										</div>
+										<div class="2u">
+											<div class="row">
+												<div class="12u"><? echo $info['uuid'];?></div>
+												<div class="12u"><? echo $info['key']; ?></div>
+											</div>
+										</div>
+										<div class="2u">
+											<? echo $info['date']; ?>
+										</div>
+										<div class="1u">
+											<? echo $info['house']; ?>
+										</div>
+										<div class="3u">
+											<paper-icon-button icon="icons:lock-open"></paper-icon-button>
+											<paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
+											<paper-icon-button icon="icons:delete"></paper-icon-button>
+										</div>
+									</div>
+								</paper-material>
+							</div>
+						</div>
+						<div class="row only-small">
+							<div class="12u">
+								<paper-material>
+									<div class="row">
+										<div class="5u 4u(xsmall)">
+											<div class="row">
+												<div class="12u">
+													<? echo $info['sessionname']; ?>
+												</div>
+												<div class="-2u 10u">
+													<? echo $info1['quizname']; ?>
+												</div>
+											</div>
+										</div>
+										<div class="2u">
+											<div class="row">
+												<div class="12u"><? echo $info['uuid'];?></div>
+												<div class="12u"><? echo $info['key']; ?></div>
+											</div>
+										</div>
+										<div class="2u 3u(xsmall)">
+											<? echo $info['date']; ?>
+										</div>
+										<div class="1u">
+											<? echo $info['house']; ?>
+										</div>
+										<div class="2u">
+											<paper-icon-button icon="icons:lock-open"></paper-icon-button>
+											<paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
+											<paper-icon-button icon="icons:delete"></paper-icon-button>
+										</div>
+									</div>
+								</paper-material>
+							</div>
+						</div>
 						<?
 					}
 				?>
-				</table>
-				<a href="func/sessiondelete.func.php?uuid=all"><font color="#FF0000">Delete All Sessions</font></a>
 				<?
 				}
 				?>
