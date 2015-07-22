@@ -1,17 +1,23 @@
 	<div class="container">
 		<div class="row">
-			<div class="8u 12u(xxxsmall)">
+			<div class="6u 12u(xxxsmall)">
 				<paper-material>
 				
 				</paper-material>
 			</div>
-			<div class="4u 12u(xxxsmall)">
+			<div class="6u 12u(xxxsmall)">
 				<paper-material>
 					<div class="row">
-						<div class="6u">
-							<dl class="contact">
-								<dt>PayPal Donations</dt>
-								<dd>
+						<div class="4u">
+							<div class="row">
+								<div class="12u">PayPal Donations</div>
+								<div class="12u">Website</div>
+								<div class="12u">Email</div>
+							</div>
+						</div>
+						<div class="8u">
+							<div class="row">
+								<div class="12u">
 									<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="padding-left:20px;">
 									<input type="hidden" name="cmd" value="_donations">
 									<input type="hidden" name="business" value="cacerrillos@gmail.com">
@@ -23,29 +29,11 @@
 									<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 									<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 									</form>
-								</dd>
-								<dt>WWW</dt>
-								<dd><a href="http://cerrillostech.com">CerrillosTech.com</a></dd>
-								<dt>Email</dt>
-								<dd><a href="mailto:carlos@cerrillostech.com">Carlos@CerrillosTech.com</a></dd>
-							</dl>
+								</div>
+								<div class="12u"><a href="http://cerrillostech.com">CerrillosTech.com</a></div>
+								<div class="12u"><a href="mailto:carlos@cerrillostech.com">Carlos@CerrillosTech.com</a></div>
+							</div>
 						</div>
-						<?
-						/*
-						<div class="6u">
-							<dl class="contact">
-								<dt>Address</dt>
-								<dd>
-									Not Availble<br />
-									At This Time<br />
-									But Maybe In<br />The Future
-								</dd>
-								<dt>Phone</dt>
-								<dd>Yes Please.</dd>
-							</dl>
-						</div>
-						*/
-						?>
 					</div>
 				</paper-material>
 			</div>
