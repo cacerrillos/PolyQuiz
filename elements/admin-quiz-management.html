@@ -45,7 +45,7 @@
 								<h2 class="nomargins">[[quizzes.name]]</h2>
 								<h6 class="nomargins" style="display:none;">[[quizzes.uuid]]</h6>
 								<div class="row not-small">
-									<div class="1u 2u(small)">
+									<div class="1u 2u(small)" on-click="resultsTotal">
 										<center><span>[[quizzes.totalcount]]</span> Results</center>
 									</div>
 									<div class="1u">
@@ -185,6 +185,9 @@
 			},
 			_convertTimeStamp: function(data) {
 				
+			},
+			resultsTotal: function(e){
+				window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
 			},
 			_goEditQuiz: function(e){
 				window.location = "?p=editquiz&uuid=" + e.model.get('quizzes.uuid');
