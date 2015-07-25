@@ -36,6 +36,7 @@
 					</paper-material>
 				</div>
 			</div>
+			<div id="resultRows">
 				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
 					<div class="row">
 						<div class="12u">
@@ -75,6 +76,7 @@
 						</div>
 					</div>
 				</template>
+			</div>
 		</div>
 	</template>
 	<script>
@@ -92,6 +94,7 @@
 			resultContentReceived: function(response) {
 				this.resultsObject = this.$.resultsAjax.lastResponse;
 				this.$.loadPaperDiv.style.display = "none";
+				this.$.resultRows.style.display = "block";
 			},
 			_transformData: function(data){
 				var arr = $.map(data, function(el) { return el; })
@@ -110,6 +113,12 @@
 			onSortBySession: function(){
 				window.location = "?p=results&sortby=session";
 			},
+			doReload: function(){
+				this.$.resultRows.style.display = "none";
+				this.$.loadPaperDiv.style.display = "block";
+				this.$.resultsAjax.params = { "uuid": this.uuid };
+				this.$.resultsAjax.generateRequest();
+			},
 			ready: function() {
 				if(this._get.hasOwnProperty("uuid")){
 					this.uuid = this._get["uuid"];
@@ -125,8 +134,7 @@
 				} else {
 					this.$.quizandhouse.disabled = true;
 				}
-				this.$.resultsAjax.params = { "uuid": this.uuid };
-				this.$.resultsAjax.generateRequest();
+				this.doReload();
 			}
 		});
 	</script>
