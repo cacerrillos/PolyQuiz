@@ -13,17 +13,18 @@ if(isset($_SESSION["is_admin"])){
 	$mysqli -> select_db($db_name);
 	$resultObject = array();
 	if($stmt = $mysqli->prepare(
-		"SELECT `quizzes`.`uuid`, `quizzes`.`quizname`, `results`.`id`, `results`.`house`, `results`.`lastname`, `results`.`firstname`, `results`.`rawscore`, `results`.`possiblescore`, `results`.`timestamp`, `results`.`ip`, `results`.`session`, `results`.`flag`, `results`.`frscore`, `results`.`frpossible`, `results`.`frgraded` FROM `quizzes` INNER JOIN `results` ON `quizzes`.`uuid` = `results`.`quizuuid` WHERE (`quizzes`.`owner` = ? AND `results`.`owner` = ? AND `quizzes`.`uuid` = ?) ORDER BY `quizzes`.`quizname` ASC, `results`.`house` ASC, `results`.`lastname` ASC;"
+		"SELECT `quizzes`.`uuid`, `quizzes`.`quizname`, `results`.`id`, `results`.`house`, `results`.`lastname`, `results`.`firstname`, `results`.`house`, `results`.`rawscore`, `results`.`possiblescore`, `results`.`timestamp`, `results`.`ip`, `results`.`session`, `results`.`flag`, `results`.`frscore`, `results`.`frpossible`, `results`.`frgraded` FROM `quizzes` INNER JOIN `results` ON `quizzes`.`uuid` = `results`.`quizuuid` WHERE (`quizzes`.`owner` = ? AND `results`.`owner` = ? AND `quizzes`.`uuid` = ?) ORDER BY `quizzes`.`quizname` ASC, `results`.`house` ASC, `results`.`lastname` ASC;"
 	)){
 		$stmt->bind_param("sss", $_SESSION['dbext'], $_SESSION['dbext'], $uuid);
 		$stmt->execute();
-		$stmt->bind_result($quizuuid, $quizname, $resultid, $resulthouse, $lastname, $firstname, $rawscore, $possiblescore, $timestamp, $ip, $session, $flag, $frscore, $frpossible, $frgraded);
+		$stmt->bind_result($quizuuid, $quizname, $resultid, $resulthouse, $lastname, $firstname, $house, $rawscore, $possiblescore, $timestamp, $ip, $session, $flag, $frscore, $frpossible, $frgraded);
 		$stmt->store_result();
 		while($stmt->fetch()){
 			$resultObject[$quizuuid]['name'] = $quizname;
 			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['uuid'] = $resultid;
 			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['firstname'] = $firstname;
 			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['lastname'] = $lastname;
+			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['house'] = $house;
 			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['rawscore'] = $rawscore;
 			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['possiblescore'] = $possiblescore;
 			$resultObject[$quizuuid]['results'][$resulthouse][$resultid]['timestamp'] = date("Y-M-d-D H:i", $timestamp);//$timestamp;
