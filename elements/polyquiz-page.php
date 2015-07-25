@@ -44,6 +44,7 @@ session_start();
 	}
 	</style>
 	<template>
+		<iron-signals on-iron-signal-toast-event="fireToast"></iron-signals>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
 			<paper-header-panel drawer>
 				<paper-toolbar>
@@ -86,10 +87,20 @@ session_start();
 				<paper-toolbar>
 					<paper-menu-button class="only-medium">
 						<paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-						<paper-menu class="dropdown-content">
-							<paper-icon-item><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
-							<paper-icon-item><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
-							<paper-icon-item><iron-icon icon="icons:settings" item-icon></iron-icon>Manage</paper-icon-item>
+						<paper-menu class="dropdown-content" on-iron-select="onSelectedChange">
+							<paper-icon-item id="home"><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
+							<paper-icon-item id="takeaquiz"><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
+							<paper-icon-item id="admin"><iron-icon icon="icons:settings" item-icon></iron-icon>Manage</paper-icon-item>
+							<?
+							if(isset($_SESSION["is_admin"])){
+								?>
+							<paper-icon-item id="sessions"><iron-icon icon="icons:settings" item-icon></iron-icon>Sessions</paper-icon-item>
+							<paper-icon-item id="quizzes"><iron-icon icon="icons:settings" item-icon></iron-icon>Quizzes</paper-icon-item>
+							<paper-icon-item id="grading"><iron-icon icon="icons:settings" item-icon></iron-icon>Grading</paper-icon-item>
+							<paper-icon-item id="logout"><iron-icon icon="icons:settings" item-icon></iron-icon>Logout</paper-icon-item>
+								<?
+							}
+							?>
 						</paper-menu>
 					</paper-menu-button>
 					<span class="title">PolyQuiz 3.0</span>
@@ -112,13 +123,35 @@ session_start();
 	<script>
 	Polymer({
 		is: "polyquiz-page",
-		listeners: {
-			"toastEvent": "fireToast"
-		},
 		properties: {
 			sidebarpage: {
 				type: Number,
 				value: 0
+			}
+		},
+		onSelectedChange: function(d){
+			switch(d.detail.item.id){
+				case "home":
+					this.goHome();
+					break;
+				case "takeaquiz":
+					this.goTakeAQuiz();
+					break;
+				case "admin":
+					this.goLogin();
+					break;
+				case "sessions":
+					this.goSessions();
+					break;
+				case "quizzes":
+					this.goQuizzes();
+					break;
+				case "grading":
+					this.goGrading();
+					break;
+				case "logout":
+					this.goLogout();
+					break;
 			}
 		},
 		goHome: function(){
@@ -129,6 +162,18 @@ session_start();
 		},
 		goLogin: function(){
 			window.location = "?p=admin";
+		},
+		goSessions: function(){
+			window.location = "?p=sessions";
+		},
+		goQuizzes: function(){
+			window.location = "?p=quizadmin";
+		},
+		goGrading: function(){
+			window.location = "?p=gradefr";
+		},
+		goLogout: function(){
+			window.location = "../func/admin.logout.php";
 		},
 		fireToastNonEvent: function(text){
 			this.$.globalToast.text = text;
