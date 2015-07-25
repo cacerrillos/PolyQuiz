@@ -1,4 +1,70 @@
 <!doctype html>
+<dom-module id="admin-quiz-results-house">
+<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+<template>
+	<div class="row" id="mainDiv">
+		<div class="12u">
+			<paper-material>
+				<h2><span>[[quizname]]</span> - <span>[[house]]</span></h2>
+				<div class="row">
+					<div class="12u">
+						<admin-quiz-results-row
+							uuid=""
+							firstname="First Name"
+							lastname="Last Name"
+							score="Score"
+							freeresponsescore="Free Response Score"
+							datetime="Date & Time"
+							></admin-quiz-results-row>
+						<template is="dom-repeat" items="[[quizdata]]" as="quizresults">
+							<admin-quiz-results-row
+								uuid="[[quizresults.uuid]]"
+								firstname="[[quizresults.firstname]]"
+								lastname="[[quizresults.lastname]]"
+								score="[[quizresults.rawscore]]"
+								possiblescore="[[quizresults.possiblescore]]"
+								freeresponsescore="[[quizresults.frscore]]"
+								freeresponsescorepossible="[[quizresults.frpossible]]"
+								datetime="[[quizresults.timestamp]]"
+								house="[[quizresults.house]]"
+								></admin-quiz-results-row>
+						</template>
+					</div>
+				</div>
+			</paper-material>
+		</div>
+	</div>
+</template>
+<script>
+	Polymer({
+		is: "admin-quiz-results-house",
+		properties: {
+			quizname: String,
+			house: String,
+			quizdata: {
+				type: Array,
+				observer: "dataChanged"
+			}
+		},
+		dataChanged: function(){
+			if(!this.quizdata){
+				this.$.mainDiv.style.display = "none";
+			} else {
+				this.$.mainDiv.style.display = "block";
+			}
+		},
+		ready: function(){
+			this.dataChanged();
+		}
+	});
+</script>
+</dom-module>
 <dom-module id="admin-quiz-results-page">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
@@ -28,6 +94,9 @@
 					<paper-material>
 						<h2 class="nomargins">Results & Grading</h2>
 						Sort By: <paper-button id="quizandhouse" on-click="onSortByQuizAndHouse" raised>Quiz & House</paper-button><paper-button id="session" on-click="onSortBySession" raised>Session</paper-button>
+						<paper-menu-button>
+							<paper-button>View</paper-button>
+						</paper-menu-button>
 					</paper-material>
 				</div>
 				<div class="12u" id="loadPaperDiv">
@@ -37,46 +106,11 @@
 				</div>
 			</div>
 			<div id="resultRows">
-				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
-					<div class="row">
-						<div class="12u">
-							 <div class="row">
-								<template is="dom-repeat" items="[[_transformData(quizzes.results)]]" as="houses">
-									<div class="12u">
-										<paper-material>
-											<h2><span>[[quizzes.name]]</span> - <span>[[quizzes.house]]</span></h2>
-											<div class="row">
-												<div class="12u">
-													<admin-quiz-results-row
-														uuid=""
-														firstname="First Name"
-														lastname="Last Name"
-														score="Score"
-														freeresponsescore="Free Response Score"
-														datetime="Date & Time"
-														></admin-quiz-results-row>
-													<template is="dom-repeat" items="[[_transformData(houses)]]" as="quizresults">
-														<admin-quiz-results-row
-															uuid="[[quizresults.uuid]]"
-															firstname="[[quizresults.firstname]]"
-															lastname="[[quizresults.lastname]]"
-															score="[[quizresults.rawscore]]"
-															possiblescore="[[quizresults.possiblescore]]"
-															freeresponsescore="[[quizresults.frscore]]"
-															freeresponsescorepossible="[[quizresults.frpossible]]"
-															datetime="[[quizresults.timestamp]]"
-															on-result-deleted="doReload"
-															></admin-quiz-results-row>
-													</template>
-												</div>
-											</div>
-										</paper-material>
-									</div>
-								</template>
-							</div>
-						</div>
-					</div>
-				</template>
+				<admin-quiz-results-house quizname="[[quizName]]" house="North" quizdata="[[_transformData(northData)]]" on-result-deleted="doReload"></admin-quiz-results-house>
+				<admin-quiz-results-house quizname="[[quizName]]" house="South" quizdata="[[_transformData(southData)]]" on-result-deleted="doReload"></admin-quiz-results-house>
+				<admin-quiz-results-house quizname="[[quizName]]" house="East" quizdata="[[_transformData(eastData)]]" on-result-deleted="doReload"></admin-quiz-results-house>
+				<admin-quiz-results-house quizname="[[quizName]]" house="West" quizdata="[[_transformData(westData)]]" on-result-deleted="doReload"></admin-quiz-results-house>
+				<admin-quiz-results-house quizname="[[quizName]]" house="Other" quizdata="[[_transformData(otherData)]]" on-result-deleted="doReload"></admin-quiz-results-house>
 			</div>
 		</div>
 	</template>
@@ -88,12 +122,35 @@
 				_get: {
 					type: Object
 				},
+				quizName: String,
+				northData: Object,
+				southData: Object,
+				eastData: Object,
+				westData: Object,
+				otherData: Object,
 				resultsObject: {
 					type: Array
 				}
 			},
 			resultContentReceived: function(response) {
 				this.resultsObject = this.$.resultsAjax.lastResponse;
+				var conv = this._transformData(this.resultsObject);
+				this.quizName = conv[0].name;
+				if(conv[0].results.North){
+					this.northData = conv[0].results.North;
+				}
+				if(conv[0].results.South){
+					this.southData = conv[0].results.South;
+				}
+				if(conv[0].results.East){
+					this.eastData = conv[0].results.East;
+				}
+				if(conv[0].results.West){
+					this.westData = conv[0].results.West;
+				}
+				if(conv[0].results.Other){
+					this.otherData = conv[0].results.Other;
+				}
 				this.$.loadPaperDiv.style.display = "none";
 				this.$.resultRows.style.display = "block";
 			},
