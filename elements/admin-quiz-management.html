@@ -1,5 +1,6 @@
 <!doctype html>
 <dom-module id="stats-ajax">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <template>
 <iron-ajax id="query" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
 <paper-button on-click="hanClick"><span id="totalshow" style="display:none;">TOTAL</span><span>[[house]]</span><br><span style="">[[count]]</span></paper-button>
@@ -30,6 +31,9 @@
 					}
 					
 				}
+		},
+		zeroResultsToast: function() {
+			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "There are 0 results!" } });
 		},
 		onResp: function(e){
 			var count = e.detail.response.count;
@@ -201,11 +205,6 @@
 			},
 			_convertTimeStamp: function(data) {
 				
-			},
-			zeroResultsToast: function() {
-				var toast = document.querySelector("paper-toast");
-				toast.text = "There are 0 results!";
-				toast.show();
 			},
 			resultsTotal: function(e){
 				if(e.model.get('quizzes.totalcount') == 0){
