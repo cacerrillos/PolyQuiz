@@ -22,6 +22,7 @@ session_start();
 	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 	<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 	<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+	<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 	<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 	
 	<style is="custom-style">
@@ -83,18 +84,30 @@ session_start();
 			</paper-header-panel>
 			<paper-scroll-header-panel main class="flex" id="scrollHeader" fixed>
 				<paper-toolbar>
-					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+					<paper-menu-button class="only-medium">
+						<paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+						<paper-menu class="dropdown-content">
+							<paper-icon-item><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
+							<paper-icon-item><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
+							<paper-icon-item><iron-icon icon="icons:settings" item-icon></iron-icon>Manage</paper-icon-item>
+						</paper-menu>
+					</paper-menu-button>
 					<span class="title">PolyQuiz 3.0</span>
 					<paper-button on-click="goHome" class="smallbuttons"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
 					<paper-button on-click="goTakeAQuiz" class="smallbuttons"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
 					<paper-button on-click="goLogin" class="smallbuttons"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
+					
 				</paper-toolbar>
 				<content id="globalMainContainer">
 				
+				
 				</content>
+				
 			</paper-scroll-header-panel>
+			
 		</paper-drawer-panel>
 		<paper-fab icon="home"></paper-fab>
+		<paper-toast id="globalToast"></paper-toast>
 	</template>
 	<script>
 	Polymer({
