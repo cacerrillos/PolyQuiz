@@ -53,7 +53,7 @@ Polymer({
 		if(e.detail.response.status == true){
 			this.$.thisDialog.close();
 			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Quiz result deleted!" } });
-			this.fire('result-deleted', {uuidd: this.uuid});
+			this.fire('result-deleted', {uuid: this.uuid});
 		} else {
 			this.$.cancelButton.disabled = false;
 			this.$.thisDialog.noCancelOnOutsideClick = false;
