@@ -220,19 +220,23 @@ Polymer({
 				this.resultsObject = this.$.resultsAjax.lastResponse;
 				var conv = this._transformData(this.resultsObject);
 				this.quizName = conv[0].name;
-				if(conv[0].results.North){
+				var house = "";
+				if(this._get.hasOwnProperty("house")){
+					house = this._get['house'];
+				}
+				if(conv[0].results.North && (house == "" || house == "North")){
 					this.northData = conv[0].results.North;
 				}
-				if(conv[0].results.South){
+				if(conv[0].results.South && (house == "" || house == "South")){
 					this.southData = conv[0].results.South;
 				}
-				if(conv[0].results.East){
+				if(conv[0].results.East && (house == "" || house == "East")){
 					this.eastData = conv[0].results.East;
 				}
-				if(conv[0].results.West){
+				if(conv[0].results.West && (house == "" || house == "West")){
 					this.westData = conv[0].results.West;
 				}
-				if(conv[0].results.Other){
+				if(conv[0].results.Other && (house == "" || house == "Other")){
 					this.otherData = conv[0].results.Other;
 				}
 				this.$.loadPaperDiv.style.display = "none";
