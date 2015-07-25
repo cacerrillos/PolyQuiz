@@ -101,7 +101,6 @@ ready: function() {
 			<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
 			<paper-item on-click="goEditQuizzes"><i class="fa fa-cog"></i> My Quizzes</paper-item>
 			<paper-progress value="100" style="width:90%; margin-left:5%; margin-right: 5%;"></paper-progress>
-			<paper-item on-click="goResults"><i class="fa fa-cog"></i> Quiz Results</paper-item>
 			<paper-item on-click="goGrading"><i class="fa fa-cog"></i> Pending Free Response Grading</paper-item>
 			<paper-item on-click="goLogout">Logout</paper-item>
 		</paper-menu>
