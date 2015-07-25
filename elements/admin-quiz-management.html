@@ -1,4 +1,60 @@
 <!doctype html>
+<dom-module id="stats-ajax">
+<template>
+<iron-ajax id="query" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
+<paper-button on-click="hanClick"><span id="totalshow" style="display:none;">TOTAL</span><span>[[house]]</span><br><span style="">[[count]]</span></paper-button>
+</template>
+<script>
+	Polymer({
+		is: 'stats-ajax',
+		properties: {
+			total: Boolean,
+			count: {
+				type: Number,
+				value: -1
+			},
+			uuid: String,
+			house : {
+				type: String,
+				value: ""
+			}
+		},
+		hanClick: function(){
+			if(this.count == 0){
+					this.zeroResultsToast();
+				} else {
+					if(this.house == ""){
+						window.location = "?p=results&uuid=" + this.uuid;
+					} else {
+						window.location = "?p=results&uuid=" + this.uuid + "&house=" + this.house;
+					}
+					
+				}
+		},
+		onResp: function(e){
+			var count = e.detail.response.count;
+			var latest = e.detail.response.latest;
+			this.count = count;
+		},
+		ready: function(){
+			if(this.total){
+				this.$.totalshow.style.display = "inline";
+			}
+			if(this.house!=""){
+				this.$.query.params = {
+					uuid: this.uuid,
+					house: this.house
+				};
+			} else {
+				this.$.query.params = {
+					uuid: this.uuid
+				};
+			}
+			this.$.query.generateRequest();
+		}
+	});
+</script>
+</dom-module>
 <dom-module id="admin-quiz-management-page">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
@@ -37,124 +93,84 @@
 					</paper-material>
 				</div>
 			</div>
-				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
-					
-					<div class="row">
-						<div class="12u">
-							<paper-material>
-								<h2 class="nomargins">[[quizzes.name]]</h2>
-								<h6 class="nomargins" style="display:none;">[[quizzes.uuid]]</h6>
-								<div class="row not-small">
-									<div class="1u 2u(small)" on-click="resultsTotal">
-										<center><span>[[quizzes.totalcount]]</span> Results</center>
-									</div>
-									<div class="1u">
-										<center>5 North</center>
-									</div>
-									<div class="1u">
-										<center>5 South</center>
-									</div>
-									<div class="1u">
-										<center>5 East</center>
-									</div>
-									<div class="1u">
-										<center>5 West</center>
-									</div>
-									<div class="1u">
-										<center>5 Other</center>
-									</div>
-									<div class="1u">
-										<center>asdd</center>
-									</div>
-									<div class="1u">
-										<center>asdd</center>
-									</div>
-									<div class="1u">
-										<center>asd</center>
-									</div>
-									<div class="3u 1u(small)">
-										<center>
-											<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
-											<paper-icon-button icon="image:remove-red-eye" alt="Preview"></paper-icon-button>
-											<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
-										</center>
-									</div>
+			<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
+				<div class="row">
+					<div class="12u">
+						<paper-material>
+							
+				<iron-ajax id="southCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="southCountR"></iron-ajax>
+				<iron-ajax id="eastCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="eastCountR"></iron-ajax>
+				<iron-ajax id="westCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="westCountR"></iron-ajax>
+				<iron-ajax id="otherCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="otherCountR"></iron-ajax>
+							<h2 class="nomargins">[[quizzes.name]]</h2>
+							<h6 class="nomargins" style="display:none;">[[quizzes.uuid]]</h6>
+							<div class="row not-small">
+								<div class="1u 2u(small)">
+									<stats-ajax uuid="[[quizzes.uuid]]" total></stats-ajax>
 								</div>
-								<div class="row only-small">
-									<div class="10u">
-										<div class="row">
-											<div class="3u">
-												<center><span>[[quizzes.totalcount]]</span> Results</center>
-											</div>
-											<div class="3u">
-												<center>5 South</center>
-											</div>
-											<div class="3u">
-												<center>5 West</center>
-											</div>
-										</div>
-										<div class="row">
-											<div class="3u">
-												<center>5 North</center>
-											</div>
-											<div class="3u">
-												<center>5 East</center>
-											</div>
-											<div class="3u">
-												<center>5 Other</center>
-											</div>
-										</div>
-									</div>
-									<div class="2u">
-										<center>
-											<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
-											<paper-icon-button icon="image:remove-red-eye" alt="Preview"></paper-icon-button>
-											<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
-										</center>
-									</div>
+								<div class="1u">
+									<stats-ajax uuid="[[quizzes.uuid]]" house="North"></stats-ajax>
 								</div>
-							</paper-material>
-						</div>
-					</div>
-				</template>
-				<!--
-				<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="quizzes">
-					<div class="row">
-						<div class="12u">
-							<paper-material>
-								<template is="dom-repeat" items="[[_transformData(quizzes.results)]]" as="houses">
-								<h2>[[quizzes.name]]</h2>
-								<h3>[[quizzes]]</h3>
+								<div class="1u">
+									<stats-ajax uuid="[[quizzes.uuid]]" house="South"></stats-ajax>
+								</div>
+								<div class="1u">
+									<stats-ajax uuid="[[quizzes.uuid]]" house="East"></stats-ajax>
+								</div>
+								<div class="1u">
+									<stats-ajax uuid="[[quizzes.uuid]]" house="West"></stats-ajax>
+								</div>
+								<div class="1u">
+									<stats-ajax uuid="[[quizzes.uuid]]" house="Other"></stats-ajax>
+								</div>
+								<div class="1u">
+									<center><paper-icon-button icon="editor:insert-chart" alt="Stats" on-click="_goStats"></paper-icon-button></center>
+								</div>
+								<div class="3u 1u(small)">
+									<center>
+										<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
+										<paper-icon-button icon="image:remove-red-eye" alt="Preview"></paper-icon-button>
+										<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
+									</center>
+								</div>
+							</div>
+							<div class="row only-small">
+								<div class="10u">
 									<div class="row">
-										<div class="12u">
-											<admin-quiz-results-row
-												uuid=""
-												firstname="First Name"
-												lastname="Last Name"
-												score="Score"
-												freeresponsescore="Free Response Score"
-												datetime="Date & Time"
-												></admin-quiz-results-row>
-											<template is="dom-repeat" items="[[_transformData(houses)]]" as="quizresults">
-												<admin-quiz-results-row
-													uuid="[[quizresults.uuid]]"
-													firstname="[[quizresults.firstname]]"
-													lastname="[[quizresults.lastname]]"
-													score="[[quizresults.rawscore]]"
-													possiblescore="[[quizresults.possiblescore]]"
-													freeresponsescore="[[quizresults.frscore]]"
-													freeresponsescorepossible="[[quizresults.frpossible]]"
-													datetime="[[quizresults.timestamp]]"
-													></admin-quiz-results-row>
-											</template>
+										<div class="3u">
+											<center><stats-ajax uuid="[[quizzes.uuid]]" total></stats-ajax></center>
+										</div>
+										<div class="3u">
+											<center><stats-ajax uuid="[[quizzes.uuid]]" house="South"></stats-ajax></center>
+										</div>
+										<div class="3u">
+											<center><stats-ajax uuid="[[quizzes.uuid]]" house="West"></stats-ajax></center>
 										</div>
 									</div>
-								</template>
-							</paper-material>
-						</div>
+									<div class="row">
+										<div class="3u">
+											<center><stats-ajax uuid="[[quizzes.uuid]]" house="North"></stats-ajax></center>
+										</div>
+										<div class="3u">
+											<center><stats-ajax uuid="[[quizzes.uuid]]" house="East"></stats-ajax></center>
+										</div>
+										<div class="3u">
+											<center><stats-ajax uuid="[[quizzes.uuid]]" house="Other"></stats-ajax></center>
+										</div>
+									</div>
+								</div>
+								<div class="2u">
+									<center>
+										<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
+										<paper-icon-button icon="image:remove-red-eye" alt="Preview"></paper-icon-button>
+										<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
+									</center>
+								</div>
+							</div>
+						</paper-material>
 					</div>
-				</template>
-				-->
+				</div>
+			</template>
 		</div>
 	</template>
 	<script>
@@ -186,8 +202,59 @@
 			_convertTimeStamp: function(data) {
 				
 			},
+			zeroResultsToast: function() {
+				var toast = document.querySelector("paper-toast");
+				toast.text = "There are 0 results!";
+				toast.show();
+			},
 			resultsTotal: function(e){
-				window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				if(e.model.get('quizzes.totalcount') == 0){
+					this.zeroResultsToast();
+				} else {
+					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				}
+			},
+			resultsNorth: function(e){
+				if(e.model.get('quizzes.totalcount') == 0){
+					this.zeroResultsToast();
+				} else {
+					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				}
+			},
+			northCountR: function(response){
+				console.log(response);
+				response.model.quizzes.northcount = response.detail.response.count;
+				console.log(response.model.quizzes);
+				//console.log(response.target.parentElement.parentElement.getElementById(""));
+				//console.log(response);
+			},
+			resultsSouth: function(e){
+				if(e.model.get('quizzes.totalcount') == 0){
+					this.zeroResultsToast();
+				} else {
+					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				}
+			},
+			resultsEast: function(e){
+				if(e.model.get('quizzes.totalcount') == 0){
+					this.zeroResultsToast();
+				} else {
+					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				}
+			},
+			resultsWest: function(e){
+				if(e.model.get('quizzes.totalcount') == 0){
+					this.zeroResultsToast();
+				} else {
+					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				}
+			},
+			resultsOther: function(e){
+				if(e.model.get('quizzes.totalcount') == 0){
+					this.zeroResultsToast();
+				} else {
+					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
+				}
 			},
 			_goEditQuiz: function(e){
 				window.location = "?p=editquiz&uuid=" + e.model.get('quizzes.uuid');
