@@ -24,12 +24,6 @@
 		}
 	</style>
 	<template>
-		<iron-ajax
-				id="ajaxQ"
-				url="../func/rawresult.php?uuid=4523"
-				handle-as="text"
-				on-response="resultContentReceived">	
-			</iron-ajax>
 		<paper-dialog
 		id="resultDialog"
 		entry-animation="scale-up-animation"
@@ -42,17 +36,6 @@
 			</paper-dialog-scrollable>
 			<div class="buttons">
 				<paper-button dialog-dismiss raised>Close</paper-button>
-			</div>
-		</paper-dialog>
-		<paper-dialog
-		id="deleteDialog"
-		entry-animation="scale-up-animation"
-		exit-animation="fade-out-animation"
-		on-iron-overlay-closed="deleteDialogClosed">
-			<h2>Delete?</h2>
-			<div class="buttons">
-				<paper-button dialog-dismiss raised>Cancel</paper-button>
-				<paper-button dialog-confirm raised>Delete</paper-button>
 			</div>
 		</paper-dialog>
 		<admin-quiz-results-delete-overlay id="deleteSpecificQuiz"></admin-quiz-results-delete-overlay>
