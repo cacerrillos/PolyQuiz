@@ -106,8 +106,6 @@ function checkPass()
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800" rel="stylesheet" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
 <script src="js/jquery.min.js"></script>
-<script src="js/jquery.dropotron.min.js"></script>
-<script src="js/config.js"></script>
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/lightbox.js"></script>
 <script src="js/sketch.js"></script>
@@ -146,14 +144,6 @@ tinymce.init({
 		var dataURL = canvas.toDataURL();
 		document.getElementById("canvasValue").value = dataURL;
 	}
-</script>
-<script type="text/javascript">
-$(document).ready(function() {
-	$("a[rel]").overlay({
-		left: 'center',
-		top: 50,
-		fixed: false});
-});
 </script>
 <style type="text/css">
 .simple_overlay {
