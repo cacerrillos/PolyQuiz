@@ -64,6 +64,7 @@
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
 	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-icons/editor-icons.html">
 	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
@@ -127,11 +128,9 @@
 								<div class="1u">
 									<stats-ajax uuid="[[quizzes.uuid]]" house="Other"></stats-ajax>
 								</div>
-								<div class="1u">
-									<center><paper-icon-button icon="editor:insert-chart" alt="Stats" on-click="_goStats"></paper-icon-button></center>
-								</div>
 								<div class="3u 1u(small)">
 									<center>
+										<paper-icon-button icon="editor:insert-chart" alt="Stats" on-click="_goStats"></paper-icon-button>
 										<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
 										<paper-icon-button icon="image:remove-red-eye" alt="Preview" disabled></paper-icon-button>
 										<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
@@ -165,6 +164,7 @@
 								</div>
 								<div class="2u">
 									<center>
+										<paper-icon-button icon="editor:insert-chart" alt="Stats" on-click="_goStats"></paper-icon-button>
 										<paper-icon-button icon="icons:create" alt="Edit" on-click="_goEditQuiz"></paper-icon-button>
 										<paper-icon-button icon="image:remove-red-eye" alt="Preview" disabled></paper-icon-button>
 										<paper-icon-button icon="icons:delete" alt="Delete"></paper-icon-button>
