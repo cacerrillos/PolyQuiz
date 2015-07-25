@@ -6,12 +6,22 @@
 	<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 	<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
 	<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+	<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 <template>
 <paper-dialog id="thisDialog">
-	<paper-spinner active></paper-spinner>
+	<iron-ajax
+		id="deleteAjax"
+		url="../../api/1.0/quizresults/delete.php"
+		handle-as="json"
+	 	on-response="onAjaxResp"></iron-ajax>
+	<h2>Delete Result</h2>
+	<h4>Are you sure you wish to delete this result?</h4>
+	Name: <span>[[lastname]]</span>, <span>[[firstname]]</span><br>
+	Quiz: <span>[[quizname]]</span><br>
+	Score: <span>[[score]]</span>/<span>[[possiblescore]]</span>
 	<div class="buttons">
-		<paper-button dialog-dismiss raised>Cancel</paper-button>
-		<paper-button dialog-confirm raised>Delete</paper-button>
+		<paper-button dialog-dismiss raised id="cancelButton">Cancel</paper-button>
+		<paper-button raised on-click="doDelete"><center><span id="deleteButtonText">Delete</span><paper-spinner id="deleteSpinner" style="display:none;"></paper-spinner></center></paper-button>
 	</div>
 </paper-dialog>
 </template>
@@ -39,15 +49,28 @@ Polymer({
 	open: function() {
 		this.$.thisDialog.open();
 	},
-	onConfirm: function() {
-		switch(this.type){
-			case "HOUSE":
-					//func/resultdelete.func.php?uuid=<? echo $uuid; ?>&house=<? echo $house; ?>&delete=1"
-				break;
-			case "SESSION":
-					//func/resultdelete.func.php?session=<? echo $uuid; ?>&delete=1
-				break;
+	onAjaxResp: function(e){
+		if(e.detail.response.status == true){
+			this.$.thisDialog.close();
+			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Quiz result deleted!" } });
+			this.fire('result-deleted', {uuidd: this.uuid});
+		} else {
+			this.$.cancelButton.disabled = false;
+			this.$.thisDialog.noCancelOnOutsideClick = false;
+			this.$.deleteButtonText.style.display = "block";
+			this.$.deleteSpinner.style.display = "none";
+			this.$.deleteSpinner.active = false;
+			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete quiz result!" } });
 		}
+	},
+	doDelete: function() {
+		this.$.cancelButton.disabled = true;
+		this.$.thisDialog.noCancelOnOutsideClick = true;
+		this.$.deleteButtonText.style.display = "none";
+		this.$.deleteSpinner.style.display = "block";
+		this.$.deleteSpinner.active = true;
+		this.$.deleteAjax.params = { uuid: this.uuid };
+		this.$.deleteAjax.generateRequest();
 	}
 });
 </script>
