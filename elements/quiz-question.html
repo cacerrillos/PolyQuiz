@@ -27,7 +27,7 @@
 		<paper-button class="dropdown-trigger" id="currentButton">__</paper-button>
 		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
 			<paper-item id="0">_____</paper-item>
-			<template is="dom-repeat" items="[[rightarray.right]]" as="right">
+			<template is="dom-repeat" items="[[_transformData(rightarray.right)]]" as="right">
 				<paper-item id="[[_trans(index)]]"><poly-html content="[[right]]"></poly-html></paper-item>
 			</template>
 		</paper-menu>
@@ -47,6 +47,11 @@ Polymer({
 			observer: "onSelectedChange"
 		},
 		selectedInternal: Number
+	},
+	_transformData: function(data){
+		var arr = $.map(data, function(el) { return el; })
+		//console.log(arr);
+		return arr;
 	},
 	onobjchange: function(e){
 		this.selected = this.rightarray.selected;
@@ -279,7 +284,8 @@ Polymer({
 			<div class="row">
 				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
 				<div class="12u">
-					<paper-textarea label="Response" id="response">{{answertext}}</paper-textarea>
+					<input type="hidden" name="answer" value="{{answertext}}">
+					<paper-textarea name="" label="Response" id="response">{{answertext}}</paper-textarea>
 				</div>
 			</div>
 		</paper-material>
@@ -387,6 +393,55 @@ Polymer({
 		});
 	</script>
 </dom-module>
+<dom-module id="question-standard-material">
+<style is="custom-style">
+
+paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		</style>
+<template>
+	<paper-material id="mat" on-click="handleClick">
+		<poly-html content="[[answertext]]"></poly-html>
+	</paper-material>
+</template>
+<script>
+Polymer({
+	is: "question-standard-material",
+	properties: {
+		answertext: String,
+		value: Number,
+		resp: {
+			type: Number,
+			observer: "respChanged"
+		},
+		selected: {
+			type: Boolean,
+			observer: "onSelectedChange"
+		}
+	},
+	respChanged: function(e){
+		if(this.resp == this.value){
+			this.selected = true;
+		} else {
+			this.selected = false;
+		}
+	},
+	onSelectedChange: function(e){
+		if(this.selected){
+			this.$.mat.style.backgroundColor = "#BBDEFB";
+		} else {
+			this.$.mat.style.backgroundColor = "white";
+		}
+	},
+	handleClick: function(e){
+		this.fire("selected", { value: this.value });
+	}
+});
+</script>
+</dom-module>
 <dom-module id="quiz-question-standard">
 <link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
@@ -414,10 +469,13 @@ Polymer({
 	<template>
 		<paper-material id="answerMaterial">
 			<div class="row">
+				<input type="hidden" name="answer" value="[[selectedAnswer]]">
+				<span>[[selectedAnswer]]</span>
 				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
-					<div class="12u"><paper-material><poly-html content="[[answer.answer]]"></poly-html></paper-material></div>
+					<div class="12u"><question-standard-material answertext="[[answer.answer]]" resp="[[selectedAnswer]]" value="[[index]]" on-selected="bleh"></question-standard-material></div>
 				</template>
+				<div class="12u"><question-standard-material answertext="Skip" resp="[[selectedAnswer]]" value="-1" on-selected="bleh"></question-standard-material></div>
 			</div>
 		</paper-material>
 	</template>
@@ -430,10 +488,18 @@ Polymer({
 				answerid: Number,
 				answertext: String,
 				questionparent: Object,
+				selectedAnswer:{
+					type: Number
+				},
 				selected: {
 					type: Boolean,
 					observer: "onSelectedChange"
 				}
+			},
+			bleh: function(e){
+				e.target.selected = true;
+				this.selectedAnswer = e.target.value;
+				console.log(e);
 			},
 			doClick: function() {
 				this.questionparent.requestSelectAnswer(this);
