@@ -1,5 +1,84 @@
 <!doctype html>
-<dom-module id="quiz-question-answer-matching">
+<dom-module id="poly-html">
+<template>
+	<div id="contentDiv"></div>
+</template>
+<script>
+	Polymer({
+		is: "poly-html",
+		properties: {
+			content: {
+				type: String,
+				observer: "redraw"
+			}
+		},
+		redraw: function(){
+			this.$.contentDiv.innerHTML = this.content;
+		},
+		ready: function(){
+			this.redraw();
+		}
+	});
+</script>
+</dom-module>
+<dom-module id="poly-dropdown">
+<template>
+	<paper-menu-button>
+		<paper-button class="dropdown-trigger" id="currentButton">__</paper-button>
+		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
+			<paper-item id="0">_____</paper-item>
+			<template is="dom-repeat" items="[[rightarray.right]]" as="right">
+				<paper-item id="[[_trans(index)]]"><poly-html content="[[right]]"></poly-html></paper-item>
+			</template>
+		</paper-menu>
+	</paper-menu-button>
+</template>
+<script>
+Polymer({
+	is: "poly-dropdown",
+	properties: {
+		rightarray: {
+			type: Object,
+			observer: "onobjchange"
+		},
+		selected: {
+			type: Number,
+			value: -1,
+			observer: "onSelectedChange"
+		},
+		selectedInternal: Number
+	},
+	onobjchange: function(e){
+		this.selected = this.rightarray.selected;
+	},
+	onSelectedChange: function(e){
+		this.selectedInternal = this.selected + 1;
+		if(this.selected == -1){
+			this.$.currentButton.innerHTML = "_____";
+			this.$.currentButton.style.fontWeight = "normal";
+			this.$.currentButton.style.color = "#212121";
+		} else {
+			this.$.currentButton.innerHTML = this.rightarray.right[this.selected];
+			this.$.currentButton.style.fontWeight = "bold";
+			this.$.currentButton.style.color = "#2196F3";
+		}
+		this.fire("selected-changed", { selected: this.selected });
+	},
+	onSelectedInternalChange: function(e){
+		this.selected = e.detail.item.id - 1;
+	},
+	_trans: function(data){
+		return data + 1;
+	},
+	ready: function(){
+		console.log(this.selected);
+		this.selected = this.selected;
+		///this.fire("selected-changed", { selected: this.selected });
+	}
+});
+</script>
+</dom-module>
+<dom-module id="quiz-question-matching">
 <link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
 	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
@@ -21,28 +100,116 @@
 	</style>
 	<template>
 		<paper-material>
-			<div class="row">
-				<div class="8u">
-					<div id="answerTextContainer"></div>
+			<template is="dom-repeat" items="[[answerArray]]" as="row" id="mainTemp">
+				<div class="row">
+					<div class="8u"><poly-html content="[[row.left]]"></poly-html></div>
+					<div class="4u">
+						<span>[[row.selected]]</span>
+						<input type="hidden" name="[[transName(index)]]" value="[[row.selected]]">
+						<poly-dropdown rightarray="[[row]]" on-selected-changed="onSelectedChange"></poly-dropdown>
+					</div>
 				</div>
-				<div class="4u">
-					<paper-menu-button>
-						<paper-button class="dropdown-trigger" id="current" style="font-weight: bold; color: #2196F3;">________</paper-button>
-						<paper-menu class="dropdown-content" id="rightText" on-iron-select="onSelectedChange">
-							<paper-item>________</paper-item>
-							<template is="dom-repeat" items="[[right]]" as="thisright">
-								<paper-item>[[thisright]]</paper-item>
-							</template>
-						</paper-menu>
-					</paper-menu-button>
-				</div>
-			</div>
+			</template>
 		</paper-material>
 	</template>
 	<script>
 		Polymer({
-			is: "quiz-question-answer-matching",
+			is: "quiz-question-matching",
 			properties: {
+				qobject: {
+					type: Object,
+					observer: "redraw"
+				},
+				answerArray: Array,
+				right: Object,
+				answerid: Number,
+				answertext: String,
+				questionparent: Object
+				
+			},
+			doClick: function() {
+				//console.log(this.questionparent);
+				this.questionparent.requestSelectAnswer(this.answerid);
+			},
+			doReset: function() {
+				this.$.rightText.select('0');
+			},
+			transName: function(data){
+				return "ans" + data;
+			},
+			_bleh: function(d){
+				//console.log(d);
+			},
+			_trans: function(input){
+				return input+1;
+			},
+			onSelectedChange: function(e) {
+				console.log(e);
+				e.model.set('row.selected', e.detail.selected);
+//				this.$.currentButton.innerHTML = details.detail.item.textContent;
+			},
+			gen: function() {
+				this.$.rightText.select('0');
+			},
+			redraw: function(){
+				var Thing = function(left, right, selected){
+					this.left = left;
+					this.right = right;
+					this.selected = selected;
+				};
+				var bleh = [];
+				for(var x = 0; x < this.qobject.left.length; x++){
+					bleh.push(new Thing(this.qobject.left[x], this.qobject.right, this.qobject.left_res[x]));
+				}
+				this.answerArray = bleh;
+				console.log(bleh);
+			},
+			ready: function() {
+				//this.$.answerTextContainer.innerHTML = this.answertext;
+				
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question-matching-edit">
+<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+	<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material>
+			<template is="dom-repeat" items="[[answerArray]]" as="row">
+				<div class="row">
+					<div class="8u"><poly-html content="[[row.left]]"></poly-html></div>
+					<div class="4u"><poly-html content="[[row.left_ans]]"></poly-html></div>
+				</div>
+			</template>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-matching-edit",
+			properties: {
+				qobject: {
+					type: Object,
+					observer: "redraw"
+				},
+				answerArray: Array,
 				right: Object,
 				answerid: Number,
 				answertext: String,
@@ -53,7 +220,6 @@
 				}
 			},
 			doClick: function() {
-				//console.log(this.questionparent);
 				this.questionparent.requestSelectAnswer(this.answerid);
 			},
 			doReset: function() {
@@ -68,14 +234,28 @@
 			gen: function() {
 				this.$.rightText.select('0');
 			},
+			redraw: function(){
+				if(true){
+					var Thing = function(left, left_ans){
+						this.left = left;
+						this.left_ans = left_ans;
+					};
+					var bleh = [];
+					for(var x = 0; x < this.qobject.left.length; x++){
+						bleh.push(new Thing(this.qobject.left[x], this.qobject.left_ans[x]));
+					}
+					this.answerArray = bleh;
+					console.log(bleh);
+				}
+			},
 			ready: function() {
-				this.$.answerTextContainer.innerHTML = this.answertext;
+				//this.$.answerTextContainer.innerHTML = this.answertext;
 				
 			}
 		});
 	</script>
 </dom-module>
-<dom-module id="quiz-question-answer-textfield">
+<dom-module id="quiz-question-textfield">
 <link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
 	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
@@ -97,6 +277,7 @@
 	<template>
 		<paper-material>
 			<div class="row">
+				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
 				<div class="12u">
 					<paper-textarea label="Response" id="response">{{answertext}}</paper-textarea>
 				</div>
@@ -105,8 +286,9 @@
 	</template>
 	<script>
 		Polymer({
-			is: "quiz-question-answer-textfield",
+			is: "quiz-question-textfield",
 			properties: {
+				qobject: Object,
 				answerid: Number,
 				answertext: String,
 				questionparent: Object,
@@ -130,13 +312,82 @@
 					this.$.answerMaterial.style.backgroundColor = "white";
 				}
 			},
+			redraw: function(){
+				
+			},
 			ready: function() {
 				//this.$.answerTextContainer.innerHTML = this.answertext;
 			}
 		});
 	</script>
 </dom-module>
-<dom-module id="quiz-question-answer-standard">
+<dom-module id="quiz-question-textfield-edit">
+<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material>
+			<div class="row">
+				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
+				<div class="12u">
+					<paper-textarea label="Response" id="response">{{answertext}}</paper-textarea>
+				</div>
+			</div>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-textfield-edit",
+			properties: {
+				qobject: Object,
+				answerid: Number,
+				answertext: String,
+				questionparent: Object,
+				selected: {
+					type: Boolean,
+					observer: "onSelectedChange"
+				}
+			},
+			doClick: function() {
+				console.log(this.questionparent);
+				this.questionparent.requestSelectAnswer(this.answerid);
+			},
+			doReset: function() {
+				this.$.response.value = "";
+				
+			},
+			onSelectedChange: function() {
+				if(this.selected){
+					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
+				} else {
+					this.$.answerMaterial.style.backgroundColor = "white";
+				}
+			},
+			redraw: function(){
+				
+			},
+			ready: function() {
+				//this.$.answerTextContainer.innerHTML = this.answertext;
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question-standard">
 <link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
 	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
@@ -161,16 +412,21 @@
 		}
 	</style>
 	<template>
-		<paper-material id="answerMaterial" on-click="doClick">
+		<paper-material id="answerMaterial">
 			<div class="row">
-				<div class="12u" id="answerTextContainer"></div>
+				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
+				<template is="dom-repeat" items="[[answerArray]]" as="answer">
+					<div class="12u"><paper-material><poly-html content="[[answer.answer]]"></poly-html></paper-material></div>
+				</template>
 			</div>
 		</paper-material>
 	</template>
 	<script>
 		Polymer({
-			is: "quiz-question-answer-standard",
+			is: "quiz-question-standard",
 			properties: {
+				qobject: Object,
+				answerArray: Array,
 				answerid: Number,
 				answertext: String,
 				questionparent: Object,
@@ -192,9 +448,179 @@
 					this.$.answerMaterial.style.backgroundColor = "white";
 				}
 			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				//console.log(arr);
+				return arr;
+			},
+			redraw: function(){
+				if(this.qobject.type == "4"){
+					this.answerArray =  this.qobject.answerArray;
+				} else {
+					var tmp = this._transformData(this.qobject.answerArray);
+					var aa = [ ];
+					for(var x = 0; x < tmp.length; x++){
+						aa[x] = {
+							answer: tmp[x]
+						}
+					}
+					this.answerArray = aa;
+				}
+			},
 			ready: function() {
+				//this.$.answerTextContainerStandard.innerHTML = this.answertext;
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question-standard-edit">
+<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		.notselected {
+			background-color: white;
+		}
+		.selected {
+			background-color: blue;
+		}
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<paper-material id="answerMaterial">
+			<div class="row">
+				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
+				<template is="dom-repeat" items="[[answerArray]]" as="answer">
+					<div class="12u"><paper-material><poly-html content="[[answer.answer]]"></poly-html></paper-material></div>
+				</template>
+			</div>
+		</paper-material>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-standard-edit",
+			properties: {
+				qobject: Object,
+				answerArray: Array,
+				answerid: Number,
+				answertext: String,
+				questionparent: Object,
+				selected: {
+					type: Boolean,
+					observer: "onSelectedChange"
+				}
+			},
+			doClick: function() {
+				this.questionparent.requestSelectAnswer(this);
+			},
+			doReset: function() {
+				this.selected = false;
+			},
+			onSelectedChange: function() {
+				if(this.selected){
+					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
+				} else {
+					this.$.answerMaterial.style.backgroundColor = "white";
+				}
+			},
+			redraw: function(){
+				if(this.qobject.type == "4"){
+					this.answerArray =  this.qobject.answerArray;
+				} else {
+					var aa = [ ];
+					for(var x = 0; x < this.qobject.answerArray.length; x++){
+						aa[x] = {
+							answer: this.qobject.answerArray[x]
+						}
+						console.log(this.qobject);
+					}
+					this.answerArray = aa;
+				}
 				
-				this.$.answerTextContainer.innerHTML = this.answertext;
+			},
+			ready: function() {
+				//this.$.answerTextContainerStandard.innerHTML = this.answertext;
+			}
+		});
+	</script>
+</dom-module>
+<dom-module id="quiz-question-edit">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+	<template>
+		<div id="mainTemplate"></div>
+	</template>
+	<script>
+		Polymer({
+			is: "quiz-question-edit",
+			properties: {
+				qobject: Object,
+				selectedanswer: {
+					type: String,
+					value: "-1"
+				},
+				preview: {
+					type: Boolean,
+					value: false
+				}
+			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				//console.log(arr);
+				return arr;
+			},
+			ready: function() {
+				switch(this.qobject.type){
+					case "0":
+					case "4":
+					case 0:
+					case 4:
+						var standardQuestion = document.createElement("quiz-question-standard-edit");
+						standardQuestion.qobject = this.qobject;
+						standardQuestion.redraw();
+						this.$.mainTemplate.appendChild(standardQuestion);
+						break;
+					case "1":
+					case 1:
+						var textfieldQuestion = document.createElement("quiz-question-textfield-edit");
+						textfieldQuestion.qobject = this.qobject;
+						textfieldQuestion.redraw();
+						this.$.mainTemplate.appendChild(textfieldQuestion);
+						break;
+					case "2":
+					case 2:
+						var matchingQuestion = document.createElement("quiz-question-matching-edit");
+						matchingQuestion.qobject = this.qobject;
+						matchingQuestion.redraw();
+						this.$.mainTemplate.appendChild(matchingQuestion);
+						break;
+				}
 			}
 		});
 	</script>
@@ -218,12 +644,7 @@
 		}
 	</style>
 	<template>
-		<paper-material>
-			<div id="questiontext"></div>
-			<div id="answers"></div>
-			<input type="hidden" name="answer" value="[[selectedanswer]]">
-			<paper-button raised on-click="doReset">Reset</paper-button>
-		</paper-material>
+		<div id="mainTemplate"></div>
 	</template>
 	<script>
 		Polymer({
@@ -239,40 +660,6 @@
 					value: false
 				}
 			},
-			doReset: function() {
-				this.selectedanswer = "-1";
-				for(var x = 0; x < this.$.answers.childNodes.length; x++){
-					this.$.answers.childNodes[x].doReset();
-				}
-			},
-			setSelected: function(num) {
-				this.selectedanswer = num;
-				if(this.qobject.type != 1 && this.qobject.type != "1"){
-					for(var x = 0; x < this.$.answers.childNodes.length; x++){
-						console.log(this.$.answers.childNodes[x]);
-						if(this.$.answers.childNodes[x].answerid == this.selectedanswer) {
-							this.$.answers.childNodes[x].selected = true;
-						} else {
-							this.$.answers.childNodes[x].selected = false;
-						}
-						
-					}
-				} else {
-					this.$.answers.firstChild.answertext = this.selectedanswer;
-				}
-				
-			},
-			requestSelectAnswer: function(details) {
-				if(this.qobject.type != 1 && this.qobject.type != "1"){
-					this.selectedanswer = details.answerid;
-					for(var x = 0; x < this.$.answers.childNodes.length; x++){
-						this.$.answers.childNodes[x].selected = false;
-					}
-					details.selected = true;
-				} else {
-					console.log("fromfreee");
-				}
-			},
 			_transformData: function(data){
 				var arr = $.map(data, function(el) { return el; })
 				//console.log(arr);
@@ -280,51 +667,30 @@
 			},
 			ready: function() {
 				console.log(this.qobject);
-				this.$.questiontext.innerHTML = this.qobject.question;
 				switch(this.qobject.type){
 					case "0":
 					case "4":
 					case 0:
 					case 4:
-						var aa = this._transformData(this.qobject.answerArray);
-						for(var y = 0; y < aa.length; y++){
-							var thisAnswer = document.createElement("quiz-question-answer-standard");
-							thisAnswer.answerid = y;
-							if(this.qobject.type == "0" || this.qobject.type == 0){
-								thisAnswer.answertext = aa[y];
-							} else {
-								thisAnswer.answertext = aa[y].answer;
-							}
-							
-							thisAnswer.questionparent = this;
-							thisAnswer.ready();
-							this.$.answers.appendChild(thisAnswer);
-						}
+						var standardQuestion = document.createElement("quiz-question-standard");
+						standardQuestion.qobject = this.qobject;
+						standardQuestion.redraw();
+						this.$.mainTemplate.appendChild(standardQuestion);
 						break;
 					case "1":
 					case 1:
-						var textfieldAnswer = document.createElement("quiz-question-answer-textfield");
-						textfieldAnswer.questionparent = this;
-						textfieldAnswer.ready();
-						this.$.answers.appendChild(textfieldAnswer);
+						var textfieldQuestion = document.createElement("quiz-question-textfield");
+						textfieldQuestion.qobject = this.qobject;
+						textfieldQuestion.redraw();
+						this.$.mainTemplate.appendChild(textfieldQuestion);
 						break;
 					case "2":
 					case 2:
-						var left = this.qobject.left;
-						for(var y = 0; y < left.length; y++){
-							var thisAnswer = document.createElement("quiz-question-answer-matching");
-							thisAnswer.answerid = y;
-							thisAnswer.answertext = left[y];
-							thisAnswer.right = this.qobject.right;
-							thisAnswer.questionparent = this;
-							thisAnswer.ready();
-							thisAnswer.gen();
-							this.$.answers.appendChild(thisAnswer);
-						}
+						var matchingQuestion = document.createElement("quiz-question-matching");
+						matchingQuestion.qobject = this.qobject;
+						matchingQuestion.redraw();
+						this.$.mainTemplate.appendChild(matchingQuestion);
 						break;
-				}
-				if(this.selectedanswer != "-1" && this.selectedanswer != ""){
-					this.setSelected(this.selectedanswer);
 				}
 			}
 		});
