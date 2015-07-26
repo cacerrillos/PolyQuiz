@@ -43,6 +43,10 @@ if(isset($_SESSION["is_admin"])){
 			//$thisQuestion['questiontextfull'] = $thisObject->question;
 			//$thisQuestion['answerArray'] = $thisObject->answerArray;
 			$thisQuestion['rawObject'] = $thisObject;
+			
+			//unset($thisObject->left_ans);
+			
+			//unset($thisQuestion['rawobject']['left_ans']);
 			//$test = array_merge($thisQuestion, array($thisObject));
 			//echo "<pre>".json_encode($test, JSON_PRETTY_PRINT)."</pre>";
 			//array_push($thisQuestion, $thisObject);
