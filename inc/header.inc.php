@@ -115,7 +115,7 @@ function checkPass()
 <script type="text/javascript">
 tinymce.PluginManager.load('equationeditor', '/build/js/plugin.min.js');
 tinymce.init({
-	selector: "textarea",
+	selector: "textareaa",
 	plugins: [
 	<?
 	if($page=="takequiz" || $page=="home"){
