@@ -9,6 +9,7 @@
 						if(!isset($_SESSION["is_admin"])){
 						?>
 						Please Log-In.
+						<admin-login></admin-login>
 						<?
 						} else {
 						?>
