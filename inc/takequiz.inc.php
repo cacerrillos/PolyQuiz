@@ -164,11 +164,13 @@ if(!isset($_SESSION['firstname']) && !isset($_SESSION['lastname'])){
 				$curans = -1;
 				}
 			}
+			$sant_question = $thisquestion;
+			unset($sant_question->left_ans);
 			?>
 			<form name="<? echo $num; ?>" method="post" action="func/quiz.func.php" onsubmit="addCanvas()">
 			<input type="hidden" name="uuid" value="<? if($use==false){ echo mysqli_real_escape_string($mysqli, $_GET['UUID']); } else { echo $quiz->uuid(); } ?>">
 			<input type="hidden" name="num" value="<? echo $num; ?>">
-			<quiz-question qobject="<? echo htmlspecialchars(json_encode($thisquestion)); ?>" selectedanswer="<? echo $curans; ?>"></quiz-question>
+			<quiz-question qobject="<? echo htmlspecialchars(json_encode($sant_question)); ?>"></quiz-question>
 			<?
 			//$thisquestion->paint($alphabet, $curans);
 			if($num!=0){
