@@ -83,7 +83,7 @@ if($thisquestion!="null"){
 			$num = $_POST['num'];
 			$next = $num+1;
 			for($x = 0; $x < count($thisquestion->left); $x++){
-				$responsArray[$x] = $_POST['ans'.$x];
+				$responsArray[$x] = intval($_POST['ans'.$x]);
 			}
 			$_SESSION["answers"][$num] = $responsArray;
 			$quiz = $_SESSION['quiz'];
@@ -100,7 +100,7 @@ if($thisquestion!="null"){
 			$num = $_POST['num'];
 			$prev = $num-1;
 			for($x = 0; $x < count($thisquestion->left); $x++){
-				$responsArray[$x] = $_POST['ans'.$x];
+				$responsArray[$x] = intval($_POST['ans'.$x]);
 			}
 			$_SESSION["answers"][$num] = $responsArray;
 			$_SESSION['quiz'] = $quiz;
