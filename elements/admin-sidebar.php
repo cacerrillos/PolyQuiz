@@ -43,7 +43,7 @@ Polymer({
 	}
 </style>
 <template>
-<form id="adminlogin" action="../func/admin.login.php" method="post">
+<form id="adminlogin" action="../api/1.0/admin/login.php" method="post">
 	<paper-input name="user" label="Username"></paper-input>
 	<paper-input name="pass" label="Password" type="password"></paper-input>
 	<paper-button on-click="submitLogin" raised>Login</paper-button>
