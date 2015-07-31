@@ -140,7 +140,7 @@ ready: function() {
 			window.location = "?p=gradefr";
 		},
 		goLogout: function(){
-			window.location = "../func/admin.logout.php";
+			window.location = "../api/1.0/admin/logout.php";
 		},
 		fireToastNonEvent: function(text){
 			this.$.globalToast.text = text;
