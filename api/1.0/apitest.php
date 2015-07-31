@@ -1,6 +1,20 @@
 <?
+include_once("../../func/config.func.php");
 include_once("objects/polyquiz.php");
+$mysqli = new mysqli($db_host, $db_user, $db_password);
+$mysqli->select_db($db_name);
+
+$test = PolyQuiz::AllOwned($mysqli, "asdas");
+echo json_encode($test);
+
+$qqq = PolyQuiz::fromMySQL($mysqli, 1);
+
+
+echo "<pre>".$qqq->toJSON()."</pre>";
+
 $quiz = new PolyQuiz();
+
+echo "<pre>".$quiz->toJSON()."</pre>";
 
 $a = new PolyAnswerStandard("2", 0);
 $b = new PolyAnswerStandard("4", 1);
