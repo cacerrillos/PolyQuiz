@@ -7,7 +7,7 @@ class PolyQuiz {
 	public $data = array();
 	public function __construct(){
 		$this->version = 0;
-		$this->uuid = uniqid("PolyQuiz_".$this->version."_");
+		$this->uuid = uniqid("PolyQuiz_");
 		$this->data['questions'] = array();
 	}
 	public static function fromJSON($jsonIn){
@@ -17,6 +17,71 @@ class PolyQuiz {
 		$instance->version = $obj->version;
 		$instance->data = $obj->data;
 		return $instance;
+	}
+	public static function AllOwned($mysqli, $owner) {
+		$toReturn = array();
+		if($stmt = $mysqli->prepare(
+			"SELECT `uuid`, `quizname`, `version`, `owner` FROM `quizzes` LIMIT 1;"
+		)){
+			$stmt->execute();
+			$stmt->bind_result($quizuuid, $quizname, $version, $owner);
+			$stmt->store_result();
+			
+			while($stmt->fetch()){
+				$thisQuiz = new self();
+				$thisQuiz->uuid = $quizuuid;
+				$thisQuiz->name = $quizname;
+				$thisQuiz->version = $version;
+				array_push($toReturn, $thisQuiz);
+			}
+			$stmt->close();
+		} else {
+			echo $mysqli->error;
+		}
+		return $toReturn;
+	}
+	public static function fromMySQL($mysqli, $uuid){
+		$toReturn = new self();
+		if($stmt = $mysqli->prepare(
+			"SELECT `uuid`, `quizname`, `version`, `owner` FROM `quizzes` WHERE `uuid`=? LIMIT 1;"
+		)){
+			$stmt->bind_param("i", $uuid);
+			$stmt->execute();
+			$stmt->bind_result($quizuuid, $quizname, $version, $owner);
+			$stmt->store_result();
+			
+			while($stmt->fetch()){
+				$toReturn->uuid = $quizuuid;
+				$toReturn->name = $quizname;
+				$toReturn->version = $version;
+			}
+			if($stmt->num_rows != 1){
+				$toReturn = false;
+			}
+			$stmt->close();
+		} else {
+			echo $mysqli->error;
+		}
+		if($toReturn){
+			if($stmt = $mysqli->prepare("SELECT `data` FROM `quizzes_questions` WHERE `quiz` = ?;")){
+				$stmt->bind_param("i", $uuid);
+				$stmt->execute();
+				$stmt->bind_result($data);
+				$stmt->store_result();
+				while($stmt->fetch()){
+					$thisQ = PolyQuestion::fromJSON($data);
+					if($thisQ){
+						$toReturn->addQuestion($thisQ);
+					}
+				}
+				
+			} else {
+				echo $mysqli->error;
+			}
+			return $toReturn;
+		} else {
+			return false;
+		}
 	}
 	public function addQuestion($obj){
 		for($x = 0; $x < count($this->data['questions']); $x++){
@@ -37,7 +102,7 @@ class PolyQuestion {
 	public $data = array();
 	public function __construct(){
 		$this->version = 0;
-		$this->uuid = uniqid("PolyQuestion_".$this->version."_");
+		$this->uuid = uniqid("PolyQuestion_");
 		$this->data['answers'] = array();
 	}
 	public static function fromJSON($jsonIn){
@@ -68,7 +133,7 @@ class PolyAnswer {
 	public $data = array();
 	public function __construct(){
 		$this->version = 0;
-		$this->uuid = uniqid("PolyAnswer_".$this->version."_");
+		$this->uuid = uniqid("PolyAnswer_");
 	}
 	public static function fromJSON($jsonIn){
 		$obj = json_decode($jsonIn);
