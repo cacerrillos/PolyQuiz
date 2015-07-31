@@ -1,7 +1,8 @@
 <?
 session_start();
 include_once("../../../func/config.func.php");
-include_once("../../../func/genquiz.func.php");
+//include_once("../../../func/genquiz.func.php");
+include_once("../objects/polyquiz.php");
 $debug = false;
 if(isset($_SESSION["is_admin"])){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
@@ -12,6 +13,8 @@ if(isset($_SESSION["is_admin"])){
 	} else {
 		exit();
 	}
+	echo PolyQuiz::fromMySQL($mysqli, $uuid)->toJSON();
+	exit();
 	if($stmt = $mysqli->prepare("SELECT `quizzes`.`uuid` FROM `quizzes` WHERE `quizzes`.`uuid` = ? AND `quizzes`.`owner` = ?;")){
 		$stmt->bind_param("ss", $uuid, $_SESSION['dbext']);
 		$stmt->execute();
