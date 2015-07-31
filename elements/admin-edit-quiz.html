@@ -48,11 +48,11 @@
 					</paper-material>
 				</div>
 			</div>
-			<template is="dom-repeat" items="[[_transformData(resultsObject)]]" as="question">
+			<template is="dom-repeat" items="[[_transformData(resultsObject.data.questions)]]" as="question">
 				<div class="row">
 					<div class="12u">
 						<paper-material on-click="toggle">
-							<h4 class="nomargins"><span style="font-size:18px;">[[_addOne(index)]]</span>) <span style="width: 80px; max-width: 80px; overflow: hidden;">[[truncate(question.question)]]</span></h4>
+							<h4 class="nomargins"><span style="font-size:18px;">[[_addOne(index)]]</span>) <span style="width: 80px; max-width: 80px; overflow: hidden;">[[truncate(question.data.question)]]</span></h4>
 							<iron-collapse id="thisQuestion">
 								<quiz-question qobject="[[question]]"></quiz-question>
 								<quiz-question-edit qobject="[[question]]"></quiz-question-edit>
