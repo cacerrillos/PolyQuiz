@@ -13,7 +13,7 @@ if(count($_POST) > 0){
 	if($stmt = $mysqli -> prepare("SELECT * FROM users WHERE username = ? AND password = ?")){
 		$stmt -> bind_param("ss", $_POST['user'], md5($_POST['pass']));
 		$stmt -> execute();
-		$stmt -> bind_result($data['id'], $data['username'], $data['passwordHash'], $data['permsid']);
+		$stmt -> bind_result($data['id'], $data['username'], $data['passwordHash']);
 		$stmt -> store_result();
 		$stmt -> fetch();
 		$num = $stmt -> num_rows;
@@ -25,7 +25,7 @@ if(count($_POST) > 0){
 	if($num==1){
 		$_SESSION['is_admin'] = "set";
 		$_SESSION['username'] = $_POST['user'];
-		$_SESSION['dbext'] = $data['permsid'];
+		$_SESSION['dbext'] = $data['id'];
 		$_SESSION['admin_id_num'] = $data['id'];
 		$_SESSION['permsid'] = $data['permsid'];
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
