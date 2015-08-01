@@ -27,7 +27,7 @@
 		<paper-button class="dropdown-trigger" id="currentButton">__</paper-button>
 		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
 			<paper-item id="0">_____</paper-item>
-			<template is="dom-repeat" items="[[_transformData(rightarray.right)]]" as="right">
+			<template is="dom-repeat" items="[[rightarray]]" as="right">
 				<paper-item id="[[_trans(index)]]"><poly-html content="[[right]]"></poly-html></paper-item>
 			</template>
 		</paper-menu>
@@ -54,20 +54,25 @@ Polymer({
 		return arr;
 	},
 	onobjchange: function(e){
-		this.selected = this.rightarray.selected;
+		
+		//this.selected = this.rightarray.selected;
+		//console.log(this.rightarray);
 	},
 	onSelectedChange: function(e){
+		console.log(this.rightarray);
+		if(this.rightarray){
 		this.selectedInternal = this.selected + 1;
 		if(this.selected == -1){
 			this.$.currentButton.innerHTML = "_____";
 			this.$.currentButton.style.fontWeight = "normal";
 			this.$.currentButton.style.color = "#212121";
 		} else {
-			this.$.currentButton.innerHTML = this.rightarray.right[this.selected];
+			this.$.currentButton.innerHTML = this.rightarray[this.selected];
 			this.$.currentButton.style.fontWeight = "bold";
 			this.$.currentButton.style.color = "#2196F3";
 		}
 		this.fire("selected-changed", { selected: this.selected });
+		}
 	},
 	onSelectedInternalChange: function(e){
 		this.selected = e.detail.item.id - 1;
@@ -76,7 +81,8 @@ Polymer({
 		return data + 1;
 	},
 	ready: function(){
-		console.log(this.selected);
+		//console.log(this.rightarray);
+		//console.log(this.selected);
 		this.selected = this.selected;
 		///this.fire("selected-changed", { selected: this.selected });
 	}
@@ -111,7 +117,7 @@ Polymer({
 					<div class="4u">
 						<span>[[row.selected]]</span>
 						<input type="hidden" name="[[transName(index)]]" value="[[row.selected]]">
-						<poly-dropdown rightarray="[[row]]" on-selected-changed="onSelectedChange"></poly-dropdown>
+						<poly-dropdown rightarray="[[_getRight(answerArray)]]" selected="{{row.selected}}" on-selected-changed="onSelectedChange"></poly-dropdown>
 					</div>
 				</div>
 			</template>
@@ -142,6 +148,14 @@ Polymer({
 			transName: function(data){
 				return "ans" + data;
 			},
+			_getRight: function(e){
+				var bleh = [];
+				for(var x = 0; x < e.length; x++){
+					bleh.push(e[x].right);
+				}
+				console.log(bleh);
+				return bleh;
+			},
 			_bleh: function(d){
 				//console.log(d);
 			},
@@ -149,7 +163,7 @@ Polymer({
 				return input+1;
 			},
 			onSelectedChange: function(e) {
-				console.log(e);
+				//console.log(e);
 				e.model.set('row.selected', e.detail.selected);
 //				this.$.currentButton.innerHTML = details.detail.item.textContent;
 			},
@@ -157,14 +171,15 @@ Polymer({
 				this.$.rightText.select('0');
 			},
 			redraw: function(){
+				console.log(this.qobject);
 				var Thing = function(left, right, selected){
 					this.left = left;
 					this.right = right;
 					this.selected = selected;
 				};
 				var bleh = [];
-				for(var x = 0; x < this.qobject.left.length; x++){
-					bleh.push(new Thing(this.qobject.left[x], this.qobject.right, this.qobject.left_res[x]));
+				for(var x = 0; x < this.qobject.data.answers.length; x++){
+					bleh.push(new Thing(this.qobject.data.answers[x].data.left, this.qobject.data.answers[x].data.right, 2));//this.qobject.data.answers[x].data.response));
 				}
 				this.answerArray = bleh;
 				console.log(bleh);
@@ -240,18 +255,17 @@ Polymer({
 				this.$.rightText.select('0');
 			},
 			redraw: function(){
-				if(true){
-					var Thing = function(left, left_ans){
-						this.left = left;
-						this.left_ans = left_ans;
-					};
-					var bleh = [];
-					for(var x = 0; x < this.qobject.left.length; x++){
-						bleh.push(new Thing(this.qobject.left[x], this.qobject.left_ans[x]));
-					}
-					this.answerArray = bleh;
-					console.log(bleh);
+				console.log(this.qobject);
+				var Thing = function(left, left_ans){
+					this.left = left;
+					this.left_ans = left_ans;
+				};
+				var bleh = [];
+				for(var x = 0; x < this.qobject.data.answers.length; x++){
+					bleh.push(new Thing(this.qobject.data.answers[x].data.left, this.qobject.data.answers[x].data.right, 0));//this.qobject.data.answers[x].data.response));
 				}
+				this.answerArray = bleh;
+				console.log(bleh);
 			},
 			ready: function() {
 				//this.$.answerTextContainer.innerHTML = this.answertext;
@@ -473,7 +487,7 @@ Polymer({
 				<span>[[selectedAnswer]]</span>
 				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
-					<div class="12u"><question-standard-material answertext="[[answer.answer]]" resp="[[selectedAnswer]]" value="[[index]]" on-selected="bleh"></question-standard-material></div>
+					<div class="12u"><question-standard-material answertext="[[answer.data.answerText]]" resp="[[selectedAnswer]]" value="[[index]]" on-selected="bleh"></question-standard-material></div>
 				</template>
 				<div class="12u"><question-standard-material answertext="Skip" resp="[[selectedAnswer]]" value="-1" on-selected="bleh"></question-standard-material></div>
 			</div>
@@ -520,18 +534,8 @@ Polymer({
 				return arr;
 			},
 			redraw: function(){
-				if(this.qobject.type == "4"){
-					this.answerArray =  this.qobject.answerArray;
-				} else {
-					var tmp = this._transformData(this.qobject.answerArray);
-					var aa = [ ];
-					for(var x = 0; x < tmp.length; x++){
-						aa[x] = {
-							answer: tmp[x]
-						}
-					}
-					this.answerArray = aa;
-				}
+				//console.log(this.qobject);
+				this.answerArray =  this.qobject.data.answers;
 			},
 			ready: function() {
 				//this.$.answerTextContainerStandard.innerHTML = this.answertext;
@@ -568,7 +572,7 @@ Polymer({
 			<div class="row">
 				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
-					<div class="12u"><paper-material><poly-html content="[[answer.answer]]"></poly-html></paper-material></div>
+					<div class="12u"><paper-material><poly-html content="[[answer.data.answerText]]"></poly-html></paper-material></div>
 				</template>
 			</div>
 		</paper-material>
@@ -601,19 +605,8 @@ Polymer({
 				}
 			},
 			redraw: function(){
-				if(this.qobject.type == "4"){
-					this.answerArray =  this.qobject.answerArray;
-				} else {
-					var aa = [ ];
-					for(var x = 0; x < this.qobject.answerArray.length; x++){
-						aa[x] = {
-							answer: this.qobject.answerArray[x]
-						}
-						console.log(this.qobject);
-					}
-					this.answerArray = aa;
-				}
-				
+				//console.log(this.qobject);
+				this.answerArray =  this.qobject.data.answers;
 			},
 			ready: function() {
 				//this.$.answerTextContainerStandard.innerHTML = this.answertext;
@@ -663,10 +656,7 @@ Polymer({
 			},
 			ready: function() {
 				switch(this.qobject.type){
-					case "0":
-					case "4":
-					case 0:
-					case 4:
+					case "Standard":
 						var standardQuestion = document.createElement("quiz-question-standard-edit");
 						standardQuestion.qobject = this.qobject;
 						standardQuestion.redraw();
@@ -679,8 +669,7 @@ Polymer({
 						textfieldQuestion.redraw();
 						this.$.mainTemplate.appendChild(textfieldQuestion);
 						break;
-					case "2":
-					case 2:
+					case "Matching":
 						var matchingQuestion = document.createElement("quiz-question-matching-edit");
 						matchingQuestion.qobject = this.qobject;
 						matchingQuestion.redraw();
@@ -734,10 +723,7 @@ Polymer({
 			ready: function() {
 				console.log(this.qobject);
 				switch(this.qobject.type){
-					case "0":
-					case "4":
-					case 0:
-					case 4:
+					case "Standard":
 						var standardQuestion = document.createElement("quiz-question-standard");
 						standardQuestion.qobject = this.qobject;
 						standardQuestion.redraw();
@@ -750,8 +736,7 @@ Polymer({
 						textfieldQuestion.redraw();
 						this.$.mainTemplate.appendChild(textfieldQuestion);
 						break;
-					case "2":
-					case 2:
+					case "Matching":
 						var matchingQuestion = document.createElement("quiz-question-matching");
 						matchingQuestion.qobject = this.qobject;
 						matchingQuestion.redraw();
