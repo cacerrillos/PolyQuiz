@@ -4,6 +4,12 @@ include_once("objects/polyquiz.php");
 $mysqli = new mysqli($db_host, $db_user, $db_password);
 $mysqli->select_db($db_name);
 
+$tt = PolyStats::getStats($mysqli, 5555, -1337, false);
+echo json_encode($tt)."<br>";
+
+$teeeet = PolyHouse::getHouses($mysqli, -1337);
+echo json_encode($teeeet);
+
 $test = PolyQuiz::AllOwned($mysqli, "asdas");
 echo json_encode($test);
 
