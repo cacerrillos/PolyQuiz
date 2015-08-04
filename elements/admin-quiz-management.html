@@ -59,6 +59,64 @@
 	});
 </script>
 </dom-module>
+<dom-module id="dynamic-house-stats">
+
+<template>
+	<div class="row">
+		<iron-ajax id="quer" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
+		<div class="2u">
+			<paper-button on-click="hanClick" class="total"><span>Total</span><br><span style="">[[totalCount]]</span></paper-button>
+		</div>
+		<template is="dom-repeat" items="[[ajaxResponse]]" as="houses">
+			<div class="2u">
+				<paper-button on-click="hanClick"><span>[[houses.data.houseData.data.houseName]]</span><br><span style="">[[houses.data.count]]</span></paper-button>
+			</div>
+		</template>
+	</div>
+</template>
+<script>
+Polymer({
+	is: "dynamic-house-stats",
+	properties: {
+		totalCount: {
+			type: Number,
+			value: -1
+		},
+		ajaxResponse: Object,
+		quizuuid: String
+	},
+	hanClick: function(e){
+		console.log(e);
+		if(e.model){
+			window.location = "?p=results&uuid=" + this.quizuuid + "&house=" + e.model.get('houses.data.houseData.data.houseId');
+		} else {
+			window.location = "?p=results&uuid=" + this.quizuuid;
+		}
+	},
+	onResp: function(e){
+		var temp = e.detail.response;
+		var todelete = -5;
+		for(var x = 0; x < temp.length; x++){
+			if(temp[x].data.houseData == -1){
+				todelete = x;
+				this.totalCount = temp[x].data.count;
+			}
+		}
+		if(todelete !== -5){
+			delete temp[todelete];
+		}
+		this.ajaxResponse = temp.filter(function(){return true;});
+		console.log(e.detail.response);
+	},
+	ready: function(){
+		this.$.quer.params = {
+			uuid: this.quizuuid
+		}
+		this.$.quer.generateRequest();
+	}
+});
+</script>
+</dom-module>
 <dom-module id="admin-quiz-management-page">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
 	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
@@ -105,23 +163,9 @@
 							<h2 class="nomargins">[[quizzes.name]]</h2>
 							<h6 class="nomargins" style="display:none;">[[quizzes.uuid]]</h6>
 							<div class="row not-small">
-								<div class="1u 2u(small)">
-									<stats-ajax uuid="[[quizzes.uuid]]" total></stats-ajax>
-								</div>
-								<div class="1u">
-									<stats-ajax uuid="[[quizzes.uuid]]" house="North"></stats-ajax>
-								</div>
-								<div class="1u">
-									<stats-ajax uuid="[[quizzes.uuid]]" house="South"></stats-ajax>
-								</div>
-								<div class="1u">
-									<stats-ajax uuid="[[quizzes.uuid]]" house="East"></stats-ajax>
-								</div>
-								<div class="1u">
-									<stats-ajax uuid="[[quizzes.uuid]]" house="West"></stats-ajax>
-								</div>
-								<div class="1u">
-									<stats-ajax uuid="[[quizzes.uuid]]" house="Other"></stats-ajax>
+								<div class="6u">
+									<span>[[quizzes.uuid]]</span>
+									<dynamic-house-stats quizuuid="[[quizzes.uuid]]"></dynamic-house-stats>
 								</div>
 								<div class="3u 1u(small)">
 									<center>
