@@ -1,6 +1,7 @@
 <?
 session_start();
 include_once("../../../func/config.func.php");
+include_once("../objects/polyquiz.php");
 $debug = false;
 if(isset($_SESSION["is_admin"])){
 	if(isset($_GET['uuid'])){
@@ -10,7 +11,10 @@ if(isset($_SESSION["is_admin"])){
 	}
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	$mysqli -> select_db($db_name);
-	$resultObject = array();
+	
+	echo json_encode(PolyStats::getStats($mysqli, $uuid, $_SESSION['dbext'], false));
+	exit();
+	
 	if(isset($_GET['house'])){
 		$house = $_GET['house'];
 		if(strtolower($house) == "north"){
