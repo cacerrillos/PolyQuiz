@@ -1,6 +1,98 @@
 <?
 include_once("types/matching.php");
 include_once("types/standard.php");
+class PolyStats {
+	public $version = 0;
+	public $data = array();
+	public function __construct($quizUUID, $houseid, $count){
+		$this->data['quizUUID'] = intval($quizUUID);
+		$this->data['houseData'] = intval($houseid);
+		$this->data['count'] = intval($count);
+	}
+	public static function getStats($mysqli, $quiz, $owner, $all = false){
+		$resultObject = array();
+		if($stmt = $mysqli->prepare("SELECT COUNT(`id`) FROM `results` WHERE `quiz` = ? AND `owner` = ? LIMIT 1;")){
+			$stmt->bind_param("ii", $quiz, $owner);
+			$stmt->execute();
+			$stmt->bind_result($count);
+			while($stmt->fetch()){
+				array_push($resultObject, new self($quiz, -1, $count));
+			}
+			$stmt->close();
+		} else {
+			die($mysqli->error);
+		}
+		$houses = PolyHouse::getHouses($mysqli, $owner);
+		for($x = 0; $x < count($houses); $x++){
+			if($stmt = $mysqli->prepare("SELECT COUNT(`id`) FROM `results` WHERE `house` = ? AND `quiz` = ? AND `owner` = ? LIMIT 1;")){
+				$stmt->bind_param("iii", $houses[$x]->data['houseId'], $quiz, $owner);
+				$stmt->execute();
+				$stmt->bind_result($count);
+				while($stmt->fetch()){
+					if($all || $count > 0){
+						array_push($resultObject, new self($quiz, $houses[$x]->data['houseId'], $count));
+					}
+				}
+				$stmt->close();
+			} else {
+				die($mysqli->error);
+			}
+		}
+		for($x = 0; $x < count($resultObject); $x++){
+			if($resultObject[$x]->data['houseData'] != -1){
+				$resultObject[$x]->data['houseData'] = PolyHouse::getHouse($mysqli, $resultObject[$x]->data['houseData'], $owner);
+			}
+		}
+		return $resultObject;
+	}
+}
+class PolyHouse {
+	public $version = 0;
+	public $data = array();
+	public function __construct($houseid, $housename){
+		$this->data['houseId'] = $houseid;
+		$this->data['houseName'] = $housename;
+	}
+	public static function getHouse($mysqli, $houseid, $owner){
+		$toReturn = false;
+		if($stmt = $mysqli->prepare("SELECT `houseid`, `housename` FROM `houses` WHERE `houseid` = ? AND `owner` = ?;")){
+			$stmt->bind_param("ii", $houseid, $owner);
+			$stmt->execute();
+			$stmt->bind_result($houseid, $housename);
+			$stmt->store_result();
+			while($stmt->fetch()){
+				$toReturn = new self($houseid, $housename);
+			}
+			$stmt->close();
+		} else {
+			die($mysqli->error);
+		}
+		if(!$toReturn){
+			return false;
+		} else {
+			return $toReturn;
+		}	
+	}
+	public static function getHouses($mysqli, $owner) {
+		$resultObject = array();
+		if($stmt = $mysqli->prepare("SELECT `houseid`, `housename` FROM `houses` WHERE `owner` = ?;")){
+			$stmt->bind_param("i", $owner);
+			$stmt->execute();
+			$stmt->bind_result($houseid, $housename);
+			$stmt->store_result();
+			while($stmt->fetch()){
+				array_push($resultObject, new self($houseid, $housename));
+			}
+			$stmt->close();
+		} else {
+			die($mysqli->error);
+		}
+		return $resultObject;
+	}
+}
+class PolySession {
+	
+}
 class PolyQuiz {
 	public $uuid;
 	public $version = 0;
