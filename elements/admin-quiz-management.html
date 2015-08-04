@@ -102,11 +102,6 @@
 				<div class="row">
 					<div class="12u">
 						<paper-material>
-							
-				<iron-ajax id="southCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="southCountR"></iron-ajax>
-				<iron-ajax id="eastCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="eastCountR"></iron-ajax>
-				<iron-ajax id="westCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="westCountR"></iron-ajax>
-				<iron-ajax id="otherCountAjax" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="otherCountR"></iron-ajax>
 							<h2 class="nomargins">[[quizzes.name]]</h2>
 							<h6 class="nomargins" style="display:none;">[[quizzes.uuid]]</h6>
 							<div class="row not-small">
@@ -205,55 +200,6 @@
 			},
 			_convertTimeStamp: function(data) {
 				
-			},
-			resultsTotal: function(e){
-				if(e.model.get('quizzes.totalcount') == 0){
-					this.zeroResultsToast();
-				} else {
-					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
-				}
-			},
-			resultsNorth: function(e){
-				if(e.model.get('quizzes.totalcount') == 0){
-					this.zeroResultsToast();
-				} else {
-					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
-				}
-			},
-			northCountR: function(response){
-				console.log(response);
-				response.model.quizzes.northcount = response.detail.response.count;
-				console.log(response.model.quizzes);
-				//console.log(response.target.parentElement.parentElement.getElementById(""));
-				//console.log(response);
-			},
-			resultsSouth: function(e){
-				if(e.model.get('quizzes.totalcount') == 0){
-					this.zeroResultsToast();
-				} else {
-					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
-				}
-			},
-			resultsEast: function(e){
-				if(e.model.get('quizzes.totalcount') == 0){
-					this.zeroResultsToast();
-				} else {
-					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
-				}
-			},
-			resultsWest: function(e){
-				if(e.model.get('quizzes.totalcount') == 0){
-					this.zeroResultsToast();
-				} else {
-					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
-				}
-			},
-			resultsOther: function(e){
-				if(e.model.get('quizzes.totalcount') == 0){
-					this.zeroResultsToast();
-				} else {
-					window.location = "?p=results&uuid=" + e.model.get('quizzes.uuid');
-				}
 			},
 			_goEditQuiz: function(e){
 				window.location = "?p=editquiz&uuid=" + e.model.get('quizzes.uuid');
