@@ -363,7 +363,7 @@ Polymer({
 	<template>
 		<paper-material>
 			<div class="row">
-				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
+				<div class="12u"><poly-html content="[[qobject.data.question]]"></poly-html></div>
 				<div class="12u">
 					<paper-textarea label="Response" id="response">{{answertext}}</paper-textarea>
 				</div>
@@ -485,7 +485,7 @@ Polymer({
 			<div class="row">
 				<input type="hidden" name="answer" value="[[selectedAnswer]]">
 				<span>[[selectedAnswer]]</span>
-				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
+				<div class="12u"><poly-html content="[[qobject.data.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
 					<div class="12u"><question-standard-material answertext="[[answer.data.answerText]]" resp="[[selectedAnswer]]" value="[[index]]" on-selected="bleh"></question-standard-material></div>
 				</template>
@@ -570,7 +570,7 @@ Polymer({
 	<template>
 		<paper-material id="answerMaterial">
 			<div class="row">
-				<div class="12u"><poly-html content="[[qobject.question]]"></poly-html></div>
+				<div class="12u"><poly-html content="[[qobject.data.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
 					<div class="12u"><paper-material><poly-html content="[[answer.data.answerText]]"></poly-html></paper-material></div>
 				</template>
