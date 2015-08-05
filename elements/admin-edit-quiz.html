@@ -55,7 +55,10 @@
 						<paper-material on-click="toggle">
 							<h4 class="nomargins"><span style="font-size:18px;">[[_addOne(index)]]</span>) <span style="width: 80px; max-width: 80px; overflow: hidden;">[[truncate(question.data.question)]]</span></h4>
 							<iron-collapse id="thisQuestion">
+								<form action="../func/posttest.php" method="post">
 								<quiz-question qobject="[[question]]"></quiz-question>
+								<button type="submit">Submit</button>
+								</form>
 								<quiz-question-edit qobject="[[question]]"></quiz-question-edit>
 							</iron-collapse>
 						</paper-material>
