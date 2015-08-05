@@ -4,8 +4,14 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
+
+CREATE TABLE IF NOT EXISTS `houses` (
+  `owner` int(11) NOT NULL,
+  `houseid` tinyint(4) NOT NULL,
+  `housename` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `quizzes` (
   `uuid` int(11) NOT NULL,
@@ -25,7 +31,8 @@ CREATE TABLE IF NOT EXISTS `results` (
   `timestamp` int(11) NOT NULL,
   `data` mediumtext NOT NULL,
   `quiz` int(11) NOT NULL,
-  `session` int(11) NOT NULL,
+  `session` varchar(32) NOT NULL,
+  `house` tinyint(4) NOT NULL,
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -37,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `results_responses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `sessions` (
-  `uuid` int(11) NOT NULL,
   `sessionid` varchar(32) NOT NULL,
   `sessionkey` varchar(32) NOT NULL,
   `quiz` int(11) NOT NULL,
@@ -51,6 +57,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+ALTER TABLE `houses`
+  ADD PRIMARY KEY (`owner`,`houseid`),
+  ADD KEY `houseid` (`houseid`);
+
 ALTER TABLE `quizzes`
   ADD PRIMARY KEY (`uuid`);
 
@@ -59,7 +69,13 @@ ALTER TABLE `quizzes_questions`
   ADD KEY `quiz` (`quiz`);
 
 ALTER TABLE `results`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `house` (`house`),
+  ADD KEY `owner` (`owner`),
+  ADD KEY `house_2` (`house`),
+  ADD KEY `results_ibfk_1` (`house`,`owner`),
+  ADD KEY `quiz` (`quiz`),
+  ADD KEY `session` (`session`);
 
 ALTER TABLE `results_responses`
   ADD PRIMARY KEY (`id`),
@@ -67,7 +83,7 @@ ALTER TABLE `results_responses`
   ADD KEY `resultid` (`resultid`);
 
 ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`uuid`);
+  ADD PRIMARY KEY (`sessionid`);
 
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -80,13 +96,19 @@ ALTER TABLE `results`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `results_responses`
   MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
-ALTER TABLE `sessions`
-  MODIFY `uuid` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `houses`
+  ADD CONSTRAINT `houses_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE `quizzes_questions`
   ADD CONSTRAINT `quizzes_questions_ibfk_1` FOREIGN KEY (`quiz`) REFERENCES `quizzes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `results`
+  ADD CONSTRAINT `results_ibfk_3` FOREIGN KEY (`session`) REFERENCES `sessions` (`sessionid`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `results_ibfk_1` FOREIGN KEY (`house`, `owner`) REFERENCES `houses` (`houseid`, `owner`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `results_ibfk_2` FOREIGN KEY (`quiz`) REFERENCES `quizzes` (`uuid`) ON UPDATE CASCADE;
 
 ALTER TABLE `results_responses`
   ADD CONSTRAINT `results_responses_ibfk_2` FOREIGN KEY (`questionuuid`) REFERENCES `quizzes_questions` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
