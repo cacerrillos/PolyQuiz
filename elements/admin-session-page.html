@@ -1,0 +1,219 @@
+<!doctype html>
+<dom-module id="admin-session-create-form">
+<template>
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<h3>Create New Session</h3>
+				<form id="newsession" action="func/ses.func.php" method="post">
+				<input type="hidden" name="date" value="Y-m-d" />
+				Session Name: <input type="text" name="sessionname" /><br />
+				House: <select name="house" size="1">
+							<option value="North">North</option>
+							<option value="South">South</option>
+							<option value="East">East</option>
+							<option value="West">West</option>
+							<option value="Other">Other</option>
+							</select><br />
+				Quiz: <select name="quiz" size="1">
+					<option value="quizuuid">QuizNAME</option>
+							</select><br />
+				<input type="radio" name="status" value="1" checked /> Open<br />
+				<input type="radio" name="status" value="0" /> Closed<br />
+				<input type="submit" name="submit" value="Create" />
+				</form>
+			</paper-material>
+		</div>
+	</div>
+</template>
+<script>
+Polymer({
+	is: "admin-session-create-form",
+	properties: {
+		
+	},
+	ready: function(){
+		
+	}
+});
+</script>
+</dom-module>
+<dom-module id="admin-session-row">
+<template>
+	<div class="row not-small">
+		<div class="12u">
+			<paper-material>
+				<div class="row">
+					<div class="4u">
+						<div class="row">
+							<div class="12u">sessionanem</div>
+							<div class="-2u 10u">quizname</div>
+						</div>
+					</div>
+					<div class="2u">
+						<div class="row">
+							<div class="12u">[[sessionobject.sessionid]]</div>
+							<div class="12u">[[sessionobject.sessionkey]]</div>
+						</div>
+					</div>
+					<div class="2u">date</div>
+					<div class="1u">house</div>
+					<div class="3u">
+						if($info['status']==1) echo "sessionopen";
+					if($info['score']==1) echo "sessionshow";
+						<admin-session-action-buttons sessionid="sessuid"></admin-session-action-buttons>
+					</div>
+				</div>
+			</paper-material>
+		</div>
+	</div>
+	<div class="row only-small">
+		<div class="12u">
+			<paper-material>
+				<div class="row">
+					<div class="5u 4u(xsmall)">
+						<div class="row">
+							<div class="12u">[[sessionobject.data.sessionname]]</div>
+							<div class="-2u 10u">[[sessionobject.data.quizname]]</div>
+						</div>
+					</div>
+					<div class="2u">
+						<div class="row">
+							<div class="12u">[[sessionobject.sessionid]]</div>
+							<div class="12u">[[sessionobject.sessionkey]]</div>
+						</div>
+					</div>
+					<div class="2u 3u(xsmall)">
+						date
+					</div>
+					<div class="1u">
+						houz
+					</div>
+					<div class="2u">
+					if($info['status']==1) echo "sessionopen";
+					if($info['score']==1) echo "sessionshow";
+						<admin-session-action-buttons sessionid="sessuid"></admin-session-action-buttons>
+					</div>
+				</div>
+			</paper-material>
+		</div>
+	</div>
+</template>
+<script>
+Polymer({
+	is: "admin-session-row",
+	properties: {
+		sessionobject: Object
+	},
+	ready: function(){
+		
+	}
+});
+</script>
+</dom-module>
+<dom-module id="admin-session-page">
+<template>
+<iron-ajax id="query" url="../api/1.0/sessions/owned.php" handle-as="json" on-response="onResp"></iron-ajax>
+<div class="container">
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<h2>Session Management</h2>
+			</paper-material>
+		</div>
+	</div>
+	<admin-session-create-form></admin-session-create-form>
+	<div class="row">
+		<div class="12u">
+			<paper-material>
+				<h3>Modify Session</h3>
+					<div class="row not-small">
+						<div class="12u">
+							<paper-material>
+								<div class="row">
+									<div class="4u">
+										<div class="row">
+											<div class="12u">
+												Session Name
+											</div>
+											<div class="-2u 10u">
+												Quiz Name
+											</div>
+										</div>
+									</div>
+									<div class="2u">
+										<div class="row">
+											<div class="12u">Id</div>
+											<div class="12u">Key</div>
+										</div>
+									</div>
+									<div class="2u">
+										Date
+									</div>
+									<div class="1u">
+										House
+									</div>
+									<div class="3u">
+										
+									</div>
+								</div>
+							</paper-material>
+						</div>
+					</div>
+					<div class="row only-small">
+						<div class="12u">
+							<paper-material>
+								<div class="row">
+									<div class="4u">
+										<div class="row">
+											<div class="12u">
+												Session Name
+											</div>
+											<div class="-2u 10u">
+												Quiz Name
+											</div>
+										</div>
+									</div>
+									<div class="2u">
+										<div class="row">
+											<div class="12u">Id</div>
+											<div class="12u">Key</div>
+										</div>
+									</div>
+									<div class="2u">
+										DDate
+									</div>
+									<div class="1u">
+										House
+									</div>
+									<div class="1u">
+										
+									</div>
+								</div>
+							</paper-material>
+						</div>
+					</div>
+					<template is="dom-repeat" items="[[sessions]]" as="session">
+						<admin-session-row sessionobject="[[session]]"></admin-session-row>
+					</template>
+			</paper-material>
+		</div>
+	</div>
+</div>
+</template>
+<script>
+Polymer({
+	is: "admin-session-page",
+	onResp: function(e){
+		this.sessions = e.detail.response;
+		console.log(e);
+	},
+	properties: {
+		sessions: Array
+	},
+	ready: function(){
+		this.$.query.generateRequest();
+	}
+});
+</script>
+</dom-module>

@@ -113,7 +113,9 @@ if($page=="home"){
 } else if($page=="survey"){
 	include("inc/survey.inc.php");
 } else if($page=="sessions"){
-	include("inc/sessions.inc.php");
+	?>
+	<admin-session-page _get='<? echo json_encode($_GET); ?>'></admin-session-page>
+	<?
 } else if($page=="register"){
 	include("inc/register.inc.php");
 } else if($page=="math"){
