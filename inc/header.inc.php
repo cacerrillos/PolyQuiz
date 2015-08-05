@@ -93,6 +93,7 @@ function checkPass()
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <link rel="import" href="elements/polyquiz-page.php">
 <link rel="import" href="elements/take-a-quiz-form.html">
+<link rel="import" href="elements/take-quiz-page.html">
 <link rel="import" href="elements/admin-sidebar.php">
 <link rel="import" href="elements/admin-quiz-results.html">
 <link rel="import" href="elements/admin-quiz-management.html">
