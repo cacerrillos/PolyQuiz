@@ -54,25 +54,29 @@ Polymer({
 		return arr;
 	},
 	onobjchange: function(e){
-		
+		console.log(e);
+		this.redraww();
 		//this.selected = this.rightarray.selected;
 		//console.log(this.rightarray);
 	},
 	onSelectedChange: function(e){
-		console.log(this.rightarray);
+		console.log(e);
 		if(this.rightarray){
-		this.selectedInternal = this.selected + 1;
+			this.selectedInternal = e + 1;
+			this.redraww();
+			this.fire("selected-changed", { selected: e });
+		}
+	},
+	redraww: function(){
 		if(this.selected == -1){
-			this.$.currentButton.innerHTML = "_____";
-			this.$.currentButton.style.fontWeight = "normal";
-			this.$.currentButton.style.color = "#212121";
-		} else {
-			this.$.currentButton.innerHTML = this.rightarray[this.selected];
-			this.$.currentButton.style.fontWeight = "bold";
-			this.$.currentButton.style.color = "#2196F3";
-		}
-		this.fire("selected-changed", { selected: this.selected });
-		}
+				this.$.currentButton.innerHTML = "_____";
+				this.$.currentButton.style.fontWeight = "normal";
+				this.$.currentButton.style.color = "#212121";
+			} else {
+				this.$.currentButton.innerHTML = this.rightarray[this.selected];
+				this.$.currentButton.style.fontWeight = "bold";
+				this.$.currentButton.style.color = "#2196F3";
+			}
 	},
 	onSelectedInternalChange: function(e){
 		this.selected = e.detail.item.id - 1;
@@ -113,8 +117,8 @@ Polymer({
 		<paper-material>
 			<template is="dom-repeat" items="[[answerArray]]" as="row" id="mainTemp">
 				<div class="row">
-					<div class="8u"><poly-html content="[[row.left]]"></poly-html></div>
-					<div class="4u">
+					<div class="6u"><poly-html content="[[row.left]]"></poly-html></div>
+					<div class="6u">
 						<span>[[row.selected]]</span>
 						<input type="hidden" name="[[transName(index)]]" value="[[row.selected]]">
 						<poly-dropdown rightarray="[[_getRight(answerArray)]]" selected="{{row.selected}}" on-selected-changed="onSelectedChange"></poly-dropdown>
@@ -215,8 +219,8 @@ Polymer({
 		<paper-material>
 			<template is="dom-repeat" items="[[answerArray]]" as="row">
 				<div class="row">
-					<div class="8u"><poly-html content="[[row.left]]"></poly-html></div>
-					<div class="4u"><poly-html content="[[row.left_ans]]"></poly-html></div>
+					<div class="6u"><paper-textarea value="[[row.left]]"></paper-textarea></div>
+					<div class="6u"><paper-textarea value="[[row.left_ans]]"></paper-textarea></div>
 				</div>
 			</template>
 		</paper-material>
@@ -365,7 +369,7 @@ Polymer({
 			<div class="row">
 				<div class="12u"><poly-html content="[[qobject.data.question]]"></poly-html></div>
 				<div class="12u">
-					<paper-textarea label="Response" id="response">{{answertext}}</paper-textarea>
+					<paper-textarea label="Response" id="responsee">{{answertext}}</paper-textarea>
 				</div>
 			</div>
 		</paper-material>
@@ -388,7 +392,7 @@ Polymer({
 				this.questionparent.requestSelectAnswer(this.answerid);
 			},
 			doReset: function() {
-				this.$.response.value = "";
+				this.$.responsee.value = "";
 				
 			},
 			onSelectedChange: function() {
@@ -487,7 +491,7 @@ Polymer({
 				<span>[[selectedAnswer]]</span>
 				<div class="12u"><poly-html content="[[qobject.data.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
-					<div class="12u"><question-standard-material answertext="[[answer.data.answerText]]" resp="[[selectedAnswer]]" value="[[index]]" on-selected="bleh"></question-standard-material></div>
+					<div class="12u"><question-standard-material answertext="[[answer.data.answerText]]" resp="[[selectedAnswer]]" value="[[answer.uuid]]" on-selected="bleh"></question-standard-material></div>
 				</template>
 				<div class="12u"><question-standard-material answertext="Skip" resp="[[selectedAnswer]]" value="-1" on-selected="bleh"></question-standard-material></div>
 			</div>
@@ -568,11 +572,11 @@ Polymer({
 		}
 	</style>
 	<template>
-		<paper-material id="answerMaterial">
+		<paper-material id="answerMateriall">
 			<div class="row">
 				<div class="12u"><poly-html content="[[qobject.data.question]]"></poly-html></div>
 				<template is="dom-repeat" items="[[answerArray]]" as="answer">
-					<div class="12u"><paper-material><poly-html content="[[answer.data.answerText]]"></poly-html></paper-material></div>
+					<div class="12u"><paper-textarea value="[[answer.data.answerText]]"></paper-textarea></div>
 				</template>
 			</div>
 		</paper-material>
@@ -599,9 +603,9 @@ Polymer({
 			},
 			onSelectedChange: function() {
 				if(this.selected){
-					this.$.answerMaterial.style.backgroundColor = "#BBDEFB";
+					this.$.answerMateriall.style.backgroundColor = "#BBDEFB";
 				} else {
-					this.$.answerMaterial.style.backgroundColor = "white";
+					this.$.answerMateriall.style.backgroundColor = "white";
 				}
 			},
 			redraw: function(){
@@ -699,7 +703,7 @@ Polymer({
 		}
 	</style>
 	<template>
-		<div id="mainTemplate"></div>
+		<div id="mainTemplatee"></div>
 	</template>
 	<script>
 		Polymer({
@@ -727,20 +731,20 @@ Polymer({
 						var standardQuestion = document.createElement("quiz-question-standard");
 						standardQuestion.qobject = this.qobject;
 						standardQuestion.redraw();
-						this.$.mainTemplate.appendChild(standardQuestion);
+						this.$.mainTemplatee.appendChild(standardQuestion);
 						break;
 					case "1":
 					case 1:
 						var textfieldQuestion = document.createElement("quiz-question-textfield");
 						textfieldQuestion.qobject = this.qobject;
 						textfieldQuestion.redraw();
-						this.$.mainTemplate.appendChild(textfieldQuestion);
+						this.$.mainTemplatee.appendChild(textfieldQuestion);
 						break;
 					case "Matching":
 						var matchingQuestion = document.createElement("quiz-question-matching");
 						matchingQuestion.qobject = this.qobject;
 						matchingQuestion.redraw();
-						this.$.mainTemplate.appendChild(matchingQuestion);
+						this.$.mainTemplatee.appendChild(matchingQuestion);
 						break;
 				}
 			}
