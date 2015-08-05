@@ -91,7 +91,101 @@ class PolyHouse {
 	}
 }
 class PolySession {
+	public $sessionid;
+	public $sessionkey;
+	public $data = array();
+	public function __construct(){
+		
+	}
 	
+	public static function createCheckMysql($mysqli){
+		$toReturn = new self();
+		$tempId = substr(uniqid(), 6, 6);
+		$valid = false;
+		while(!$valid){
+			if($stmt = $mysqli->prepare(
+				"SELECT `sessionid` FROM `sessions` WHERE `sessionid`=? LIMIT 1;"
+			)){
+				$stmt->bind_param("s", $tempId);
+				$stmt->execute();
+				$stmt->store_result();
+				if($stmt->num_rows == 0){
+					$valid = true;
+				} else {
+					$tempId = substr(uniqid(), 6, 6);
+				}
+				$stmt->close();
+			} else {
+				die($mysqli->error);
+			}
+		}
+		if($valid){
+			$toReturn->sessionid = $tempId;
+			$toReturn->sessionkey = substr(uniqid(), 11, 2);
+		}
+		return $toReturn;
+	}
+	public static function ownedBy($mysqli, $owner){
+		$toReturn = array();
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner` FROM `sessions` WHERE `owner`=?;")){
+			$stmt->bind_param("i", $owner);
+			$stmt->execute();
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner);
+			$stmt->execute();
+			while($stmt->fetch()){
+				$thisThang = new self();
+				$thisThang->sessionid = $sessionid;
+				$thisThang->sessionkey = $sessionkey;
+				$thisThang->data['quiz'] = $quiz;
+				$thisThang->data['owner'] = $owner;
+				array_push($toReturn, $thisThang);
+			}
+		}
+		return $toReturn;
+	}
+	public static function fromMySQL($mysqli, $uuid){
+		$toReturn = new self();
+		if($stmt = $mysqli->prepare(
+			"SELECT `uuid`, `sessionid`, `sessionkey`, `owner` FROM `quizzes` WHERE `uuid`=? LIMIT 1;"
+		)){
+			$stmt->bind_param("i", $uuid);
+			$stmt->execute();
+			$stmt->bind_result($quizuuid, $quizname, $version, $owner);
+			$stmt->store_result();
+			
+			while($stmt->fetch()){
+				$toReturn->uuid = $quizuuid;
+				$toReturn->name = $quizname;
+				$toReturn->version = $version;
+			}
+			if($stmt->num_rows != 1){
+				$toReturn = false;
+			}
+			$stmt->close();
+		} else {
+			echo $mysqli->error;
+		}
+		if($toReturn){
+			if($stmt = $mysqli->prepare("SELECT `data` FROM `quizzes_questions` WHERE `quiz` = ?;")){
+				$stmt->bind_param("i", $uuid);
+				$stmt->execute();
+				$stmt->bind_result($data);
+				$stmt->store_result();
+				while($stmt->fetch()){
+					$thisQ = PolyQuestion::fromJSON($data);
+					if($thisQ){
+						$toReturn->addQuestion($thisQ);
+					}
+				}
+				
+			} else {
+				echo $mysqli->error;
+			}
+			return $toReturn;
+		} else {
+			return false;
+		}
+	}
 }
 class PolyQuiz {
 	public $uuid;

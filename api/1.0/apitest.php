@@ -4,6 +4,14 @@ include_once("objects/polyquiz.php");
 $mysqli = new mysqli($db_host, $db_user, $db_password);
 $mysqli->select_db($db_name);
 
+
+
+$sestest = PolySession::createCheckMysql($mysqli);
+echo json_encode($sestest)."<br>";
+
+$sestestget = PolySession::ownedBy($mysqli,-1337);
+echo json_encode($sestestget)."<br>";
+
 $tt = PolyStats::getStats($mysqli, 5555, -1337, false);
 echo json_encode($tt)."<br>";
 
