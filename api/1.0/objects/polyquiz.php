@@ -226,7 +226,7 @@ class PolyQuiz {
 		}
 		return $toReturn;
 	}
-	public static function fromMySQL($mysqli, $uuid){
+	public static function fromMySQL($mysqli, $uuid, $includeQuestions = true){
 		$toReturn = new self();
 		if($stmt = $mysqli->prepare(
 			"SELECT `uuid`, `quizname`, `version`, `owner` FROM `quizzes` WHERE `uuid`=? LIMIT 1;"
@@ -249,20 +249,22 @@ class PolyQuiz {
 			echo $mysqli->error;
 		}
 		if($toReturn){
-			if($stmt = $mysqli->prepare("SELECT `data` FROM `quizzes_questions` WHERE `quiz` = ?;")){
-				$stmt->bind_param("i", $uuid);
-				$stmt->execute();
-				$stmt->bind_result($data);
-				$stmt->store_result();
-				while($stmt->fetch()){
-					$thisQ = PolyQuestion::fromJSON($data);
-					if($thisQ){
-						$toReturn->addQuestion($thisQ);
+			if($includeQuestions){
+				if($stmt = $mysqli->prepare("SELECT `data` FROM `quizzes_questions` WHERE `quiz` = ?;")){
+					$stmt->bind_param("i", $uuid);
+					$stmt->execute();
+					$stmt->bind_result($data);
+					$stmt->store_result();
+					while($stmt->fetch()){
+						$thisQ = PolyQuestion::fromJSON($data);
+						if($thisQ){
+							$toReturn->addQuestion($thisQ);
+						}
 					}
+					
+				} else {
+					echo $mysqli->error;
 				}
-				
-			} else {
-				echo $mysqli->error;
 			}
 			return $toReturn;
 		} else {
