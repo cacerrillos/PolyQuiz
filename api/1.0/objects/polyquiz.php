@@ -96,10 +96,14 @@ class PolySession {
 	public $name;
 	public $owner;
 	public $quiz;
+	public $date;
 	public $data = array();
 	public function __construct(){
 		$this->data['status'] = true;
 		$this->data['show'] = true;
+		$this->data['house'] = 0;
+		$date = new DateTime();
+		$this->date = $date->getTimestamp();
 	}
 	
 	public static function createCheckMysql($mysqli){
@@ -131,10 +135,10 @@ class PolySession {
 	}
 	public static function ownedBy($mysqli, $owner){
 		$toReturn = array();
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data` FROM `sessions` WHERE `owner`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date` FROM `sessions` WHERE `owner`=?;")){
 			$stmt->bind_param("i", $owner);
 			$stmt->execute();
-			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data);
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date);
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
@@ -143,6 +147,7 @@ class PolySession {
 				$thisThang->owner = $owner;
 				$thisThang->name = $name;
 				$thisThang->quiz = $quiz;
+				$thisThang->date = $date;
 				$thisThang->data = json_decode($data);
 				
 				array_push($toReturn, $thisThang);
