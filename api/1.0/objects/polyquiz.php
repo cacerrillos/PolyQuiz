@@ -152,53 +152,50 @@ class PolySession {
 				
 				array_push($toReturn, $thisThang);
 			}
+			$stmt->close();
 		}
 		return $toReturn;
 	}
-	public static function fromMySQL($mysqli, $uuid){
-		/*
-		$toReturn = new self();
-		if($stmt = $mysqli->prepare(
-			"SELECT `uuid`, `sessionid`, `sessionkey`, `owner` FROM `quizzes` WHERE `uuid`=? LIMIT 1;"
-		)){
-			$stmt->bind_param("i", $uuid);
-			$stmt->execute();
-			$stmt->bind_result($quizuuid, $quizname, $version, $owner);
-			$stmt->store_result();
-			
-			while($stmt->fetch()){
-				$toReturn->uuid = $quizuuid;
-				$toReturn->name = $quizname;
-				$toReturn->version = $version;
-			}
-			if($stmt->num_rows != 1){
-				$toReturn = false;
-			}
-			$stmt->close();
-		} else {
-			echo $mysqli->error;
-		}
-		if($toReturn){
-			if($stmt = $mysqli->prepare("SELECT `data` FROM `quizzes_questions` WHERE `quiz` = ?;")){
-				$stmt->bind_param("i", $uuid);
-				$stmt->execute();
-				$stmt->bind_result($data);
-				$stmt->store_result();
-				while($stmt->fetch()){
-					$thisQ = PolyQuestion::fromJSON($data);
-					if($thisQ){
-						$toReturn->addQuestion($thisQ);
+	public function delete($mysqli, $owner){
+		$status = false;
+		if($owner == $this->owner){
+			if($stmt = $mysqli->prepare("DELETE FROM `sessions` WHERE `owner` = ? AND `sessionid` = ?;")){
+				$stmt->bind_param("is", $owner, $this->sessionid);
+				if($stmt->execute()){
+					if($stmt->affected_rows == 1){
+						$status = true;
 					}
+				} else {
+					$status = $mysqli->errno;
 				}
-				
+				$stmt->close();
 			} else {
 				echo $mysqli->error;
 			}
-			return $toReturn;
-		} else {
-			return false;
 		}
-		*/
+		return $status;
+	}
+	public static function fromMySQL($mysqli, $uuid, $owner){
+		$toReturn = false;
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
+			$stmt->bind_param("is", $owner, $uuid);
+			$stmt->execute();
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date);
+			$stmt->execute();
+			while($stmt->fetch()){
+				$thisThang = new self();
+				$thisThang->sessionid = $sessionid;
+				$thisThang->sessionkey = $sessionkey;
+				$thisThang->owner = $owner;
+				$thisThang->name = $name;
+				$thisThang->quiz = $quiz;
+				$thisThang->date = $date;
+				$thisThang->data = json_decode($data);
+				$toReturn = $thisThang;
+			}
+			$stmt->close();
+		}
+		return $toReturn;
 	}
 }
 class PolyQuiz {
