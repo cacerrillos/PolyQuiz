@@ -93,9 +93,13 @@ class PolyHouse {
 class PolySession {
 	public $sessionid;
 	public $sessionkey;
+	public $name;
+	public $owner;
+	public $quiz;
 	public $data = array();
 	public function __construct(){
-		
+		$this->data['status'] = true;
+		$this->data['show'] = true;
 	}
 	
 	public static function createCheckMysql($mysqli){
@@ -127,17 +131,20 @@ class PolySession {
 	}
 	public static function ownedBy($mysqli, $owner){
 		$toReturn = array();
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner` FROM `sessions` WHERE `owner`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data` FROM `sessions` WHERE `owner`=?;")){
 			$stmt->bind_param("i", $owner);
 			$stmt->execute();
-			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner);
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data);
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
 				$thisThang->sessionid = $sessionid;
 				$thisThang->sessionkey = $sessionkey;
-				$thisThang->data['quiz'] = $quiz;
-				$thisThang->data['owner'] = $owner;
+				$thisThang->owner = $owner;
+				$thisThang->name = $name;
+				$thisThang->quiz = $quiz;
+				$thisThang->data = json_decode($data);
+				
 				array_push($toReturn, $thisThang);
 			}
 		}
