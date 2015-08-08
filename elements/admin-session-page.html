@@ -99,8 +99,14 @@ Polymer({
 					type: Object
 				},
 				sessionid: String,
-				sessionopen: Boolean,
-				sessionshow: Boolean,
+				sessionopen: {
+					type: Boolean,
+					observer: "openChanged"
+				},
+				sessionshow: {
+					type: Boolean,
+					observer: "showChanged"
+				},
 				resultsObject: {
 					type: Array
 				}
@@ -193,7 +199,8 @@ Polymer({
 			onSortBySession: function(){
 				window.location = "?p=results&sortby=session";
 			},
-			ready: function() {
+			openChanged: function(e){
+				console.log(e);
 				if(this.sessionopen){
 					this.$.openstat.icon = "icons:lock-open";
 					this.$.openstat.style.color = "#8BC34A";
@@ -201,11 +208,19 @@ Polymer({
 					this.$.openstat.icon = "icons:lock-outline";
 					this.$.openstat.style.color = "#D32F2F";
 				}
+			},
+			showChanged: function(e){
+				console.log(e);
 				if(this.sessionshow){
 					this.$.showscore.style.color = "#8BC34A";
 				} else {
 					this.$.showscore.style.color = "#D32F2F";
 				}
+			},
+			ready: function() {
+				this.openChanged();
+				this.showChanged();
+				
 				//this.$.resultsAjax.generateRequest();
 			}
 		});
@@ -222,11 +237,11 @@ Polymer({
 	</style>
 <template>
 	<iron-ajax id="quizInfoAjax" url="../api/1.0/quiz/info.php" handle-as="json" on-response="quizInfoResp"></iron-ajax>
-	<div class="row not-small">
+	<div class="row">
 		<div class="12u">
 			<paper-material>
 				<div class="row">
-					<div class="4u">
+					<div class="4u 5u(small) 4u(xsmall)">
 						<div class="row">
 							<div class="12u">[[sessionname]]</div>
 							<div class="-2u 10u">[[quizname]]</div>
@@ -238,43 +253,10 @@ Polymer({
 							<div class="12u">[[sessionobject.sessionkey]]</div>
 						</div>
 					</div>
-					<div class="2u">date</div>
+					<div class="2u 3u(xsmall)">date</div>
 					<div class="1u">house</div>
-					<div class="3u">
-						if($info['status']==1) echo "sessionopen";
-					if($info['score']==1) echo "sessionshow";
-						<admin-session-action-buttons sessionid="sessuid"></admin-session-action-buttons>
-					</div>
-				</div>
-			</paper-material>
-		</div>
-	</div>
-	<div class="row only-small">
-		<div class="12u">
-			<paper-material>
-				<div class="row">
-					<div class="5u 4u(xsmall)">
-						<div class="row">
-							<div class="12u">[[sessionname]]</div>
-							<div class="-2u 10u">[[quizname]]</div>
-						</div>
-					</div>
-					<div class="2u">
-						<div class="row">
-							<div class="12u">[[sessionobject.sessionid]]</div>
-							<div class="12u">[[sessionobject.sessionkey]]</div>
-						</div>
-					</div>
-					<div class="2u 3u(xsmall)">
-						date
-					</div>
-					<div class="1u">
-						houz
-					</div>
-					<div class="2u">
-					if($info['status']==1) echo "sessionopen";
-					if($info['score']==1) echo "sessionshow";
-						<admin-session-action-buttons sessionid="sessuid"></admin-session-action-buttons>
+					<div class="3u 2u(small)">
+						<admin-session-action-buttons id="actionButtons" sessionid="sessuid"></admin-session-action-buttons>
 					</div>
 				</div>
 			</paper-material>
@@ -303,6 +285,12 @@ Polymer({
 	},
 	ready: function(){
 		console.log(this.sessionobject);
+		if(this.sessionobject.data.open){
+			this.$.actionButtons.sessionopen = true;
+		}
+		if(this.sessionobject.data.show){
+			this.$.actionButtons.sessionshow = true;
+		}
 		if(this.sessionobject.name){
 			this.sessionname = this.sessionobject.name;
 		}
