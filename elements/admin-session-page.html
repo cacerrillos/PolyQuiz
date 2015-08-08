@@ -1,5 +1,12 @@
 <!doctype html>
 <dom-module id="admin-session-create-form">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
 <template>
 	<div class="row">
 		<div class="12u">
@@ -39,6 +46,13 @@ Polymer({
 </script>
 </dom-module>
 <dom-module id="admin-session-row">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
 <template>
 	<div class="row not-small">
 		<div class="12u">
@@ -112,6 +126,13 @@ Polymer({
 </script>
 </dom-module>
 <dom-module id="admin-session-page">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
 <template>
 <iron-ajax id="query" url="../api/1.0/sessions/owned.php" handle-as="json" on-response="onResp"></iron-ajax>
 <div class="container">
