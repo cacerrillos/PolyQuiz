@@ -1,4 +1,96 @@
 <!doctype html>
+<dom-module id="admin-quiz-selector-input">
+
+<template>
+	<iron-ajax id="quizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
+	<input name="quiz" type="hidden" id="quiz" value="-1">
+	<paper-menu-button>
+		<paper-button class="dropdown-trigger" id="currentButton">__</paper-button>
+		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
+			<paper-item id="0">_____</paper-item>
+			<template is="dom-repeat" items="[[objects]]" as="row">
+				<paper-item id="[[_trans(index)]]">[[row.text]]</paper-item>
+			</template>
+		</paper-menu>
+	</paper-menu-button>
+</template>
+<script>
+Polymer({
+	is: "admin-quiz-selector-input",
+	properties: {
+		objects: {
+			type: Object,
+			observer: "onobjchange"
+		},
+		selected: {
+			type: Number,
+			value: -1,
+			observer: "onSelectedChange"
+		},
+		selectedInternal: Number
+	},
+	quizInfoResp: function(e){
+		
+		if(e.detail.response){
+			console.log(e);
+			var arr = [];
+			var roww = function(id, text){
+					this.id = id;
+					this.text = text;
+				};
+			for(var x = 0; x < e.detail.response.length; x++){
+				var tis = e.detail.response[x];
+				arr.push(new roww(tis.uuid, tis.name));
+			}
+			if(arr.length > 0){
+				this.objects = arr;
+			}
+		}
+		
+	},
+	onobjchange: function(e){
+		console.log(e);
+		this.redraww();
+		//this.selected = this.rightarray.selected;
+		//console.log(this.rightarray);
+	},
+	onSelectedChange: function(e){
+		console.log(e);
+		console.log(this.selected);
+		if(this.objects){
+			this.selectedInternal = e + 1;
+			this.redraww();
+			if(this.selected >= 0 && this.selected < this.objects.length){
+				this.$.quiz.value = this.objects[this.selected].id;
+			} else {
+				this.$.quiz.value = -1;
+			}
+			this.fire("selected-changed", { selected: e });
+		}
+	},
+	redraww: function(){
+		if(this.selected == -1){
+			this.$.currentButton.innerHTML = "_____";
+			this.$.currentButton.style.fontWeight = "normal";
+			this.$.currentButton.style.color = "#212121";
+		} else {
+			this.$.currentButton.innerHTML = this.objects[this.selected].text;
+			this.$.currentButton.style.fontWeight = "bold";
+			this.$.currentButton.style.color = "#2196F3";
+		}
+	},
+	onSelectedInternalChange: function(e){
+		this.selected = e.detail.item.id - 1;
+	},
+	_trans: function(data){
+		return data + 1;
+	},
+	ready: function(){
+		
+	}
+});
+</script>
+</dom-module>
 <dom-module id="admin-session-create-form">
 	<style is="custom-style">
 		paper-material {
@@ -9,12 +101,12 @@
 	</style>
 <template>
 	<div class="row">
-		<div class="12u">
+		<div class="6u 12u(xsmall)">
 			<paper-material>
 				<h3>Create New Session</h3>
 				<form id="newsession" action="func/ses.func.php" method="post">
 				<input type="hidden" name="date" value="Y-m-d" />
-				Session Name: <input type="text" name="sessionname" /><br />
+				<paper-input name="sessionname" label="Session Name"></paper-input>
 				House: <select name="house" size="1">
 							<option value="North">North</option>
 							<option value="South">South</option>
@@ -22,9 +114,7 @@
 							<option value="West">West</option>
 							<option value="Other">Other</option>
 							</select><br />
-				Quiz: <select name="quiz" size="1">
-					<option value="quizuuid">QuizNAME</option>
-							</select><br />
+				Quiz: <admin-quiz-selector-input id="selector" ></admin-quiz-selector-input><br>
 				<input type="radio" name="status" value="1" checked /> Open<br />
 				<input type="radio" name="status" value="0" /> Closed<br />
 				<input type="submit" name="submit" value="Create" />
@@ -151,7 +241,7 @@ Polymer({
 				this.$.deleteAjax.generateRequest();
 			},
 			onDeleteResp: function(e){
-				console.log(e.detail.response);
+				console.log(e);
 				if(e.detail.response.status == true){
 					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Deleted session!" } });
 					this.fire('session-deleted', {uuid: e.target.params.uuid});
@@ -258,7 +348,7 @@ Polymer({
 					<div class="2u 3u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
 					<div class="1u">[[house]]</div>
 					<div class="3u 2u(small)">
-						<admin-session-action-buttons id="actionButtons" sessionid="sessuid"></admin-session-action-buttons>
+						<admin-session-action-buttons id="actionButtons" sessionid="[[sessionobject.sessionid]]"></admin-session-action-buttons>
 					</div>
 				</div>
 			</paper-material>
@@ -415,8 +505,8 @@ Polymer({
 							</paper-material>
 						</div>
 					</div>
-					<template is="dom-repeat" items="[[sessions]]" as="session">
-						<admin-session-row sessionobject="[[session]]"></admin-session-row>
+					<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session">
+						<admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></admin-session-row>
 					</template>
 			</paper-material>
 		</div>
@@ -432,6 +522,10 @@ Polymer({
 	},
 	properties: {
 		sessions: Array
+	},
+	onSessionDeleted: function(e){
+		console.log(e);
+		this.$.query.generateRequest();
 	},
 	ready: function(){
 		this.$.query.generateRequest();
