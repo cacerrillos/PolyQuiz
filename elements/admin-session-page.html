@@ -151,6 +151,7 @@ Polymer({
 				this.$.deleteAjax.generateRequest();
 			},
 			onDeleteResp: function(e){
+				console.log(e.detail.response);
 				if(e.detail.response.status == true){
 					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Deleted session!" } });
 					this.fire('session-deleted', {uuid: e.target.params.uuid});
