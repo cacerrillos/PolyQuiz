@@ -221,6 +221,7 @@ Polymer({
 		}
 	</style>
 <template>
+	<iron-ajax id="quizInfoAjax" url="../api/1.0/quiz/info.php" handle-as="json" on-response="quizInfoResp"></iron-ajax>
 	<div class="row not-small">
 		<div class="12u">
 			<paper-material>
@@ -228,7 +229,7 @@ Polymer({
 					<div class="4u">
 						<div class="row">
 							<div class="12u">sessionanem</div>
-							<div class="-2u 10u">quizname</div>
+							<div class="-2u 10u">[[quizname]]</div>
 						</div>
 					</div>
 					<div class="2u">
@@ -255,7 +256,7 @@ Polymer({
 					<div class="5u 4u(xsmall)">
 						<div class="row">
 							<div class="12u">[[sessionobject.data.sessionname]]</div>
-							<div class="-2u 10u">[[sessionobject.data.quizname]]</div>
+							<div class="-2u 10u">[[quizname]]</div>
 						</div>
 					</div>
 					<div class="2u">
@@ -284,10 +285,24 @@ Polymer({
 Polymer({
 	is: "admin-session-row",
 	properties: {
-		sessionobject: Object
+		sessionobject: Object,
+		quizname: {
+			type: String,
+			value: "Quiz Name Not Found"
+		}
+	},
+	quizInfoResp: function(e){
+		if(e.detail.response){
+			this.quizname = e.detail.response.name;
+		}
+		console.log(e);
 	},
 	ready: function(){
 		
+		this.$.quizInfoAjax.params = {
+			uuid: this.sessionobject.quiz
+		};
+		this.$.quizInfoAjax.generateRequest();
 	}
 });
 </script>
