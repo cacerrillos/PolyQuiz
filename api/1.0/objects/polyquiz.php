@@ -144,6 +144,7 @@ class PolySession {
 		return $toReturn;
 	}
 	public static function fromMySQL($mysqli, $uuid){
+		/*
 		$toReturn = new self();
 		if($stmt = $mysqli->prepare(
 			"SELECT `uuid`, `sessionid`, `sessionkey`, `owner` FROM `quizzes` WHERE `uuid`=? LIMIT 1;"
@@ -185,6 +186,7 @@ class PolySession {
 		} else {
 			return false;
 		}
+		*/
 	}
 }
 class PolyQuiz {
