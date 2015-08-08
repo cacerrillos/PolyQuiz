@@ -33,7 +33,6 @@ Polymer({
 	quizInfoResp: function(e){
 		
 		if(e.detail.response){
-			console.log(e);
 			var arr = [];
 			var roww = function(id, text){
 					this.id = id;
@@ -50,14 +49,11 @@ Polymer({
 		
 	},
 	onobjchange: function(e){
-		console.log(e);
 		this.redraww();
 		//this.selected = this.rightarray.selected;
 		//console.log(this.rightarray);
 	},
 	onSelectedChange: function(e){
-		console.log(e);
-		console.log(this.selected);
 		if(this.objects){
 			this.selectedInternal = e + 1;
 			this.redraww();
@@ -242,7 +238,6 @@ Polymer({
 				this.$.deleteAjax.generateRequest();
 			},
 			onDeleteResp: function(e){
-				console.log(e);
 				if(e.detail.response.status == true){
 					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Deleted session!" } });
 					this.fire('session-deleted', {uuid: e.target.params.uuid});
@@ -298,7 +293,6 @@ Polymer({
 				window.location = "?p=results&sortby=session";
 			},
 			openChanged: function(e){
-				console.log(e);
 				if(this.sessionopen){
 					this.$.openstat.icon = "icons:lock-open";
 					this.$.openstat.style.color = "#8BC34A";
@@ -308,7 +302,6 @@ Polymer({
 				}
 			},
 			showChanged: function(e){
-				console.log(e);
 				if(this.sessionshow){
 					this.$.showscore.style.color = "#8BC34A";
 				} else {
@@ -403,14 +396,12 @@ Polymer({
 			this.quizname = e.detail.response.name;
 		}
 		this.stopSpinner();
-		console.log(e);
 	},
 	houseInfoResp: function(e){
 		if(e.detail.response){
 			this.house = e.detail.response.data.houseName;
 		}
 		this.stopSpinner();
-		console.log(e);
 	},
 	ready: function(){
 		console.log(this.sessionobject);
@@ -498,7 +489,6 @@ Polymer({
 	is: "admin-session-page",
 	onResp: function(e){
 		this.sessions = e.detail.response;
-		console.log(e);
 	},
 	properties: {
 		sessions: Array
@@ -509,7 +499,6 @@ Polymer({
 		this.$.rowWrapper.style.display = "block";
 	},
 	onSessionDeleted: function(e){
-		console.log(e);
 		this.$.query.generateRequest();
 		this.$.rowSpinner.active = true;
 		this.$.rowSpinner.style.display = "block";
