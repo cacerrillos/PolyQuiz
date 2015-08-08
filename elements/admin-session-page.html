@@ -254,7 +254,7 @@ Polymer({
 							<div class="12u">[[sessionobject.sessionkey]]</div>
 						</div>
 					</div>
-					<div class="2u 3u(xsmall)">date</div>
+					<div class="2u 3u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
 					<div class="1u">[[house]]</div>
 					<div class="3u 2u(small)">
 						<admin-session-action-buttons id="actionButtons" sessionid="sessuid"></admin-session-action-buttons>
@@ -277,6 +277,18 @@ Polymer({
 			type: String,
 			value: "Quiz Name Not Found"
 		}
+	},
+	unixDateToHumanDate: function(e){
+		var a = new Date(e * 1000);
+		var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+		var year = a.getFullYear();
+		var month = months[a.getMonth()];
+		var date = a.getDate();
+		var hour = a.getHours();
+		var min = a.getMinutes();
+		var sec = a.getSeconds();
+		var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+		return time;
 	},
 	quizInfoResp: function(e){
 		if(e.detail.response){
