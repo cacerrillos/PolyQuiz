@@ -482,9 +482,12 @@ Polymer({
 							</paper-material>
 						</div>
 					</div>
-					<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session">
-						<admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></admin-session-row>
-					</template>
+					<paper-spinner id="rowSpinner" active></paper-spinner>
+					<div id="rowWrapper">
+						<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
+							<admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></admin-session-row>
+						</template>
+					</div>
 			</paper-material>
 		</div>
 	</div>
@@ -500,12 +503,20 @@ Polymer({
 	properties: {
 		sessions: Array
 	},
+	spinnerOff: function(e){
+		this.$.rowSpinner.active = false;
+		this.$.rowSpinner.style.display = "none";
+		this.$.rowWrapper.style.display = "block";
+	},
 	onSessionDeleted: function(e){
 		console.log(e);
 		this.$.query.generateRequest();
+		this.$.rowSpinner.active = true;
+		this.$.rowSpinner.style.display = "block";
+		this.$.rowWrapper.style.display = "none";
 	},
 	ready: function(){
-		this.$.query.generateRequest();
+		this.onSessionDeleted();
 	}
 });
 </script>
