@@ -340,6 +340,9 @@ Polymer({
 		<div class="12u">
 			<paper-material>
 				<div class="row">
+					<div class="12u"><center><paper-spinner id="spinner" active></paper-spinner></center></div>
+				</div>
+				<div class="row" id="contentRow" style="display:none;">
 					<div class="4u 5u(small) 4u(xsmall)">
 						<div class="row">
 							<div class="12u">[[sessionname]]</div>
@@ -388,16 +391,25 @@ Polymer({
 		var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
 		return time;
 	},
+	stopSpinner: function(){
+		if(this.$.quizInfoAjax.lastResponse && this.$.houseInfoAjax.lastResponse){
+			this.$.spinner.active = false;
+			this.$.spinner.style.display = "none";
+			this.$.contentRow.style.display = "block";
+		}
+	},
 	quizInfoResp: function(e){
 		if(e.detail.response){
 			this.quizname = e.detail.response.name;
 		}
+		this.stopSpinner();
 		console.log(e);
 	},
 	houseInfoResp: function(e){
 		if(e.detail.response){
 			this.house = e.detail.response.data.houseName;
 		}
+		this.stopSpinner();
 		console.log(e);
 	},
 	ready: function(){
