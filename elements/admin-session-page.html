@@ -247,7 +247,13 @@ Polymer({
 					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Deleted session!" } });
 					this.fire('session-deleted', {uuid: e.target.params.uuid});
 				} else {
-					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete session!" } });
+					if(e.detail.response.error){
+						if(e.detail.response.error == 1451){
+							this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete session! Still contains results!" } });
+						}
+					} else {
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete session!" } });
+					}
 				}
 			},
 			onToggleLockResp: function(e){
