@@ -45,6 +45,173 @@ Polymer({
 });
 </script>
 </dom-module>
+<dom-module id="admin-session-action-buttons">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.active {
+			color: #8BC34A;
+		}
+		.inactive {
+			color: #D32F2F;
+		}
+	</style>
+	<template>
+		<iron-ajax
+		id="toggleLockAjax"
+		url="../../api/1.0/sessions/settings.php"
+		handle-as="json"
+	 	on-response="onToggleLockResp"></iron-ajax>
+		<iron-ajax
+		id="toggleShowAjax"
+		url="../../api/1.0/sessions/settings.php"
+		handle-as="json"
+	 	on-response="onToggleShowResp"></iron-ajax>
+		<iron-ajax
+		id="deleteAjax"
+		url="../../api/1.0/sessions/delete.php"
+		handle-as="json"
+	 	on-response="onDeleteResp"></iron-ajax>
+		<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
+		<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
+		<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
+	
+	</template>
+	<script>
+		Polymer({
+			is: "admin-session-action-buttons",
+			properties: {
+				_get: {
+					type: Object
+				},
+				sessionid: String,
+				sessionopen: Boolean,
+				sessionshow: Boolean,
+				resultsObject: {
+					type: Array
+				}
+			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				//console.log(arr);
+				return arr;
+			},
+			toggleLock: function() {
+				if(this.sessionopen){
+					this.$.toggleLockAjax.params = {
+						uuid: this.sessionid,
+						action: "close"
+					};
+				} else {
+					this.$.toggleLockAjax.params = {
+						uuid: this.sessionid,
+						action: "open"
+					};
+				}
+				this.$.toggleLockAjax.generateRequest();
+			},
+			toggleShow: function() {
+				if(this.sessionshow){
+					this.$.toggleShowAjax.params = {
+						uuid: this.sessionid,
+						action: "dontshow"
+					};
+				} else {
+					this.$.toggleShowAjax.params = {
+						uuid: this.sessionid,
+						action: "show"
+					};
+				}
+				this.$.toggleShowAjax.generateRequest();
+			},
+			onDeleteClick: function(){
+				this.$.deleteAjax.params = {
+					uuid: this.sessionid
+				};
+				this.$.deleteAjax.generateRequest();
+			},
+			onDeleteResp: function(e){
+				if(e.detail.response.status == true){
+					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Deleted session!" } });
+					this.fire('session-deleted', {uuid: e.target.params.uuid});
+				} else {
+					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete session!" } });
+				}
+			},
+			onToggleLockResp: function(e){
+				if(e.target.params.action == "open"){
+					if(e.detail.response.status == true){
+						this.sessionopen = true;
+						this.ready();
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Opened session!" } });
+					} else {
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to open session!" } });
+					}
+				} else if(e.target.params.action == "close") {
+					if(e.detail.response.status == true){
+						this.sessionopen = false;
+						this.ready();
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Closed session!" } });
+					} else {
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to close session!" } });
+					}
+				}
+			},
+			onToggleShowResp: function(e){
+				if(e.target.params.action == "show"){
+					if(e.detail.response.status == true){
+						this.sessionshow = true;
+						this.ready();
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Set scores to visible!" } });
+					} else {
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to set scores to visible!" } });
+					}
+				} else if(e.target.params.action == "dontshow") {
+					if(e.detail.response.status == true){
+						this.sessionshow = false;
+						this.ready();
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Set scores to NOT visible!" } });
+					} else {
+						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to set scores to NOT visible!" } });
+					}
+				}
+			},
+			onSortBySession: function(){
+				window.location = "?p=results&sortby=session";
+			},
+			ready: function() {
+				if(this.sessionopen){
+					this.$.openstat.icon = "icons:lock-open";
+					this.$.openstat.style.color = "#8BC34A";
+				} else {
+					this.$.openstat.icon = "icons:lock-outline";
+					this.$.openstat.style.color = "#D32F2F";
+				}
+				if(this.sessionshow){
+					this.$.showscore.style.color = "#8BC34A";
+				} else {
+					this.$.showscore.style.color = "#D32F2F";
+				}
+				//this.$.resultsAjax.generateRequest();
+			}
+		});
+	</script>
+
+</dom-module>
 <dom-module id="admin-session-row">
 	<style is="custom-style">
 		paper-material {

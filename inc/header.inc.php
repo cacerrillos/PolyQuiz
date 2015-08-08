@@ -97,7 +97,6 @@ function checkPass()
 <link rel="import" href="elements/admin-sidebar.php">
 <link rel="import" href="elements/admin-quiz-results.html">
 <link rel="import" href="elements/admin-quiz-management.html">
-<link rel="import" href="elements/admin-session-action-buttons.html">
 <link rel="import" href="elements/admin-edit-quiz.html">
 <link rel="import" href="elements/admin-session-page.html">
 <link rel="import" href="bower_components/iron-icons/image-icons.html">
