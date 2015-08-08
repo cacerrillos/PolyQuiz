@@ -237,6 +237,7 @@ Polymer({
 	</style>
 <template>
 	<iron-ajax id="quizInfoAjax" url="../api/1.0/quiz/info.php" handle-as="json" on-response="quizInfoResp"></iron-ajax>
+	<iron-ajax id="houseInfoAjax" url="../api/1.0/houses/info.php" handle-as="json" on-response="houseInfoResp"></iron-ajax>
 	<div class="row">
 		<div class="12u">
 			<paper-material>
@@ -254,7 +255,7 @@ Polymer({
 						</div>
 					</div>
 					<div class="2u 3u(xsmall)">date</div>
-					<div class="1u">house</div>
+					<div class="1u">[[house]]</div>
 					<div class="3u 2u(small)">
 						<admin-session-action-buttons id="actionButtons" sessionid="sessuid"></admin-session-action-buttons>
 					</div>
@@ -283,6 +284,12 @@ Polymer({
 		}
 		console.log(e);
 	},
+	houseInfoResp: function(e){
+		if(e.detail.response){
+			this.house = e.detail.response.data.houseName;
+		}
+		console.log(e);
+	},
 	ready: function(){
 		console.log(this.sessionobject);
 		if(this.sessionobject.data.open){
@@ -297,7 +304,11 @@ Polymer({
 		this.$.quizInfoAjax.params = {
 			uuid: this.sessionobject.quiz
 		};
+		this.$.houseInfoAjax.params = {
+			uuid: this.sessionobject.data.house
+		};
 		this.$.quizInfoAjax.generateRequest();
+		this.$.houseInfoAjax.generateRequest();
 	}
 });
 </script>
