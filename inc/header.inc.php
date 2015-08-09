@@ -95,6 +95,7 @@ function checkPass()
 <link rel="import" href="elements/take-a-quiz-form.html">
 <link rel="import" href="elements/take-quiz-page.html">
 <link rel="import" href="elements/admin-sidebar.php">
+<link rel="import" href="elements/admin-sidebar.html">
 <link rel="import" href="elements/admin-quiz-results.html">
 <link rel="import" href="elements/admin-quiz-management.html">
 <link rel="import" href="elements/admin-edit-quiz.html">
