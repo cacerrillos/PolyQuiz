@@ -1,9 +1,8 @@
 <?
 $mysqli = new mysqli($db_host, $db_user, $db_password);
 $mysqli -> select_db($db_name);
-if(mysqli_connect_errno()) {
-	echo "Connection Failed: " . mysqli_connect_errno();
-	exit();
+if($mysqli->errno){
+	echo "Connection Failed: " . $mysqli->errno;
 }
 $count = 0;
 if($stmt = $mysqli->prepare("SELECT value FROM stats WHERE id='totalresults';")){
