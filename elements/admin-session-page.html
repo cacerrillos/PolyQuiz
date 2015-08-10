@@ -1,4 +1,43 @@
 <!doctype html>
+<dom-module id="admin-session-delete-prompt">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<style is="custom-style">
+	paper-dialog {
+		background-color: white;
+	}
+</style>
+<template>
+<paper-dialog id="dialog" on-iron-overlay-closed="closedEvent" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+	<h2>Delete Session?</h2>
+	<span>[[sessionid]]</span>
+	<div class="buttons">
+		<paper-button dialog-dismiss>Cancel</paper-button>
+		<paper-button dialog-confirm>Delete</paper-button>
+	</div>
+</paper-dialog>
+</template>
+<script>
+Polymer({
+	is: "admin-session-delete-prompt",
+	properties: {
+		sessionid: String
+	},
+	closedEvent: function(e){
+		if(e.detail.confirmed){
+			this.fire("delete-confirm", { sessionid: this.sessionid });
+		}
+		console.log(e);
+	},
+	open: function(){
+		this.$.dialog.open();
+	},
+	ready: function(){
+		
+	}
+});
+</script>
+</dom-module>
 <dom-module id="admin-quiz-selector-input">
 
 <template>
@@ -232,6 +271,10 @@ Polymer({
 				this.$.toggleShowAjax.generateRequest();
 			},
 			onDeleteClick: function(){
+				this.$.deletePrompt.open();				
+			},
+			doDelete: function(e){
+				console.log(e);
 				this.$.deleteAjax.params = {
 					uuid: this.sessionid
 				};
