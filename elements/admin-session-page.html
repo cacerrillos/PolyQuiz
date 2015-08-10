@@ -538,7 +538,7 @@ Polymer({
 							</paper-material>
 						</div>
 					</div>
-					<paper-spinner id="rowSpinner" active></paper-spinner>
+					<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
 					<div id="rowWrapper">
 						<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
 							<admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></admin-session-row>
