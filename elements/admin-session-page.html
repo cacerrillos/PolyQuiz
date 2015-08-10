@@ -39,7 +39,6 @@ Polymer({
 </script>
 </dom-module>
 <dom-module id="admin-quiz-selector-input">
-
 <template>
 	<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
 	<input name="[[name]]" type="hidden" id="quiz" value="-1">
@@ -140,18 +139,23 @@ Polymer({
 	<div class="row">
 		<div class="6u 12u(xsmall)">
 			<paper-material>
-				<h3>Create New Session</h3>
-				<form id="newsession" action="func/ses.func.php" method="post">
-				<input type="hidden" name="date" value="Y-m-d" />
-				<paper-input name="sessionname" label="Session Name"></paper-input>
-				House: <select name="house" size="1">
+			<form id="newsession" action="func/ses.func.php" method="post">
+				<div class="row">
+					<div class="12u"><h3>Create New Session</h3></div>
+					<input type="hidden" name="date" value="Y-m-d" />
+					<div class="12u"><paper-input name="sessionname" label="Session Name"></paper-input></div>
+					<div class="12u">
+					House: <select name="house" size="1">
 							<option value="North">North</option>
 							<option value="South">South</option>
 							<option value="East">East</option>
 							<option value="West">West</option>
 							<option value="Other">Other</option>
-							</select><br />
-				Quiz: <admin-quiz-selector-input id="selector" name="quiz"></admin-quiz-selector-input><br>
+							</select>
+					</div>
+					<div class="1u">Quiz</div>
+					<div class="10u"><admin-quiz-selector-input id="selector" name="quiz"></admin-quiz-selector-input></div>
+				</div>
 				<input type="radio" name="status" value="1" checked /> Open<br />
 				<input type="radio" name="status" value="0" /> Closed<br />
 				<input type="submit" name="submit" value="Create" />
