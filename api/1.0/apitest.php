@@ -1,4 +1,5 @@
 <?
+session_start();
 include_once("../../func/config.func.php");
 include_once("objects/polyquiz.php");
 $mysqli = new mysqli($db_host, $db_user, $db_password);
@@ -7,7 +8,12 @@ $mysqli->select_db($db_name);
 
 
 $sestest = PolySession::createCheckMysql($mysqli);
+
+
+$sestest->owner = $_SESSION['dbext'];
+
 echo json_encode($sestest)."<br>";
+//var_dump($sestest->saveToMysql($mysqli, $_SESSION['dbext']));
 
 $sestestget = PolySession::ownedBy($mysqli,-1337);
 echo json_encode($sestestget)."<br>";
