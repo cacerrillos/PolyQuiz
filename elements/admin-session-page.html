@@ -44,9 +44,9 @@ Polymer({
 	<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
 	<input name="[[name]]" type="hidden" id="quiz" value="-1">
 	<paper-menu-button>
-		<paper-button class="dropdown-trigger" id="currentButton">__</paper-button>
+		<paper-button class="dropdown-trigger" id="currentButton" raised>[[selectedText]]</paper-button>
 		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
-			<paper-item id="0">_____</paper-item>
+			<paper-item id="0">Select A Quiz</paper-item>
 			<template is="dom-repeat" items="[[objects]]" as="row">
 				<paper-item id="[[_trans(index)]]">[[row.text]]</paper-item>
 			</template>
@@ -67,6 +67,7 @@ Polymer({
 			value: -1,
 			observer: "onSelectedChange"
 		},
+		selectedText: String,
 		selectedInternal: Number
 	},
 	quizInfoResp: function(e){
@@ -106,11 +107,11 @@ Polymer({
 	},
 	redraww: function(){
 		if(this.selected == -1){
-			this.$.currentButton.innerHTML = "_____";
+			this.selectedText = "Select A Quiz";
 			this.$.currentButton.style.fontWeight = "normal";
 			this.$.currentButton.style.color = "#212121";
 		} else {
-			this.$.currentButton.innerHTML = this.objects[this.selected].text;
+			this.selectedText = this.objects[this.selected].text;
 			this.$.currentButton.style.fontWeight = "bold";
 			this.$.currentButton.style.color = "#2196F3";
 		}
