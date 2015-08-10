@@ -212,10 +212,20 @@ Polymer({
 		url="../../api/1.0/sessions/delete.php"
 		handle-as="json"
 	 	on-response="onDeleteResp"></iron-ajax>
-		<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
-		<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
-		<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
-	
+		<div class="row">
+			<div class="4u">
+				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
+				<paper-spinner id="lockSpinner" style="display:none;"></paper-spinner>
+			</div>
+			<div class="4u">
+				<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
+				<paper-spinner id="showSpinner" style="display:none;"></paper-spinner>
+			</div>
+			<div class="4u">
+				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
+			</div>
+		</div>
+		<admin-session-delete-prompt sessionid="[[sessionid]]" id="deletePrompt" on-delete-confirm="doDelete"></admin-session-delete-prompt>
 	</template>
 	<script>
 		Polymer({
@@ -243,6 +253,9 @@ Polymer({
 				return arr;
 			},
 			toggleLock: function() {
+				this.$.openstat.style.display = "none";
+				this.$.lockSpinner.style.display = "block";
+				this.$.lockSpinner.active = true;
 				if(this.sessionopen){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessionid,
@@ -257,6 +270,9 @@ Polymer({
 				this.$.toggleLockAjax.generateRequest();
 			},
 			toggleShow: function() {
+				this.$.showscore.style.display = "none";
+				this.$.showSpinner.style.display = "block";
+				this.$.showSpinner.active = true;
 				if(this.sessionshow){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessionid,
@@ -295,6 +311,9 @@ Polymer({
 				}
 			},
 			onToggleLockResp: function(e){
+				this.$.openstat.style.display = "block";
+				this.$.lockSpinner.style.display = "none";
+				this.$.lockSpinner.active = false;
 				if(e.target.params.status == "true"){
 					if(e.detail.response.status == true){
 						this.sessionopen = true;
@@ -314,6 +333,9 @@ Polymer({
 				}
 			},
 			onToggleShowResp: function(e){
+				this.$.showscore.style.display = "block";
+				this.$.showSpinner.style.display = "none";
+				this.$.showSpinner.active = false;
 				if(e.target.params.show == "true"){
 					if(e.detail.response.status == true){
 						this.sessionshow = true;
