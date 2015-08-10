@@ -38,39 +38,79 @@ Polymer({
 });
 </script>
 </dom-module>
-<dom-module id="admin-quiz-selector-input">
+<dom-module id="admin-session-create-form">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.validButton {
+			background-color: #4285f4;
+			color: rgba(255,255,255,1.00);
+		}
+	</style>
 <template>
-	<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
-	<input name="[[name]]" type="hidden" id="quiz" value="-1">
-	<paper-menu-button>
-		<paper-button class="dropdown-trigger" id="currentButton" raised>[[selectedText]]</paper-button>
-		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
-			<paper-item id="0">Select A Quiz</paper-item>
-			<template is="dom-repeat" items="[[objects]]" as="row">
-				<paper-item id="[[_trans(index)]]">[[row.text]]</paper-item>
-			</template>
-		</paper-menu>
-	</paper-menu-button>
+	<div class="row">
+		<div class="6u 12u(xsmall)">
+			<paper-material>
+				<form id="newsession" action="func/ses.func.php" method="post">
+					<div class="row">
+						<div class="12u"><h3>Create New Session</h3></div>
+						<input type="hidden" name="date" value="Y-m-d" />
+						<div class="12u"><paper-input name="sessionname" label="Session Name"></paper-input></div>
+						<div class="12u">
+							<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
+							<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
+						</div>
+						<div class="12u">
+							<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
+							<poly-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
+						</div>
+						<div class="12u">
+							<div class="row">
+							<div class="12u">
+								<input type="hidden" name="status" value="1"/>
+								<paper-radio-group selected="open">
+									<paper-radio-button name="open">Open</paper-radio-button>
+									<paper-radio-button name="closed">Closed</paper-radio-button>
+								</paper-radio-group>
+								</div>
+							</div>
+						</div>
+					</div>
+					<paper-button raised id="submitButton" class="">Create</paper-button>
+					<input type="submit" name="submit" value="Create" />
+				</form>
+			</paper-material>
+		</div>
+	</div>
 </template>
 <script>
 Polymer({
-	is: "admin-quiz-selector-input",
-	properties: {
-		name: String,
-		objects: {
-			type: Object,
-			observer: "onobjchange"
-		},
-		selected: {
-			type: Number,
-			value: -1,
-			observer: "onSelectedChange"
-		},
-		selectedText: String,
-		selectedInternal: Number
+	is: "admin-session-create-form",
+		properties: {
+		quizzes: Object,
+		houses: Object
+	},
+	housesResp: function(e){
+		if(e.detail.response){
+			console.log(e);
+			var arr = [];
+			var roww = function(id, text){
+					this.id = id;
+					this.text = text;
+				};
+			for(var x = 0; x < e.detail.response.length; x++){
+				var tis = e.detail.response[x];
+				arr.push(new roww(tis.data.houseId, tis.data.houseName));
+			}
+			if(arr.length > 0){
+				this.houses = arr;
+			}
+		}
 	},
 	quizInfoResp: function(e){
-		
 		if(e.detail.response){
 			var arr = [];
 			var roww = function(id, text){
@@ -82,96 +122,24 @@ Polymer({
 				arr.push(new roww(tis.uuid, tis.name));
 			}
 			if(arr.length > 0){
-				this.objects = arr;
+				this.quizzes = arr;
 			}
 		}
-		
 	},
-	onobjchange: function(e){
-		this.redraww();
-		//this.selected = this.rightarray.selected;
-		//console.log(this.rightarray);
-	},
-	onSelectedChange: function(e){
-		if(this.objects){
-			this.selectedInternal = e + 1;
-			this.redraww();
-			if(this.selected >= 0 && this.selected < this.objects.length){
-				this.$.quiz.value = this.objects[this.selected].id;
-			} else {
-				this.$.quiz.value = -1;
-			}
-			this.fire("selected-changed", { selected: e });
-		}
-	},
-	redraww: function(){
-		if(this.selected == -1){
-			this.selectedText = "Select A Quiz";
-			this.$.currentButton.style.fontWeight = "normal";
-			this.$.currentButton.style.color = "#212121";
+	formDataChanged: function(e){
+		console.log(e);
+		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1){
+			this.$.submitButton.style.backgroundColor = "#4285f4";
+			this.$.submitButton.style.color = "white";
+			this.$.submitButton.disabled = false;
 		} else {
-			this.selectedText = this.objects[this.selected].text;
-			this.$.currentButton.style.fontWeight = "bold";
-			this.$.currentButton.style.color = "#2196F3";
+			this.$.submitButton.style.backgroundColor = "#eaeaea";
+			this.$.submitButton.style.color = "#a8a8a8";
+			this.$.submitButton.disabled = true;
 		}
 	},
-	onSelectedInternalChange: function(e){
-		this.selected = e.detail.item.id - 1;
-	},
-	_trans: function(data){
-		return data + 1;
-	},
 	ready: function(){
-		
-	}
-});
-</script>
-</dom-module>
-<dom-module id="admin-session-create-form">
-	<style is="custom-style">
-		paper-material {
-			background-color: white;
-			margin-top: 5px;
-			margin-bottom: 5px;
-		}
-	</style>
-<template>
-	<div class="row">
-		<div class="6u 12u(xsmall)">
-			<paper-material>
-			<form id="newsession" action="func/ses.func.php" method="post">
-				<div class="row">
-					<div class="12u"><h3>Create New Session</h3></div>
-					<input type="hidden" name="date" value="Y-m-d" />
-					<div class="12u"><paper-input name="sessionname" label="Session Name"></paper-input></div>
-					<div class="12u">
-					House: <select name="house" size="1">
-							<option value="North">North</option>
-							<option value="South">South</option>
-							<option value="East">East</option>
-							<option value="West">West</option>
-							<option value="Other">Other</option>
-							</select>
-					</div>
-					<div class="1u">Quiz</div>
-					<div class="10u"><admin-quiz-selector-input id="selector" name="quiz"></admin-quiz-selector-input></div>
-				</div>
-				<input type="radio" name="status" value="1" checked /> Open<br />
-				<input type="radio" name="status" value="0" /> Closed<br />
-				<input type="submit" name="submit" value="Create" />
-				</form>
-			</paper-material>
-		</div>
-	</div>
-</template>
-<script>
-Polymer({
-	is: "admin-session-create-form",
-	properties: {
-		
-	},
-	ready: function(){
-		
+		this.houseorquizChanged();
 	}
 });
 </script>
