@@ -97,9 +97,14 @@ function checkPass()
 <link rel="import" href="elements/admin-sidebar.php">
 <link rel="import" href="elements/admin-sidebar.html">
 <link rel="import" href="elements/admin-quiz-results.html">
+<link rel="import" href="elements/poly-elements.html">
 <link rel="import" href="elements/admin-quiz-management.html">
 <link rel="import" href="elements/admin-edit-quiz.html">
 <link rel="import" href="elements/admin-session-page.html">
+<link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="bower_components/iron-selector/iron-selectable.html">
 <link rel="import" href="bower_components/iron-icons/image-icons.html">
 <link rel="import" href="bower_components/paper-material/paper-material.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />

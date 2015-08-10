@@ -1,0 +1,103 @@
+<!doctype html>
+<dom-module id="poly-dropdown-input">
+<style is="custom-style">
+	.but {
+		background-color: #4285f4;
+		color: rgba(255,255,255,1.00);
+	}
+</style>
+<template>
+	<input name="[[name]]" type="hidden" id="formValue" value="-1">
+	<paper-menu-button>
+		<paper-button class="dropdown-trigger" id="currentButton"><span class="">[[selectedText]]</span></paper-button>
+		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
+			<paper-item id="0">[[defaulttext]]</paper-item>
+			<template is="dom-repeat" items="[[objects]]" as="row">
+				<paper-item id="[[_trans(index)]]">[[row.text]]</paper-item>
+			</template>
+		</paper-menu>
+	</paper-menu-button>
+</template>
+<script>
+Polymer({
+	is: "poly-dropdown-input",
+	properties: {
+		raised: Boolean,
+		name: String,
+		objects: {
+			type: Object,
+			observer: "onobjchange"
+		},
+		selected: {
+			type: Number,
+			value: -1,
+			observer: "onSelectedChange"
+		},
+		defaulttext: {
+			type: String,
+			value: "_____"
+		},
+		selectedText: String,
+		selectedInternal: Number
+	},
+	quizInfoResp: function(e){
+		if(e.detail.response){
+			var arr = [];
+			var roww = function(id, text){
+					this.id = id;
+					this.text = text;
+				};
+			for(var x = 0; x < e.detail.response.length; x++){
+				var tis = e.detail.response[x];
+				arr.push(new roww(tis.uuid, tis.name));
+			}
+			if(arr.length > 0){
+				this.objects = arr;
+			}
+		}
+		
+	},
+	onobjchange: function(e){
+		this.redraww();
+		//this.selected = this.rightarray.selected;
+		//console.log(this.rightarray);
+	},
+	onSelectedChange: function(e){
+		if(this.objects){
+			this.selectedInternal = e + 1;
+			this.redraww();
+			if(this.selected >= 0 && this.selected < this.objects.length){
+				this.$.formValue.value = this.objects[this.selected].id;
+				this.fire("selected-changed", { selected: this.objects[this.selected].id });
+			} else {
+				this.$.formValue.value = -1;
+				this.fire("selected-changed", { });
+			}
+			
+		}
+	},
+	redraww: function(){
+		if(this.selected == -1){
+			this.selectedText = this.defaulttext;
+			this.$.currentButton.style.fontWeight = "normal";
+			this.$.currentButton.style.color = "#212121";
+		} else {
+			this.selectedText = this.objects[this.selected].text;
+			this.$.currentButton.style.fontWeight = "bold";
+			this.$.currentButton.style.color = "#2196F3";
+		}
+	},
+	onSelectedInternalChange: function(e){
+		this.selected = e.detail.item.id - 1;
+	},
+	_trans: function(data){
+		return data + 1;
+	},
+	ready: function(){
+		if(this.raised){
+			this.$.currentButton.raised = true;
+		}
+	}
+});
+</script>
+</dom-module>
