@@ -8,6 +8,8 @@ class PolySession {
 	public $date;
 	public $data = array();
 	public function __construct(){
+		$this->name = "DEFAULT NAME";
+		$this->quiz = 1;
 		$this->data['status'] = true;
 		$this->data['show'] = true;
 		$this->data['house'] = 0;
@@ -84,6 +86,40 @@ class PolySession {
 		}
 		return $status;
 	}
+	public function setStatus($setTo){
+		$status = false;
+		if($setTo){
+			$this->data['status'] = true;
+		} else {
+			$this->data['status'] = false;
+		}
+		$status = true;
+		return $status;
+	}
+	public function setShowScores($setTo){
+		$status = false;
+		if($setTo){
+			$this->data['show'] = true;
+		} else {
+			$this->data['show'] = false;
+		}
+		$status = true;
+		return $status;
+	}
+	public function saveToMysql($mysqli, $owner){
+		$toReturn = false;
+		if($this->owner == $owner){
+			if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`) VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?, `data`=?;")){
+				$stmt->bind_param("ssiississ", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, json_encode($this->data), $this->date, $this->name, json_encode($this->data));
+				$stmt->execute();
+				$stmt->close();
+				$toReturn = true;
+			} else {
+				$toReturn = $mysqli->error;
+			}
+		}
+		return $toReturn;
+	}
 	public static function fromMySQL($mysqli, $uuid, $owner){
 		$toReturn = false;
 		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
@@ -99,7 +135,7 @@ class PolySession {
 				$thisThang->name = $name;
 				$thisThang->quiz = $quiz;
 				$thisThang->date = $date;
-				$thisThang->data = json_decode($data);
+				$thisThang->data = (array)json_decode($data);
 				$toReturn = $thisThang;
 			}
 			$stmt->close();

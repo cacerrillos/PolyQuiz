@@ -160,12 +160,12 @@ Polymer({
 	<template>
 		<iron-ajax
 		id="toggleLockAjax"
-		url="../../api/1.0/sessions/settings.php"
+		url="../../api/1.0/sessions/set_status.php"
 		handle-as="json"
 	 	on-response="onToggleLockResp"></iron-ajax>
 		<iron-ajax
 		id="toggleShowAjax"
-		url="../../api/1.0/sessions/settings.php"
+		url="../../api/1.0/sessions/set_show_scores.php"
 		handle-as="json"
 	 	on-response="onToggleShowResp"></iron-ajax>
 		<iron-ajax
@@ -207,12 +207,12 @@ Polymer({
 				if(this.sessionopen){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessionid,
-						action: "close"
+						status: "false"
 					};
 				} else {
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessionid,
-						action: "open"
+						status: "true"
 					};
 				}
 				this.$.toggleLockAjax.generateRequest();
@@ -221,12 +221,12 @@ Polymer({
 				if(this.sessionshow){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessionid,
-						action: "dontshow"
+						show: "false"
 					};
 				} else {
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessionid,
-						action: "show"
+						show: "true"
 					};
 				}
 				this.$.toggleShowAjax.generateRequest();
@@ -252,7 +252,7 @@ Polymer({
 				}
 			},
 			onToggleLockResp: function(e){
-				if(e.target.params.action == "open"){
+				if(e.target.params.status == "true"){
 					if(e.detail.response.status == true){
 						this.sessionopen = true;
 						this.ready();
@@ -260,7 +260,7 @@ Polymer({
 					} else {
 						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to open session!" } });
 					}
-				} else if(e.target.params.action == "close") {
+				} else if(e.target.params.status == "false") {
 					if(e.detail.response.status == true){
 						this.sessionopen = false;
 						this.ready();
@@ -271,7 +271,7 @@ Polymer({
 				}
 			},
 			onToggleShowResp: function(e){
-				if(e.target.params.action == "show"){
+				if(e.target.params.show == "true"){
 					if(e.detail.response.status == true){
 						this.sessionshow = true;
 						this.ready();
@@ -279,7 +279,7 @@ Polymer({
 					} else {
 						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to set scores to visible!" } });
 					}
-				} else if(e.target.params.action == "dontshow") {
+				} else if(e.target.params.show == "false") {
 					if(e.detail.response.status == true){
 						this.sessionshow = false;
 						this.ready();
@@ -405,7 +405,7 @@ Polymer({
 	},
 	ready: function(){
 		console.log(this.sessionobject);
-		if(this.sessionobject.data.open){
+		if(this.sessionobject.data.status){
 			this.$.actionButtons.sessionopen = true;
 		}
 		if(this.sessionobject.data.show){
