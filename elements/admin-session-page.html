@@ -5,7 +5,8 @@
 <style is="custom-style">
 	paper-dialog {
 		background-color: white;
-		padding: 20px;
+		padding-left: 20px;
+		padding-right: 20px;
 	}
 </style>
 <template>
@@ -14,8 +15,8 @@
 	Id: <span style="font-weight:bold;">[[sessionid]]</span><br>
 	Name: <span style="font-weight:bold;">[[sessionname]]</span>
 	<div class="buttons">
-		<paper-button dialog-dismiss>Cancel</paper-button>
-		<paper-button dialog-confirm>Delete</paper-button>
+		<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+		<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Delete</paper-button>
 	</div>
 </paper-dialog>
 </template>
@@ -235,7 +236,7 @@ Polymer({
 	 	on-response="onDeleteResp"></iron-ajax>
 		<div class="row">
 			<div class="1u">
-				<paper-icon-button icon="icons:lock-open" on-click="editDialog" id="edit"></paper-icon-button>
+				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
 				<paper-spinner id="editSpinner" style="display:none;"></paper-spinner>
 			</div>
 			<div class="1u">
