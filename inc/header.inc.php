@@ -106,6 +106,7 @@ function checkPass()
 <link rel="import" href="bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="bower_components/iron-selector/iron-selectable.html">
 <link rel="import" href="bower_components/iron-icons/image-icons.html">
+<link rel="import" href="bower_components/iron-form/iron-form.html">
 <link rel="import" href="bower_components/paper-material/paper-material.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />
