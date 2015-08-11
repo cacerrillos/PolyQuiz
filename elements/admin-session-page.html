@@ -5,12 +5,14 @@
 <style is="custom-style">
 	paper-dialog {
 		background-color: white;
+		padding: 20px;
 	}
 </style>
 <template>
 <paper-dialog id="dialog" on-iron-overlay-closed="closedEvent" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 	<h2>Delete Session?</h2>
-	<span>[[sessionid]]</span>
+	Id: <span style="font-weight:bold;">[[sessionid]]</span><br>
+	Name: <span style="font-weight:bold;">[[sessionname]]</span>
 	<div class="buttons">
 		<paper-button dialog-dismiss>Cancel</paper-button>
 		<paper-button dialog-confirm>Delete</paper-button>
@@ -21,7 +23,8 @@
 Polymer({
 	is: "admin-session-delete-prompt",
 	properties: {
-		sessionid: String
+		sessionid: String,
+		sessionname: String
 	},
 	closedEvent: function(e){
 		if(e.detail.confirmed){
@@ -243,7 +246,7 @@ Polymer({
 				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
 			</div>
 		</div>
-		<admin-session-delete-prompt sessionid="[[sessionid]]" id="deletePrompt" on-delete-confirm="doDelete"></admin-session-delete-prompt>
+		<admin-session-delete-prompt sessionid="[[sessionid]]" sessionname="[[sessionname]]" id="deletePrompt" on-delete-confirm="doDelete"></admin-session-delete-prompt>
 	</template>
 	<script>
 		Polymer({
@@ -434,7 +437,7 @@ Polymer({
 					<div class="2u 3u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
 					<div class="1u">[[house]]</div>
 					<div class="3u 2u(small)">
-						<admin-session-action-buttons id="actionButtons" sessionid="[[sessionobject.sessionid]]"></admin-session-action-buttons>
+						<admin-session-action-buttons id="actionButtons" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></admin-session-action-buttons>
 					</div>
 				</div>
 			</paper-material>
