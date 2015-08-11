@@ -7,7 +7,7 @@
 	}
 </style>
 <template>
-	<input name="[[name]]" type="hidden" id="formValue" value="-1">
+	<input name="[[name]]" type="hidden" id="formValue" value="{{value}}">
 	<paper-menu-button>
 		<paper-button class="dropdown-trigger" id="currentButton"><span class="">[[selectedText]]</span></paper-button>
 		<paper-menu class="dropdown-content" on-iron-select="onSelectedInternalChange" selected="[[selectedInternal]]">
@@ -22,6 +22,10 @@
 Polymer({
 	is: "poly-dropdown-input",
 	properties: {
+		value: {
+			type: String,
+			value: "-1"
+		},
 		raised: Boolean,
 		name: String,
 		objects: {
@@ -67,10 +71,10 @@ Polymer({
 			this.selectedInternal = e + 1;
 			this.redraww();
 			if(this.selected >= 0 && this.selected < this.objects.length){
-				this.$.formValue.value = this.objects[this.selected].id;
+				this.value = this.objects[this.selected].id;
 				this.fire("selected-changed", { selected: this.objects[this.selected].id });
 			} else {
-				this.$.formValue.value = -1;
+				this.value = -1;
 				this.fire("selected-changed", { });
 			}
 			
