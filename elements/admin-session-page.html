@@ -55,38 +55,35 @@ Polymer({
 		<div class="6u 12u(xsmall)">
 			<paper-material>
 				<iron-ajax id="createAjax" url="../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
-				<form is="iron-form" id="newsession" action="../func/posttest.php" method="post">
-					<div class="row">
-						<div class="12u"><h3>Create New Session</h3></div>
-						<input type="hidden" name="date" value="Y-m-d" />
-						<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
-						<div class="12u">
-							<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
-							<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
-						</div>
-						<div class="12u">
-							<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
-							<poly-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
-						</div>
-						<div class="12u">
-							<div class="row">
-								<div class="12u">
-									<paper-radio-group selected="open" id="status">
-										<paper-radio-button name="open">Open</paper-radio-button>
-										<paper-radio-button name="closed">Closed</paper-radio-button>
-									</paper-radio-group>
-								</div>
-								<div class="12u">
-									<paper-radio-group selected="show" id="show">
-										<paper-radio-button name="show">Show Scores</paper-radio-button>
-										<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
-									</paper-radio-group>
-								</div>
+				<div class="row">
+					<div class="12u"><h3>Create New Session</h3></div>
+					<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
+					<div class="12u">
+						<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
+						<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
+					</div>
+					<div class="12u">
+						<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
+						<poly-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
+					</div>
+					<div class="12u">
+						<div class="row">
+							<div class="12u">
+								<paper-radio-group selected="open" id="status">
+									<paper-radio-button name="open">Open</paper-radio-button>
+									<paper-radio-button name="closed">Closed</paper-radio-button>
+								</paper-radio-group>
+							</div>
+							<div class="12u">
+								<paper-radio-group selected="show" id="show">
+									<paper-radio-button name="show">Show Scores</paper-radio-button>
+									<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
+								</paper-radio-group>
 							</div>
 						</div>
 					</div>
-					<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
-				</form>
+				</div>
+				<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
 			</paper-material>
 		</div>
 	</div>
