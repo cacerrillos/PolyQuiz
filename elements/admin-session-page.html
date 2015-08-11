@@ -234,15 +234,16 @@ Polymer({
 		handle-as="json"
 	 	on-response="onDeleteResp"></iron-ajax>
 		<div class="row">
-			<div class="4u">
+			<div class="1u">
 				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
 				<paper-spinner id="lockSpinner" style="display:none;"></paper-spinner>
 			</div>
 			<div class="4u">
+			<div class="1u">
 				<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
 				<paper-spinner id="showSpinner" style="display:none;"></paper-spinner>
 			</div>
-			<div class="4u">
+			<div class="1u">
 				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
 			</div>
 		</div>
@@ -256,6 +257,7 @@ Polymer({
 					type: Object
 				},
 				sessionid: String,
+				sessionname: String,
 				sessionopen: {
 					type: Boolean,
 					observer: "openChanged"
