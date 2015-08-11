@@ -70,12 +70,17 @@ Polymer({
 						</div>
 						<div class="12u">
 							<div class="row">
-							<div class="12u">
-								<input type="hidden" name="status" value="1"/>
-								<paper-radio-group selected="open" id="status">
-									<paper-radio-button name="open">Open</paper-radio-button>
-									<paper-radio-button name="closed">Closed</paper-radio-button>
-								</paper-radio-group>
+								<div class="12u">
+									<paper-radio-group selected="open" id="status">
+										<paper-radio-button name="open">Open</paper-radio-button>
+										<paper-radio-button name="closed">Closed</paper-radio-button>
+									</paper-radio-group>
+								</div>
+								<div class="12u">
+									<paper-radio-group selected="show" id="show">
+										<paper-radio-button name="show">Show</paper-radio-button>
+										<paper-radio-button name="dontshow">Don't Show</paper-radio-button>
+									</paper-radio-group>
 								</div>
 							</div>
 						</div>
@@ -137,10 +142,10 @@ Polymer({
 			house: this.$.houseSelector.value,
 			quiz: this.$.quizSelector.value,
 			status: this.$.status.selected,
-			show: "true"
+			show: this.$.show.selected
 		};
 		this.$.createAjax.generateRequest();
-		console.log(this.$.sessionName.value + " " + this.$.houseSelector.value + " " + this.$.quizSelector.value + " " + this.$.status.selected);
+		console.log(this.$.sessionName.value + " " + this.$.houseSelector.value + " " + this.$.quizSelector.value + " " + this.$.status.selected + " " + this.$.show.selected);
 	},
 	createResp: function(e){
 		if(e.detail.response.status === true){
