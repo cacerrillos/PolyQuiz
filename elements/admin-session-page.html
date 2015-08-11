@@ -54,11 +54,12 @@ Polymer({
 	<div class="row">
 		<div class="6u 12u(xsmall)">
 			<paper-material>
-				<form id="newsession" action="func/ses.func.php" method="post">
+				<iron-ajax id="createAjax" url="../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
+				<form is="iron-form" id="newsession" action="../func/posttest.php" method="post">
 					<div class="row">
 						<div class="12u"><h3>Create New Session</h3></div>
 						<input type="hidden" name="date" value="Y-m-d" />
-						<div class="12u"><paper-input name="sessionname" label="Session Name"></paper-input></div>
+						<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
 						<div class="12u">
 							<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
 							<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
@@ -71,7 +72,7 @@ Polymer({
 							<div class="row">
 							<div class="12u">
 								<input type="hidden" name="status" value="1"/>
-								<paper-radio-group selected="open">
+								<paper-radio-group selected="open" id="status">
 									<paper-radio-button name="open">Open</paper-radio-button>
 									<paper-radio-button name="closed">Closed</paper-radio-button>
 								</paper-radio-group>
@@ -79,7 +80,7 @@ Polymer({
 							</div>
 						</div>
 					</div>
-					<paper-button raised id="submitButton" class="">Create</paper-button>
+					<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
 					<input type="submit" name="submit" value="Create" />
 				</form>
 			</paper-material>
@@ -91,7 +92,11 @@ Polymer({
 	is: "admin-session-create-form",
 		properties: {
 		quizzes: Object,
-		houses: Object
+		houses: Object,
+		selectedquiz: String,
+		selectedhouse: String,
+		sessionname: String,
+		
 	},
 	housesResp: function(e){
 		if(e.detail.response){
@@ -126,9 +131,29 @@ Polymer({
 			}
 		}
 	},
+	reqSubmit: function(e){
+		this.$.createAjax.params = {
+			sessionname: this.$.sessionName.value,
+			house: this.$.houseSelector.value,
+			quiz: this.$.quizSelector.value,
+			status: this.$.status.selected,
+			show: "true"
+		};
+		this.$.createAjax.generateRequest();
+		console.log(this.$.sessionName.value + " " + this.$.houseSelector.value + " " + this.$.quizSelector.value + " " + this.$.status.selected);
+	},
+	createResp: function(e){
+		if(e.detail.response.status === true){
+			this.fire("reload-sessions", { });
+		}
+		console.log(e);
+	},
+	test: function(e){
+		console.log(e);
+	},
 	formDataChanged: function(e){
 		console.log(e);
-		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1){
+		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1 && this.$.sessionName.value.length > 0){
 			this.$.submitButton.style.backgroundColor = "#4285f4";
 			this.$.submitButton.style.color = "white";
 			this.$.submitButton.disabled = false;
@@ -139,7 +164,7 @@ Polymer({
 		}
 	},
 	ready: function(){
-		this.houseorquizChanged();
+		this.formDataChanged();
 	}
 });
 </script>
@@ -482,7 +507,7 @@ Polymer({
 			</paper-material>
 		</div>
 	</div>
-	<admin-session-create-form></admin-session-create-form>
+	<admin-session-create-form on-reload-sessions="onSessionDeleted"></admin-session-create-form>
 	<div class="row">
 		<div class="12u">
 			<paper-material>
