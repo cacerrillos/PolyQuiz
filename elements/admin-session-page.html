@@ -430,7 +430,10 @@ Polymer({
 Polymer({
 	is: "admin-session-row",
 	properties: {
-		sessionobject: Object,
+		sessionobject: {
+			type: Object,
+			observer: "ready"
+		},
 		sessionname: {
 			type: String,
 			value: "Session Name Not Found"
@@ -475,9 +478,13 @@ Polymer({
 		console.log(this.sessionobject);
 		if(this.sessionobject.data.status){
 			this.$.actionButtons.sessionopen = true;
+		} else {
+			this.$.actionButtons.sessionopen = false;
 		}
 		if(this.sessionobject.data.show){
 			this.$.actionButtons.sessionshow = true;
+		} else {
+			this.$.actionButtons.sessionshow = false;
 		}
 		if(this.sessionobject.name){
 			this.sessionname = this.sessionobject.name;
