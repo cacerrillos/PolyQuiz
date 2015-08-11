@@ -22,10 +22,10 @@ if(isset($_SESSION["is_admin"]) && isset($_GET['sessionname']) && isset($_GET['q
 	} else {
 		//false
 	}
-	if($_GET['show']=="true"){
+	if($_GET['show']=="show"){
 		$obj->setShowScores(true);
 
-	} else if($_GET['show']=="false"){
+	} else if($_GET['show']=="dontshow"){
 		$obj->setShowScores(false);
 	} else {
 		//false
