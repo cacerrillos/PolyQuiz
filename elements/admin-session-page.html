@@ -56,7 +56,7 @@ Polymer({
 			<paper-material>
 				<iron-ajax id="createAjax" url="../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
 				<div class="row">
-					<div class="12u"><paper-button on-click="toggleForm"><iron-icon icon="menu"></iron-icon>Create New Session</paper-button></div>
+					<div class="12u"><paper-button on-click="toggleForm">Create New Session</paper-button></div>
 					<iron-collapse id="collapse">
 						<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
 						<div class="12u">
@@ -83,11 +83,10 @@ Polymer({
 								</div>
 							</div>
 						</div>
-										<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
-				<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
+						<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
+						<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
 					</iron-collapse>
 				</div>
-
 			</paper-material>
 		</div>
 	</div>
