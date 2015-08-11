@@ -42,6 +42,133 @@ Polymer({
 });
 </script>
 </dom-module>
+<dom-module id="admin-house-manage-form">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.validButton {
+			background-color: #4285f4;
+			color: rgba(255,255,255,1.00);
+		}
+	</style>
+<template>
+	<iron-ajax id="getHousesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
+	<iron-ajax id="createHouseAjax" url="../api/1.0/house/create.php" handle-as="json" on-response="createResp"></iron-ajax>
+	<paper-dialog>
+		<paper-input label="Session Name" on-change="formDataChanged" id="houseName"></paper-input>
+		<paper-button raised class="" on-click="reqSubmit">Create</paper-button>
+		<paper-button raised class="" on-click="resetForm">Reset</paper-button>
+	</paper-dialog>
+	<div class="row">
+		<div class="12u"><paper-button on-click="toggleForm" disabled>Manage Houses</paper-button></div>
+		<iron-collapse id="houseCollapse">
+			<div class="12u"><paper-button raised>Add</paper-button></div>
+			<div class="12u">
+				
+			</div>
+			<div class="12u">
+				<div class="row">
+					<template is="dom-repeat" items="[[houses]]" as="house">
+						<div class="12u">[[house.text]]</div>
+					</template>
+				</div>
+			</div>
+			
+		</iron-collapse>
+	</div>
+</template>
+<script>
+Polymer({
+	is: "admin-house-manage-form",
+		properties: {
+		quizzes: Object,
+		houses: Object,
+		selectedquiz: String,
+		selectedhouse: String,
+		sessionname: String,
+		
+	},
+	toggleForm: function(e){
+		this.$.houseCollapse.toggle();
+	},
+	housesResp: function(e){
+		if(e.detail.response){
+			console.log(e);
+			var arr = [];
+			var roww = function(id, text){
+					this.id = id;
+					this.text = text;
+				};
+			for(var x = 0; x < e.detail.response.length; x++){
+				var tis = e.detail.response[x];
+				arr.push(new roww(tis.data.houseId, tis.data.houseName));
+			}
+			if(arr.length > 0){
+				this.houses = arr;
+			}
+		}
+	},
+	quizInfoResp: function(e){
+		if(e.detail.response){
+			var arr = [];
+			var roww = function(id, text){
+					this.id = id;
+					this.text = text;
+				};
+			for(var x = 0; x < e.detail.response.length; x++){
+				var tis = e.detail.response[x];
+				arr.push(new roww(tis.uuid, tis.name));
+			}
+			if(arr.length > 0){
+				this.quizzes = arr;
+			}
+		}
+	},
+	reqSubmit: function(e){
+		this.$.createAjax.params = {
+			sessionname: this.$.sessionName.value,
+			house: this.$.houseSelector.value,
+			quiz: this.$.quizSelector.value,
+			status: this.$.status.selected,
+			show: this.$.show.selected
+		};
+		this.$.createAjax.generateRequest();
+		console.log(this.$.sessionName.value + " " + this.$.houseSelector.value + " " + this.$.quizSelector.value + " " + this.$.status.selected + " " + this.$.show.selected);
+	},
+	createResp: function(e){
+		
+		if(e.detail.response.status === true){
+			this.resetForm();
+			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Created a new Session!" } });
+			this.fire("reload-sessions", { });
+		} else {
+			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "FAILED to create a new Session!" } });
+		}
+		
+		console.log(e);
+	},
+	resetForm: function(e){
+		this.$.sessionName.value = "";
+		this.$.houseSelector.selected = -1;
+		this.$.quizSelector.selected = -1;
+		this.$.status.selected = "open";
+		this.$.show.selected = "show";
+	},
+	test: function(e){
+		console.log(e);
+	},
+	formDataChanged: function(e){
+		
+	},
+	ready: function(){
+		this.formDataChanged();
+	}
+});
+</script>
+</dom-module>
 <dom-module id="admin-session-create-form">
 	<style is="custom-style">
 		paper-material {
@@ -55,44 +182,38 @@ Polymer({
 		}
 	</style>
 <template>
+	<iron-ajax id="createAjax" url="../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
 	<div class="row">
-		<div class="6u 12u(xsmall)">
-			<paper-material>
-				<iron-ajax id="createAjax" url="../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
+		<div class="12u"><paper-button on-click="toggleForm">Create New Session</paper-button></div>
+		<iron-collapse id="collapse">
+			<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
+			<div class="12u">
+				<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
+				<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
+			</div>
+			<div class="12u">
+				<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
+				<poly-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
+			</div>
+			<div class="12u">
 				<div class="row">
-					<div class="12u"><paper-button on-click="toggleForm">Create New Session</paper-button></div>
-					<iron-collapse id="collapse">
-						<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
-						<div class="12u">
-							<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
-							<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
-						</div>
-						<div class="12u">
-							<iron-ajax id="allquizInfoAjax" url="../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
-							<poly-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
-						</div>
-						<div class="12u">
-							<div class="row">
-								<div class="12u">
-									<paper-radio-group selected="open" id="status">
-										<paper-radio-button name="open">Open</paper-radio-button>
-										<paper-radio-button name="closed">Closed</paper-radio-button>
-									</paper-radio-group>
-								</div>
-								<div class="12u">
-									<paper-radio-group selected="show" id="show">
-										<paper-radio-button name="show">Show Scores</paper-radio-button>
-										<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
-									</paper-radio-group>
-								</div>
-							</div>
-						</div>
-						<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
-						<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
-					</iron-collapse>
+					<div class="12u">
+						<paper-radio-group selected="open" id="status">
+							<paper-radio-button name="open">Open</paper-radio-button>
+							<paper-radio-button name="closed">Closed</paper-radio-button>
+						</paper-radio-group>
+					</div>
+					<div class="12u">
+						<paper-radio-group selected="show" id="show">
+							<paper-radio-button name="show">Show Scores</paper-radio-button>
+							<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
+						</paper-radio-group>
+					</div>
 				</div>
-			</paper-material>
-		</div>
+			</div>
+			<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
+			<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
+		</iron-collapse>
 	</div>
 </template>
 <script>
@@ -176,7 +297,6 @@ Polymer({
 		console.log(e);
 	},
 	formDataChanged: function(e){
-		console.log(e);
 		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1 && this.$.sessionName.value.length > 0){
 			this.$.submitButton.style.backgroundColor = "#4285f4";
 			this.$.submitButton.style.color = "white";
@@ -234,6 +354,23 @@ Polymer({
 		url="../../api/1.0/sessions/delete.php"
 		handle-as="json"
 	 	on-response="onDeleteResp"></iron-ajax>
+		<paper-dialog id="editDialog" on-iron-overlay-closed="closedEvent" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<iron-ajax
+		id="editAjax"
+		url="../../api/1.0/sessions/edit.php"
+		handle-as="json"
+	 	on-response="onEditResp"></iron-ajax>
+			<div class="row">
+				<div class="12u">
+					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessionname]]"></paper-input>
+				</div>
+			</div>
+			
+			<div class="buttons">
+				<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Save</paper-button>
+			</div>
+		</paper-dialog>
 		<div class="row">
 			<div class="1u">
 				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
@@ -260,6 +397,7 @@ Polymer({
 				_get: {
 					type: Object
 				},
+				houses: Object,
 				sessionid: String,
 				sessionname: String,
 				sessionopen: {
@@ -272,6 +410,27 @@ Polymer({
 				},
 				resultsObject: {
 					type: Array
+				}
+			},
+			housesResp: function(e){
+				if(e.detail.response){
+					var arr = [];
+					var roww = function(id, text){
+							this.id = id;
+							this.text = text;
+						};
+					for(var x = 0; x < e.detail.response.length; x++){
+						var tis = e.detail.response[x];
+						arr.push(new roww(tis.uuid, tis.name));
+					}
+					if(arr.length > 0){
+						this.houses = arr;
+					}
+				}
+			},
+			closedEvent: function(e){
+				if(e.detail.confirmed){
+					this.doEdit();
 				}
 			},
 			_transformData: function(data){
@@ -379,6 +538,31 @@ Polymer({
 					} else {
 						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to set scores to NOT visible!" } });
 					}
+				}
+			},
+			editDialog: function(e){
+				this.$.sessionNameEdit.value = this.sessionname;
+				this.$.editDialog.open();
+			},
+			doEdit: function(e){
+				this.$.edit.style.display = "none";
+				this.$.editSpinner.style.display = "block";
+				this.$.editSpinner.active = true;
+				this.$.editAjax.params = {
+					uuid: this.sessionid,
+					name: this.$.sessionNameEdit.value
+				};
+				this.$.editAjax.generateRequest();
+			},
+			onEditResp: function(e){
+				this.$.edit.style.display = "block";
+				this.$.editSpinner.style.display = "none";
+				this.$.editSpinner.active = false;
+				if(e.detail.response.status == true){
+					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Saved changes to session!" } });
+					this.fire('session-deleted', { });
+				} else {
+					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to save changes to session!" } });
 				}
 			},
 			onSortBySession: function(){
@@ -545,7 +729,19 @@ Polymer({
 			</paper-material>
 		</div>
 	</div>
-	<admin-session-create-form on-reload-sessions="onSessionDeleted"></admin-session-create-form>
+	<div class="row">
+		<div class="6u 12u(xsmall)">
+			<paper-material>
+				<admin-session-create-form on-reload-sessions="onSessionDeleted"></admin-session-create-form>
+			</paper-material>
+		</div>
+		<div class="6u 12u(xsmall)">
+			<paper-material>
+				<admin-house-manage-form on-reload-sessions="onSessionDeleted"></admin-house-manage-form>
+			</paper-material>
+		</div>
+	</div>
+	
 	<div class="row">
 		<div class="12u">
 			<paper-material>
