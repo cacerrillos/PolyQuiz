@@ -235,6 +235,10 @@ Polymer({
 	 	on-response="onDeleteResp"></iron-ajax>
 		<div class="row">
 			<div class="1u">
+				<paper-icon-button icon="icons:lock-open" on-click="editDialog" id="edit"></paper-icon-button>
+				<paper-spinner id="editSpinner" style="display:none;"></paper-spinner>
+			</div>
+			<div class="1u">
 				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
 				<paper-spinner id="lockSpinner" style="display:none;"></paper-spinner>
 			</div>
