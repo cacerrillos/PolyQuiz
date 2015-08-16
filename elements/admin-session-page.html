@@ -347,6 +347,10 @@ Polymer({
 		.inactive {
 			color: #D32F2F;
 		}
+		paper-dialog {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
 	</style>
 	<template>
 		<iron-ajax
@@ -366,10 +370,10 @@ Polymer({
 	 	on-response="onDeleteResp"></iron-ajax>
 		<paper-dialog id="editDialog" on-iron-overlay-closed="closedEvent" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<iron-ajax
-		id="editAjax"
-		url="../../api/1.0/sessions/edit.php"
-		handle-as="json"
-	 	on-response="onEditResp"></iron-ajax>
+				id="editAjax"
+				url="../../api/1.0/sessions/edit.php"
+				handle-as="json"
+				on-response="onEditResp"></iron-ajax>
 			<div class="row">
 				<div class="12u">
 					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessionname]]"></paper-input>
