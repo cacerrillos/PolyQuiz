@@ -1,4 +1,4 @@
-/* skel-layout.js v3.0.0-dev | (c) n33 | skel.io | MIT licensed */
+/* skel-layout.js v3.0.0 | (c) n33 | skel.io | MIT licensed */
 
 (function(_) { "use strict"; var __ = {
 
@@ -320,7 +320,7 @@
 
 				// Box model.
 					if (__.config.boxModel)
-						s += __.css.bm.replace('&', __.config.boxModel);
+						s += __.css.bm.split('&').join(__.config.boxModel);
 
 				// Grid.
 					if (__.config.grid)
