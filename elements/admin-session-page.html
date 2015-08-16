@@ -191,7 +191,7 @@ Polymer({
 	<div class="row">
 		<div class="12u"><paper-button on-click="toggleForm" id="createToggleButton" raised>Create New Session</paper-button></div>
 		<iron-collapse id="collapse">
-			<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName"></paper-input></div>
+			<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input></div>
 			<div class="12u">
 				<iron-ajax id="housesAjax" url="../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
 				<poly-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></poly-dropdown-input>
