@@ -63,7 +63,7 @@ Polymer({
 		<paper-button raised class="" on-click="resetForm">Reset</paper-button>
 	</paper-dialog>
 	<div class="row">
-		<div class="12u"><paper-button on-click="toggleForm" disabled>Manage Houses</paper-button></div>
+		<div class="12u"><paper-button on-click="toggleForm" id="manageToggleButton" disabled raised>Manage Houses</paper-button></div>
 		<iron-collapse id="houseCollapse">
 			<div class="12u"><paper-button raised>Add</paper-button></div>
 			<div class="12u">
@@ -93,6 +93,11 @@ Polymer({
 	},
 	toggleForm: function(e){
 		this.$.houseCollapse.toggle();
+		if(this.$.houseCollapse.opened){
+			this.$.createToggleButton.raised = false;
+		} else {
+			this.$.createToggleButton.raised = true;
+		}
 	},
 	housesResp: function(e){
 		if(e.detail.response){
