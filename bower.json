@@ -26,6 +26,7 @@
     "skel": "~3.0.0-dev",
     "jquery": "~2.1.4",
     "neon-elements": "PolymerElements/neon-elements#~1.0.0",
-    "tinymce": "~4.2.3"
+    "tinymce": "~4.2.3",
+    "tinymce-decorator": "*"
   }
 }

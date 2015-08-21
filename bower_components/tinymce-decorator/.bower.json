@@ -1,0 +1,39 @@
+{
+  "name": "tinymce-decorator",
+  "authors": [
+    "Florian Roy"
+  ],
+  "description": "Polymer wrapper for tinymce",
+  "main": "element/*",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "Polymer",
+    "web-components",
+    "tinymce",
+    "wysiwyg"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.*",
+    "tinymce": "*"
+  },
+  "devDependencies": {
+    "web-component-tester": "*"
+  },
+  "homepage": "https://github.com/display-interactive/tinymce-decorator",
+  "_release": "cefaf58c8d",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cefaf58c8d69cb3d8ac666be7ae56d0d40f4dbd7"
+  },
+  "_source": "git://github.com/display-interactive/tinymce-decorator.git",
+  "_target": "*",
+  "_originalSource": "tinymce-decorator",
+  "_direct": true
+}
