@@ -119,11 +119,11 @@ function checkPass()
 <script src="js/sketch.js"></script>
 <link rel="stylesheet" type="text/css" href="js/mathquill.css">
 <script src="js/mathquill.min.js"></script>
-<script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript">
+/*
 tinymce.PluginManager.load('equationeditor', '/build/js/plugin.min.js');
 tinymce.init({
-	selector: "textareaa",
+	selector: "textarea#editable",
 	plugins: [
 	<?
 	if($page=="takequiz" || $page=="home"){
@@ -144,6 +144,7 @@ tinymce.init({
    toolbar: ['undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | equationeditor'],
    content_css: 'build/mathquill.css'
  });
+ */
 </script>
 <script>
 	function addCanvas(){
