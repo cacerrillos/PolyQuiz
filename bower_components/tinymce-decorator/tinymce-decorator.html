@@ -94,7 +94,7 @@
             if (this.content_css) {
                 config.content_css = this.content_css;
             }
-
+			tinymce.PluginManager.load('equationeditor', '/js/equationeditor/plugin.min.js');
             tinymce.init(config);
         }
     });
