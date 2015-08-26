@@ -109,7 +109,7 @@ session_start();
 					<paper-button on-click="goLogin" class="smallbuttons"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 					
 				</paper-toolbar>
-				<content id="globalMainContainer">
+				<content id="maincontainer">
 				
 				
 				</content>
