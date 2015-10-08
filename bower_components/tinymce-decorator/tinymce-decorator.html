@@ -26,10 +26,6 @@
                 type: String,
                 value: ''
             },
-			external_plugins: {
-				type: String,
-				value: ''
-			},
             menubar: {
                 type: String,
                 value: ''
@@ -66,7 +62,6 @@
             var config = {
                 selector: '#' + this.element.id,
                 plugins: this.plugins,
-				external_plugins: this.external_plugins,
                 menubar: this.menubar,
                 toolbar: this.toolbar,
 
@@ -94,7 +89,7 @@
             if (this.content_css) {
                 config.content_css = this.content_css;
             }
-			tinymce.PluginManager.load('equationeditor', '/js/equationeditor/plugin.min.js');
+
             tinymce.init(config);
         }
     });

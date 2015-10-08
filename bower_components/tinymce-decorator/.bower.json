@@ -19,21 +19,20 @@
     "wysiwyg"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.*",
+    "polymer": "Polymer/polymer#^1.1.*",
     "tinymce": "*"
   },
   "devDependencies": {
     "web-component-tester": "*"
   },
   "homepage": "https://github.com/display-interactive/tinymce-decorator",
-  "_release": "cefaf58c8d",
+  "_release": "dcf31592f0",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "cefaf58c8d69cb3d8ac666be7ae56d0d40f4dbd7"
+    "commit": "dcf31592f0a8070c155cb2825bbe17c8076de57b"
   },
   "_source": "git://github.com/display-interactive/tinymce-decorator.git",
   "_target": "*",
-  "_originalSource": "tinymce-decorator",
-  "_direct": true
+  "_originalSource": "tinymce-decorator"
 }

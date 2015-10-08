@@ -28,5 +28,8 @@
     "neon-elements": "PolymerElements/neon-elements#~1.0.0",
     "tinymce": "~4.2.3",
     "tinymce-decorator": "*"
+  },
+  "resolutions": {
+    "polymer": "^1.1.0"
   }
 }
