@@ -1,0 +1,155 @@
+<dom-module id="polyquiz-app">
+	<link rel="import" href="../bower_components/polymer/polymer.html">
+
+	<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+	<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+	<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+	<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+	<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+	<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+
+	<link rel="import" href="pages/polyquiz-page-home.html">
+	<link rel="import" href="pages/polyquiz-page-takeaquiz.html">
+	<link rel="import" href="pages/polyquiz-page-admin.html">
+	<link rel="import" href="admin-sidebar.html">
+
+	<style is="custom-style">
+		paper-drawer-panel {
+			--paper-drawer-panel-main-container: {
+				background-color: #BBDEFB;
+			};
+		}
+		paper-fab {
+			position: absolute;
+			bottom: 16px;
+			right: 16px;
+		}
+		:host {
+			--paper-item-min-height: 32px;
+		}
+		.smallbuttons {
+			min-width: 2em;
+		}
+	</style>
+
+	<template>
+		<iron-signals on-iron-signal-toast-event="fireToast"></iron-signals>
+			<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
+				<paper-header-panel drawer>
+					<paper-toolbar>
+						<div style="color:#FFFFFF">Application</div>
+					</paper-toolbar>
+					<paper-menu id="sidebarMenu">
+						<paper-icon-item on-click="goToPageOnClick" data-page="home">
+							<iron-icon icon="icons:home" item-icon></iron-icon>Home
+						</paper-icon-item>
+						<paper-icon-item on-click="goToPageOnClick" data-page="takeaquiz">
+							<iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz
+						</paper-icon-item>
+						<paper-icon-item on-click="goToPageOnClick" data-page="admin">
+							<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
+						</paper-icon-item>
+					</paper-menu>
+					<admin-login></admin-login>
+				</paper-header-panel>
+				<paper-scroll-header-panel main class="flex" id="scrollHeader" fixed>
+					<paper-toolbar>
+						<paper-menu-button class="only-medium">
+							<paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+							<paper-menu class="dropdown-content" on-iron-select="onSelectedChange">
+								<paper-icon-item id="home"><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
+								<paper-icon-item id="takeaquiz"><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
+								<paper-icon-item id="admin"><iron-icon icon="icons:settings" item-icon></iron-icon>Admin</paper-icon-item>
+							</paper-menu>
+						</paper-menu-button>
+						<span class="title">PolyQuiz 3.0</span>
+						<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="home"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
+						<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="takeaquiz"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
+						<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="admin"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
+						
+					</paper-toolbar>
+					
+
+					<neon-animated-pages id="pageSelector" attrForSelected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+						<neon-animatable data-page="home"><polyquiz-page-home></polyquiz-page-home></neon-animatable>
+						<neon-animatable data-page="takeaquiz"><polyquiz-page-takeaquiz ctx="[[ctx]]"></polyquiz-page-takeaquiz></neon-animatable>
+						<neon-animatable data-page="admin"><polyquiz-page-admin ctx="[[ctx]]"></polyquiz-page-admin></neon-animatable>
+						<neon-animatable data-page="login"><polyquiz-page-login ctx="[[ctx]]"></polyquiz-page-login></neon-animatable>
+					</neon-animated-pages>
+					
+				</paper-scroll-header-panel>
+				
+			</paper-drawer-panel>
+			<paper-fab icon="home"></paper-fab>
+			<paper-toast id="globalToast"></paper-toast>
+			
+	</template>
+	<script>
+		Polymer({
+			is: "polyquiz-app",
+			properties: {
+				page: {
+					type: String,
+					observer: "onPageChange"
+				},
+				ctx: {
+					type: Object,
+					observer: "onContextChange"
+				}
+			},
+			notFound: function(details) {
+				//firetoast
+				if(this.$.pageSelector.selected == null){
+					this.$.pageSelector.select(0);
+				}
+				this.fireToastNonEvent("Page not found! [ " + details.path + " ]");
+			},
+			goToPageOnClick: function(e){
+				if(e.target.getAttribute("data-page") != null){
+					page("/" + e.target.getAttribute("data-page"));
+					//this.page = e.target.getAttribute("page");
+				} else if(e.target.parentElement.getAttribute("data-page") != null) {
+					page("/" + e.target.parentElement.getAttribute("data-page"));
+					//this.page = e.target.parentElement.getAttribute("page");
+				} else {
+					this.fireToastNonEvent("Page Does Not Exist! :'[");
+				}
+			},
+			onContextChange: function(details) {
+				console.log(details);
+			},
+			onPageChange: function(details) {
+				for(var x = 0; x < this.$.sidebarMenu.items.length; x++){
+					if(this.$.sidebarMenu.items[x].getAttribute("data-page") == details){
+						this.$.sidebarMenu.select(this.$.sidebarMenu.indexOf(this.$.sidebarMenu.items[x]));
+						break;
+					}
+				}
+				for(var x = 0; x < this.$.pageSelector.items.length; x++){
+					if(this.$.pageSelector.items[x].getAttribute("data-page") == details){
+						this.$.pageSelector.select(this.$.pageSelector.indexOf(this.$.pageSelector.items[x]));
+						break;
+					}
+				}
+			},
+			fireToastNonEvent: function(text){
+				this.$.globalToast.text = text;
+				this.$.globalToast.show();
+			},
+			onresp: function(){
+				//this.fireToastNonEvent(this.$.mainPanel.narrow);
+				this.fire('iron-signal', {name: 'hideshowevent', data: { show: this.$.mainPanel.narrow } });
+				if(this.$.mainPanel.narrow){
+					
+				//	this.$.scrollHeader.scrollAwayTopbar = true;
+				} else {
+				//	this.$.scrollHeader.fixed = true;
+				}
+			},
+			ready: function() {
+
+			}
+		});
+	</script>
+</dom-module>
