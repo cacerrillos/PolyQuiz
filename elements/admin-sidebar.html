@@ -1,35 +1,88 @@
 <!doctype html>
 <dom-module id="admin-login">
-<style is="custom-style">
-	form {
-		margin-left: 10px;
-		margin-right: 10px;
-	}
-</style>
-<template>
-<form id="adminlogin" action="../api/1.0/admin/login.php" method="post">
-	<paper-input name="user" label="Username"></paper-input>
-	<paper-input name="pass" label="Password" type="password"></paper-input>
-	<paper-button on-click="submitLogin" raised>Login</paper-button>
-</form>
-</template>
-<script>
-Polymer({
-is: "admin-login",
-properties: {
-	sidebarpage: {
-		type: Number,
-		value: 0
-	}
-},
-submitLogin: function() {
-	document.getElementById('adminlogin').submit();
-},
-ready: function() {
-	
-},
-});
-</script>
+	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+	<style is="custom-style">
+		form {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+		paper-spinner {
+			width: 19px;
+			height: 19px;
+		}
+	</style>
+
+	<template>
+		<iron-ajax id="loginAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../api/1.0/admin/login.php"></iron-ajax>
+		<form id="adminlogin">
+			<paper-input id="user" name="user" label="Username" on-input="loginFieldsCheck"></paper-input>
+			<paper-input id="pass" name="pass" label="Password" on-input="loginFieldsCheck" type="password"></paper-input>
+			<paper-button id="loginButton" on-click="submitLogin" raised disabled><paper-spinner id="loginSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
+		</form>
+	</template>
+
+	<script>
+		Polymer({
+			is: "admin-login",
+			properties: {
+				sidebarpage: {
+					type: Number,
+					value: 0
+				},
+				buttonText: {
+					type: String,
+					value: "Login"
+				}
+			},
+			loginFieldsCheck: function(e) {
+				if(this.$.user.value.length > 0 && this.$.pass.value.length > 0){
+					this.$.loginButton.disabled = false;
+				} else {
+					this.$.loginButton.disabled = true;
+				}
+			},
+			submitLogin: function() {
+				this.$.loginButton.disabled = true;
+
+				this.$.loginSpinner.style.display = "inline-block";
+				this.buttonText = "";
+
+				this.$.loginSpinner.active = true;
+				
+				
+				this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
+				this.$.loginAjax.generateRequest();
+				//document.getElementById('adminlogin').submit();
+			},
+			reqCB: function(details) {
+				console.log(details);
+			},
+			loginCallback: function(details) {
+
+				if(details.detail.response != null) {
+					if(details.detail.response.status) {
+
+					} else {
+						this.$.pass.value = "";
+						this.fire('firetoast', { message: "Invalid Username And/Or Password!"});
+					}
+				} else {
+					this.fire('firetoast', { message: "Failed To Login! Server Encountered an Error!"});
+				}
+
+				this.$.loginSpinner.active = false;
+
+				this.$.loginSpinner.style.display = "none";
+				this.buttonText = "Login";
+
+				this.$.loginButton.disabled = false;
+			},
+			ready: function() {
+				
+			}
+		});
+	</script>
 </dom-module>
 <dom-module id="admin-sidebar">
 	<link rel="import" href="../bower_components/paper-input/paper-input.html">
