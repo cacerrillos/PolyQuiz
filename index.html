@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PolyQuiz</title>
+<script src="bower_components/skel/dist/skel.min.js"></script>
+<script src="bower_components/skel/dist/skel-layout.min.js"></script>
+<script>
+skel.breakpoints({
+	xlarge: "(max-width: 1680px)",
+	large:  "(max-width: 1280px)",
+	medium: "(max-width: 980px)",
+	small:  "(max-width: 736px)",
+	xsmall: "(max-width: 580px)",
+	xxsmall: "(max-width: 480px)",
+	xxxsmall: "(max-width: 360px)"
+});
+skel.layout({
+	reset: "full",
+	grid: {
+		gutters: "40px"
+	},
+	containers: true,
+	conditionals: true,
+	breakpoints: {
+		large: {
+			containers: "95%"
+		},
+		medium: {
+			containers: "95%",
+			grid: {
+				gutters: "30px"
+			}
+		},
+		small: {
+			containers: "95%",
+			grid: {
+				gutters: "20px"
+			}
+		},
+		xsmall: {
+			grid: {
+				gutters: "10px"
+			}
+		},
+		xxsmall: {
+			grid: {
+				gutters: "5px"
+			}
+		},
+		xxxsmall: {
+			containers: "100%"
+		}
+	}
+});
+</script>
+<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<script src="bower_components/page/page.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link rel="import" href="elements/polyquiz-app.html">
+
+<style is="custom-style">
+	body{
+		font-family: Roboto;
+	}
+	:root {
+		--dark-primary-color:       #1976D2;
+		--default-primary-color:    #2196F3;
+		--light-primary-color:      #BBDEFB;
+		--text-primary-color:       #FFFFFF;
+		--accent-color:             #8BC34A;
+		--primary-background-color: #BBDEFB;
+		--primary-text-color:       #212121;
+		--secondary-text-color:     #727272;
+		--disabled-text-color:      #BDBDBD;
+		--divider-color:            #B6B6B6;
+		
+		
+		/* Components */
+		
+		/* paper-drawer-panel */
+		--drawer-menu-color:           #ffffff;
+		--drawer-border-color:         1px solid #ccc;
+		--drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+		
+		/* paper-menu */
+		--paper-menu-background-color: #fff;
+		--menu-link-color:             #111111;
+		
+		/* paper-input */
+		/*
+		--paper-input-container-color: rgba(0,0,0,0.75);
+		--paper-input-container-focus-color: #2196F3;
+		*/
+		--paper-menu-selected-item: {
+			color: #2196F3;
+		}
+	}
+	paper-material {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		background-color: white;
+	}
+		
+</style>
+</head>
+<body>
+	<polyquiz-app id="mainapp"></polyquiz-app>
+</body>
+</html>
+<script>
+var mainapp = document.querySelector("#mainapp");
+
+page('/', function(ctx, next){
+	mainapp.page = "home";
+});
+page('/home', function(ctx, next){
+	mainapp.page = "home";
+});
+
+page('/takeaquiz', function(ctx, next) {
+	mainapp.page = "takeaquiz";
+	console.log(ctx);
+	next();
+});
+page('/takeaquiz/:sessionid', handleTakeAQuiz);
+page('/takeaquiz/:sessionid/:sessionkey', handleTakeAQuiz);
+
+page('/admin', handleAdmin);
+page('/admin/:subpage', handleAdmin);
+
+page('*', function(ctx, next){
+	console.log(ctx);
+	mainapp.notFound(ctx);
+});
+
+page({hashbang: true });
+
+function handleTakeAQuiz(ctx, next) {
+	mainapp.page = "takeaquiz";
+	mainapp.ctx = ctx;
+	page.redirect('/takeaquiz'); //Prevents the sessionid/key being saved in browser history
+	next();
+}
+
+function handleAdmin(ctx, next) {
+	mainapp.page = "admin";
+	mainapp.ctx = ctx;
+	if(false) {
+
+	} else {
+		if(ctx.params.subpage != null){
+			if(ctx.params.subpage != "login"){
+				page.redirect('/admin/login');
+			}
+		}
+	}
+}
+
+</script>
