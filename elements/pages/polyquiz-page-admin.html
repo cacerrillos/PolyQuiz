@@ -1,0 +1,104 @@
+<!doctype html>
+<dom-module id="polyquiz-page-admin">
+	<link rel="import" href="../../bower_components/polymer/polymer.html">
+	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 10px;
+			padding: 10px;
+		}
+	</style>
+
+	<template>
+		<iron-ajax auto url="../../api/1.0/admin/status.php" handle-as="json" last-response="{{adminStatus}}"></iron-ajax>
+		<div class="container">
+			
+			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[adminSubpage]]">
+				<div class="row">
+					<div class="12u" data-subpage="adminhome">
+						<paper-material>
+							<h2 class="nomargins">Admin Home</h2>
+							<?
+							if(!isset($_SESSION["is_admin"])){
+							?>
+							Please Log-In.
+							<admin-login></admin-login>
+							<?
+							} else {
+							?>
+							Welcome back admin!<br />
+							Quick Start Guide:<br />
+							1) Create a Quiz under "Edit Quizzes" & add questions to it.<br />
+							2) Create a Quiz Session under "Edit Sessions" and be sure to select your desired quiz.<br />
+							3) Use the Session Id & Session Key to let others take your quiz.<br />
+							4) View the results under "Quiz Results".<br />
+							*) Should any quiz taker accidentally exit their quiz early,<br />find their name under "Quizzes In Progress" and give them the "Restore Id" & "Restore Key".
+							<?
+							}
+							?>
+						</paper-material>
+					</div>
+				</div>
+			</iron-pages>
+			<div class="12u">
+				<paper-material>
+					<?
+					if(isset($_SESSION["is_admin"])){
+					?>
+					<h2>Password Management</h2>
+					<h4>You will be logged out if your password was changed successfully.</h4>
+					<form action="func/admin.password.php" method="post">
+					<div class="tutorialWrapper">
+						<label for="oldpass">Old Password: </label>
+						<input type="password" name="oldpass" id="oldpass" />
+							<div class="fieldWrapper">
+								<label for="pass1">New Password: </label>
+								<input type="password" name="pass1" id="pass1">
+							</div>
+							<div class="fieldWrapper">
+								<label for="pass2">Confirm New Password: </label>
+								<input type="password" name="pass2" id="pass2" onkeyup="checkPass(); return false;">
+								<span id="confirmMessage" class="confirmMessage"></span>
+							</div>
+					</div>
+					<input type="submit" name="submit" value="Change" class="button alt fa fa-lock">
+					</form>
+				</paper-material>
+			</div>
+		</div>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'polyquiz-page-admin',
+			properties: {
+				ctx: {
+					type: Object,
+					observer: "onContextChanged"
+				},
+				adminSubpage: Number,
+				adminStatus: {
+					type: Object,
+					observer: "onAdminStatusChanged"
+				}
+			},
+			onContextChanged: function(details) {
+				if(details.params.subpage != null) {
+
+				} else {
+					this.$.pageSelector.select(0);
+				}
+			},
+			onAdminStatusChanged: function(details) {
+				if(details.admin){
+					console.log("admin");
+				} else {
+					console.log("nbot admin");
+				}
+			},
+			ready: function() {
+
+			}
+		});
+	</script>
