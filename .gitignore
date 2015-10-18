@@ -1,4 +1,5 @@
 Thumbs.db
 _notes
 dwsync.xml
-polyquiz.sublime-workspace
+*.sublime-project
+*.sublime-workspace
