@@ -4,6 +4,78 @@
 		"selected_items":
 		[
 			[
+				"fa",
+				"false"
+			],
+			[
+				"logi",
+				"loginFieldsCheck"
+			],
+			[
+				"det",
+				"details"
+			],
+			[
+				"json",
+				"json_decode"
+			],
+			[
+				"detai",
+				"detail"
+			],
+			[
+				"dis",
+				"display"
+			],
+			[
+				"fire",
+				"fireToastNonEvent"
+			],
+			[
+				"deta",
+				"detail"
+			],
+			[
+				"login",
+				"loginAjax"
+			],
+			[
+				"sel",
+				"selected"
+			],
+			[
+				"admins",
+				"adminSubpage"
+			],
+			[
+				"on",
+				"onAdminStatusChanged"
+			],
+			[
+				"mar",
+				"margin-bottom"
+			],
+			[
+				"poly",
+				"polyquiz-page-admin"
+			],
+			[
+				"sessi",
+				"sessionid"
+			],
+			[
+				"ses",
+				"sessionid"
+			],
+			[
+				"take-a",
+				"take-a-quiz-form"
+			],
+			[
+				"li",
+				"link	Tag"
+			],
+			[
 				"pading",
 				"padding-right"
 			],
@@ -18,10 +90,6 @@
 			[
 				"paper",
 				"paper-button"
-			],
-			[
-				"mar",
-				"margin-left"
 			],
 			[
 				"padd",
@@ -51,12 +119,12 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"last_filter": "",
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 512.0
 	},
 	"console":
 	{
@@ -76,10 +144,44 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/Carlos/Documents/GitHub/polyquiz"
+		"/C/Users/Carlos/Documents/GitHub/polyquiz",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0/admin",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0/objects",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/bower_components/neon-animation",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/admin-quiz-results",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/pages",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/inc"
 	],
 	"file_history":
 	[
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/pages/polyquiz-page-home.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0/admin/login.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/admin-session-page.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/admin-sidebar.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/index.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/polyquiz-app.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/pages/polyquiz-page-admin.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/polyquiz-page.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/indd.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/take-a-quiz-form.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/pages/polyquiz-page-takeaquiz.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0/admin/status.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/admin-quiz-management.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/admin-edit-quiz.html",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0/apitest.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/api/1.0/objects/polyhouse.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/inc/admin.inc.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/take-quiz-page.html",
+		"/C/Users/Carlos/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/inc/home.inc.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/pages/polyquiz-page-home",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/index.phpp",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/elements/polyquiz-page.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/inc/header.inc.php",
+		"/C/Users/Carlos/Documents/GitHub/polyquiz/polyquiz.sublime-project",
 		"/C/Users/Carlos/Documents/GitHub/project-diana-the-teacher/elements/polygrades-page.html",
 		"/C/Users/Carlos/Documents/GitHub/project-diana-the-teacher/elements/pgpage-settings.html",
 		"/C/Users/Carlos/Documents/GitHub/project-diana-the-teacher/elements/pgpage-assignments.html",
@@ -92,7 +194,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 166.0
 	},
 	"find_in_files":
 	{
@@ -106,6 +208,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"neon-animated",
+			"../",
+			"iron-pages",
+			"take-a-quiz-page",
+			"../",
+			"=\"../"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -134,7 +242,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -205,7 +313,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 389.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
