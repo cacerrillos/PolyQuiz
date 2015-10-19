@@ -28,7 +28,8 @@
     "neon-elements": "PolymerElements/neon-elements#~1.0.0",
     "tinymce": "~4.2.3",
     "tinymce-decorator": "*",
-    "page": "page.js#~1.6.4"
+    "page": "page.js#~1.6.4",
+    "gold-elements": "PolymerElements/gold-elements#~1.0.1"
   },
   "resolutions": {
     "polymer": "^1.1.0"
