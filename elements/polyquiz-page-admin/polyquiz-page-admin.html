@@ -44,31 +44,6 @@
 				</div>
 				</div>
 			</iron-pages>
-			<div class="12u">
-				<paper-material>
-					<?
-					if(isset($_SESSION["is_admin"])){
-					?>
-					<h2>Password Management</h2>
-					<h4>You will be logged out if your password was changed successfully.</h4>
-					<form action="func/admin.password.php" method="post">
-					<div class="tutorialWrapper">
-						<label for="oldpass">Old Password: </label>
-						<input type="password" name="oldpass" id="oldpass" />
-							<div class="fieldWrapper">
-								<label for="pass1">New Password: </label>
-								<input type="password" name="pass1" id="pass1">
-							</div>
-							<div class="fieldWrapper">
-								<label for="pass2">Confirm New Password: </label>
-								<input type="password" name="pass2" id="pass2" onkeyup="checkPass(); return false;">
-								<span id="confirmMessage" class="confirmMessage"></span>
-							</div>
-					</div>
-					<input type="submit" name="submit" value="Change" class="button alt fa fa-lock">
-					</form>
-				</paper-material>
-			</div>
 		</div>
 	</template>
 
