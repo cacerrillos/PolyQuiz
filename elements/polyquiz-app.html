@@ -33,53 +33,53 @@
 	</style>
 
 	<template>
-			<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
-				<paper-header-panel drawer>
-					<paper-toolbar>
-						<div style="color:#FFFFFF">Application</div>
-					</paper-toolbar>
-					<paper-menu id="sidebarMenu">
-						<paper-icon-item on-click="goToPageOnClick" data-page="home">
-							<iron-icon icon="icons:home" item-icon></iron-icon>Home
-						</paper-icon-item>
-						<paper-icon-item on-click="goToPageOnClick" data-page="takeaquiz">
-							<iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz
-						</paper-icon-item>
-						<paper-icon-item on-click="goToPageOnClick" data-page="admin">
-							<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
-						</paper-icon-item>
-					</paper-menu>
-				</paper-header-panel>
-				<paper-scroll-header-panel main class="flex" id="scrollHeader" fixed>
-					<paper-toolbar>
-						<paper-menu-button class="only-medium">
-							<paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-							<paper-menu class="dropdown-content" on-iron-select="onSelectedChange">
-								<paper-icon-item id="home"><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
-								<paper-icon-item id="takeaquiz"><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
-								<paper-icon-item id="admin"><iron-icon icon="icons:settings" item-icon></iron-icon>Admin</paper-icon-item>
-							</paper-menu>
-						</paper-menu-button>
-						<span class="title">PolyQuiz 3.0</span>
-						<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="home"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
-						<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="takeaquiz"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
-						<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="admin"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
-						
-					</paper-toolbar>
+		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
+			<paper-header-panel drawer>
+				<paper-toolbar>
+					<div style="color:#FFFFFF">Application</div>
+				</paper-toolbar>
+				<paper-menu id="sidebarMenu">
+					<paper-icon-item on-click="goToPageOnClick" data-page="home">
+						<iron-icon icon="icons:home" item-icon></iron-icon>Home
+					</paper-icon-item>
+					<paper-icon-item on-click="goToPageOnClick" data-page="takeaquiz">
+						<iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz
+					</paper-icon-item>
+					<paper-icon-item on-click="goToPageOnClick" data-page="admin">
+						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
+					</paper-icon-item>
+				</paper-menu>
+			</paper-header-panel>
+			<paper-scroll-header-panel main class="flex" id="scrollHeader" fixed>
+				<paper-toolbar>
+					<paper-menu-button class="only-medium">
+						<paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+						<paper-menu class="dropdown-content" on-iron-select="onSelectedChange">
+							<paper-icon-item id="home"><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
+							<paper-icon-item id="takeaquiz"><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
+							<paper-icon-item id="admin"><iron-icon icon="icons:settings" item-icon></iron-icon>Admin</paper-icon-item>
+						</paper-menu>
+					</paper-menu-button>
+					<span class="title">PolyQuiz 3.0</span>
+					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="home"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
+					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="takeaquiz"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
+					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="admin"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 					
-
-					<neon-animated-pages id="pageSelector" attrForSelected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-						<neon-animatable data-page="home"><polyquiz-page-home></polyquiz-page-home></neon-animatable>
-						<neon-animatable data-page="takeaquiz"><polyquiz-page-takeaquiz ctx="[[ctx]]"></polyquiz-page-takeaquiz></neon-animatable>
-						<neon-animatable data-page="admin"><polyquiz-page-admin ctx="[[ctx]]"></polyquiz-page-admin></neon-animatable>
-						<neon-animatable data-page="login"><polyquiz-page-login ctx="[[ctx]]"></polyquiz-page-login></neon-animatable>
-					</neon-animated-pages>
-					
-				</paper-scroll-header-panel>
+				</paper-toolbar>
 				
-			</paper-drawer-panel>
-			<paper-fab icon="home"></paper-fab>
-			<paper-toast id="globalToast"></paper-toast>
+
+				<neon-animated-pages id="pageSelector" attrForSelected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+					<neon-animatable data-page="home"><polyquiz-page-home></polyquiz-page-home></neon-animatable>
+					<neon-animatable data-page="takeaquiz"><polyquiz-page-takeaquiz ctx="[[ctx]]"></polyquiz-page-takeaquiz></neon-animatable>
+					<neon-animatable data-page="admin"><polyquiz-page-admin ctx="[[ctx]]"></polyquiz-page-admin></neon-animatable>
+					<neon-animatable data-page="login"><polyquiz-page-login ctx="[[ctx]]"></polyquiz-page-login></neon-animatable>
+				</neon-animated-pages>
+				
+			</paper-scroll-header-panel>
+			
+		</paper-drawer-panel>
+		<paper-fab icon="home"></paper-fab>
+		<paper-toast id="globalToast"></paper-toast>
 			
 	</template>
 	<script>
