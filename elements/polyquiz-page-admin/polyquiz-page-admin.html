@@ -22,8 +22,11 @@
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[adminSubpage]]">
 				<div class="row" data-subpage="adminhome">
 					<div class="8u">
-						<paper-material>
+						<paper-material hidden="[[isAdmin]]">
 							<polyquiz-admin-register-form></polyquiz-admin-register-form>
+						</paper-material>
+						<paper-material hidden="[[!isAdmin]]">
+							<h4 style="font-weight: normal;">Welcome back <b>[[username]]</b>!</h4>
 						</paper-material>
 					</div>
 					<div class="4u">
@@ -69,6 +72,10 @@
 					observer: "onContextChanged"
 				},
 				adminSubpage: Number,
+				username: {
+					type: String,
+					value: "Error, you may not exist o_O"
+				},
 				isAdmin: {
 					type: Boolean,
 					value: false
@@ -97,6 +104,15 @@
 			},
 			onAdminStatusChanged: function(details) {
 				this.isAdmin = details.admin;
+				if(details.name != null || details.email != null) {
+					this.username = "";
+				}
+				if(details.name != null) {
+					this.username = details.name;
+				}
+				if(details.email != null) {
+					this.username += "[" + details.email + "]";
+				}
 			},
 			ready: function() {
 
