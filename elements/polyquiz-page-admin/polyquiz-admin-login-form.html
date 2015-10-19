@@ -78,13 +78,14 @@
 				//document.getElementById('adminlogin').submit();
 			},
 			reqCB: function(details) {
-				console.log(details);
+				//console.log(details);
 			},
 			loginCallback: function(details) {
 
 				if(details.detail.response != null) {
 					if(details.detail.response.status) {
-
+						this.fire('firetoast', { message: "Logged In!"});
+						this.fire('admin-status-changed', {});
 					} else {
 						this.$.pass.value = "";
 						this.fire('firetoast', { message: "Invalid Username And/Or Password!"});
