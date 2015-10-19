@@ -1,5 +1,7 @@
 <?
-session_start();
-session_destroy();
-header('Location: ' . $_SERVER['HTTP_REFERER']);
+	session_start();
+	session_destroy();
+	$status = array();
+	$status['status'] = true;
+	echo json_encode($status);
 ?>
