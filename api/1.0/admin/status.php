@@ -5,6 +5,5 @@
 	if(isset($_SESSION['dbext'])){
 		$result['admin'] = true;
 	}
-
 	echo json_encode($result);
 ?>
