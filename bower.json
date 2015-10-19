@@ -20,7 +20,7 @@
   ],
   "private": true,
   "dependencies": {
-    "polymer": "~1.0.6",
+    "polymer": "Polymer/polymer#^1.1.0",
     "paper-elements": "PolymerElements/paper-elements#~1.0.1",
     "iron-elements": "PolymerElements/iron-elements#~1.0.2",
     "skel": "~3.0.0-dev",
@@ -30,8 +30,5 @@
     "tinymce-decorator": "*",
     "page": "page.js#~1.6.4",
     "gold-elements": "PolymerElements/gold-elements#~1.0.1"
-  },
-  "resolutions": {
-    "polymer": "^1.1.0"
   }
 }
