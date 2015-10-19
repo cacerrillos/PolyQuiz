@@ -15,10 +15,10 @@ if(count($_POST) > 0){
 	if(mysqli_connect_errno()) {
 		$result['error'] = "Connection Failed: " . mysqli_connect_errno();
 	} else {
-		if($stmt = $mysqli -> prepare("SELECT * FROM users WHERE username = ? AND password = ?")){
+		if($stmt = $mysqli -> prepare("SELECT `id`, `email`, `name` FROM users WHERE email = ? AND password = ?")){
 			$stmt -> bind_param("ss", $_POST['user'], md5($_POST['pass']));
 			$stmt -> execute();
-			$stmt -> bind_result($data['id'], $data['username'], $data['passwordHash']);
+			$stmt -> bind_result($data['id'], $data['email'], $data['name']);
 			$stmt -> store_result();
 			$stmt -> fetch();
 			$num = $stmt -> num_rows;
@@ -29,7 +29,8 @@ if(count($_POST) > 0){
 		$mysqli -> close();
 		if($num==1){
 			$_SESSION['is_admin'] = "set";
-			$_SESSION['username'] = $_POST['user'];
+			$_SESSION['email'] = $data['email'];
+			$_SESSION['name'] = $data['name'];
 			$_SESSION['dbext'] = $data['id'];
 			$_SESSION['admin_id_num'] = $data['id'];
 			$_SESSION['permsid'] = $data['permsid'];
