@@ -25,8 +25,11 @@
 						</paper-material>
 					</div>
 					<div class="4u">
-						<paper-material>
+						<paper-material hidden="[[isAdmin]]">
 							<polyquiz-admin-login-form></polyquiz-admin-login-form>
+						</paper-material>
+						<paper-material hidden="[[!isAdmin]]">
+							<polyquiz-admin-change-password-form></polyquiz-admin-change-password-form>
 						</paper-material>
 					</div>
 				</div>
@@ -56,6 +59,10 @@
 					observer: "onContextChanged"
 				},
 				adminSubpage: Number,
+				isAdmin: {
+					type: Boolean,
+					value: false
+				},
 				adminStatus: {
 					type: Object,
 					observer: "onAdminStatusChanged"
@@ -72,8 +79,10 @@
 			},
 			onAdminStatusChanged: function(details) {
 				if(details.admin){
+					isAdmin = true;
 					console.log("admin");
 				} else {
+					isAdmin = false;
 					console.log("nbot admin");
 				}
 			},
