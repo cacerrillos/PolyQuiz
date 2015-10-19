@@ -1,6 +1,8 @@
 <!doctype html>
 <dom-module id="polyquiz-admin-login-form">
 	<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
 	<link rel="import" href="polyquiz-admin-login-form.html">
 	
 	<style is="custom-style">
@@ -8,18 +10,27 @@
 			margin-left: 10px;
 			margin-right: 10px;
 		}
-		paper-spinner {
-			width: 19px;
-			height: 19px;
+		h3 {
+			margin-top: .25em;
+			margin-bottom: .25em;
 		}
 	</style>
 
 	<template>
+		<div class="layout horizontal">
+			<div class="flex"></div>
+			<h3>Log In</h3>
+			<div class="flex"></div>
+		</div>
 		<iron-ajax id="loginAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.0/admin/login.php"></iron-ajax>
 		<form id="adminlogin">
-			<paper-input id="user" name="user" label="Username" on-input="loginFieldsCheck"></paper-input>
-			<paper-input id="pass" name="pass" label="Password" on-input="loginFieldsCheck" type="password"></paper-input>
-			<paper-button id="loginButton" on-click="submitLogin" raised disabled><paper-spinner id="loginSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
+			<paper-input id="user" name="user" label="Username" on-input="loginFieldsCheck" on-keydown="checkForEnter"></paper-input>
+			<paper-input id="pass" name="pass" label="Password" on-input="loginFieldsCheck" on-keydown="checkForEnter" type="password"></paper-input>
+			<div class="layout horizontal">
+				<div class="flex"></div>
+					<paper-button id="loginButton" on-click="submitLogin" raised disabled><paper-spinner id="loginSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
+				<div class="flex"></div>
+			</div>
 		</form>
 	</template>
 
@@ -33,27 +44,37 @@
 				},
 				buttonText: {
 					type: String,
-					value: "Login"
+					value: "Log In"
 				}
 			},
 			loginFieldsCheck: function(e) {
 				if(this.$.user.value.length > 0 && this.$.pass.value.length > 0){
 					this.$.loginButton.disabled = false;
+					return true;
 				} else {
 					this.$.loginButton.disabled = true;
+					return false;
 				}
 			},
+			checkForEnter: function(e) {
+				 if(e.keyCode === 13) {
+				 	this.submitLogin();
+				 }
+			},
 			submitLogin: function() {
-				this.$.loginButton.disabled = true;
+				if(this.loginFieldsCheck(null)){
+					this.$.loginButton.disabled = true;
 
-				this.$.loginSpinner.style.display = "inline-block";
-				this.buttonText = "";
+					this.$.loginSpinner.style.display = "inline-block";
+					this.buttonText = "";
 
-				this.$.loginSpinner.active = true;
+					this.$.loginSpinner.active = true;
+					
+					
+					this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
+					this.$.loginAjax.generateRequest();
+				}
 				
-				
-				this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
-				this.$.loginAjax.generateRequest();
 				//document.getElementById('adminlogin').submit();
 			},
 			reqCB: function(details) {
@@ -75,9 +96,10 @@
 				this.$.loginSpinner.active = false;
 
 				this.$.loginSpinner.style.display = "none";
-				this.buttonText = "Login";
+				this.buttonText = "Log In";
 
 				this.$.loginButton.disabled = false;
+				this.loginFieldsCheck(null);
 			},
 			ready: function() {
 				
