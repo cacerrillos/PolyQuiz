@@ -15,6 +15,7 @@
 
 	<template>
 		<iron-ajax id="adminStatusAjax" auto url="../../api/1.0/admin/status.php" handle-as="json" last-response="{{adminStatus}}"></iron-ajax>
+		<iron-ajax id="logoutAjax" url="../../api/1.0/admin/logout.php" handle-as="json" on-response="logOutCallback"></iron-ajax>
 		<div class="container">
 			
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[adminSubpage]]">
