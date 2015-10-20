@@ -24,12 +24,18 @@
 		</div>
 		<iron-ajax id="loginAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.0/admin/login.php"></iron-ajax>
 		<form id="register">
-			<gold-email-input id="email" label="Email Address" on-keydown="checkForEnter" auto-validate></gold-email-input>
-			<paper-input id="newPassword" label="Password" on-input="validateForm" on-keydown="checkForEnter" type="password"></paper-input>
-			<paper-input id="newPasswordConfirm" label="Confirm Password" on-input="validateForm" on-keydown="checkForEnter" type = "password" error-message="Passwords do not match!"></paper-input>
+			<div class="layout horizontal">
+				<paper-input id="firstname" label="First Name" class="flex" on-input="formCheck"></paper-input>
+				<div style="margin-left:10px;"></div>
+				<paper-input id="lastname" label="Last Name" class="flex" on-input="formCheck"></paper-input>
+			</div>
+			
+			<gold-email-input id="email" label="Email Address" on-keydown="checkForEnter" on-input="formCheck" auto-validate></gold-email-input>
+			<paper-input id="password" label="Password" on-input="formCheck" on-keydown="checkForEnter" type="password"></paper-input>
+			<paper-input id="passwordConfirm" label="Confirm Password" on-input="formCheck" on-keydown="checkForEnter" type = "password" error-message="Passwords do not match!"></paper-input>
 			<div class="layout horizontal">
 				<div class="flex"></div>
-					<paper-button id="registerButton" on-click="submitLogin" raised disabled><paper-spinner id="loginSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
+					<paper-button id="signupButton" on-click="submitSignUp" raised disabled><paper-spinner id="loadingSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
 				<div class="flex"></div>
 			</div>
 		</form>
@@ -48,28 +54,34 @@
 					value: "Sign Up"
 				}
 			},
-			loginFieldsCheck: function(e) {
-				if(this.$.user.value.length > 0 && this.$.pass.value.length > 0){
-					this.$.loginButton.disabled = false;
-					return true;
-				} else {
-					this.$.loginButton.disabled = true;
-					return false;
+			formCheck: function(e) {
+				if(this.$.firstname.value.length > 0 &&
+				   this.$.lastname.value.length > 0 &&
+				   this.$.email.value.length > 0 &&
+				   this.$.password.value.length > 0 &&
+				   this.$.passwordConfirm.value.length > 0){
+					if(this.$.password.value == this.$.passwordConfirm.value && !this.$.email.invalid) {
+						this.$.signupButton.disabled = false;
+						console.log("Tetet");
+						return true;
+					}
 				}
+				this.$.signupButton.disabled = true;
+				return false;
 			},
 			checkForEnter: function(e) {
 				 if(e.keyCode === 13) {
-				 	this.submitLogin();
+				 	this.submitSignUp();
 				 }
 			},
-			submitLogin: function() {
-				if(this.loginFieldsCheck(null)){
-					this.$.loginButton.disabled = true;
+			submitSignUp: function() {
+				if(this.formCheck(null)){
+					this.$.signupButton.disabled = true;
 
-					this.$.loginSpinner.style.display = "inline-block";
+					this.$.loadingSpinner.style.display = "inline-block";
 					this.buttonText = "";
 
-					this.$.loginSpinner.active = true;
+					this.$.loadingSpinner.active = true;
 					
 					
 					this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
@@ -95,13 +107,13 @@
 					this.fire('firetoast', { message: "Failed To Login! Server Encountered an Error!"});
 				}
 
-				this.$.loginSpinner.active = false;
+				this.$.loadingSpinner.active = false;
 
-				this.$.loginSpinner.style.display = "none";
+				this.$.loadingSpinner.style.display = "none";
 				this.buttonText = "Sign Up";
 
-				this.$.loginButton.disabled = false;
-				this.loginFieldsCheck(null);
+				this.$.signupButton.disabled = false;
+				this.formCheck(null);
 			},
 			ready: function() {
 				
