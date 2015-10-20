@@ -22,7 +22,7 @@
 			<h3>Sign Up</h3>
 			<div class="flex"></div>
 		</div>
-		<iron-ajax id="loginAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.0/admin/login.php"></iron-ajax>
+		<iron-ajax id="signupAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.0/admin/login.php"></iron-ajax>
 		<form id="register">
 			<div class="layout horizontal">
 				<paper-input id="firstname" label="First Name" class="flex" on-input="formCheck"></paper-input>
@@ -84,8 +84,8 @@
 					this.$.loadingSpinner.active = true;
 					
 					
-					this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
-					this.$.loginAjax.generateRequest();
+					//this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
+					//this.$.loginAjax.generateRequest();
 				}
 				
 				//document.getElementById('adminlogin').submit();
