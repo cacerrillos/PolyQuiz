@@ -36,11 +36,11 @@
 		<iron-ajax id="adminStatusAjax" auto url="../../api/1.0/admin/status.php" handle-as="json" last-response="{{adminStatus}}"></iron-ajax>
 		<iron-ajax id="logoutAjax" url="../../api/1.0/admin/logout.php" handle-as="json" on-response="logOutCallback"></iron-ajax>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
-			<paper-header-panel drawer>
+			<paper-header-panel drawer class="vertical layout">
 				<paper-toolbar>
 					<div style="color:#FFFFFF">Application</div>
 				</paper-toolbar>
-				<paper-menu id="sidebarMenu">
+				<paper-menu id="sidebarMenu" class="flex">
 					<paper-icon-item on-click="goToPageOnClick" data-page="home">
 						<iron-icon icon="icons:home" item-icon></iron-icon>Home
 					</paper-icon-item>
@@ -51,20 +51,18 @@
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
 					</paper-icon-item>
 				</paper-menu>
+				<paper-icon-item on-click="">
+					Log Out
+				</paper-icon-item>
+				<paper-item disabled>
+				</paper-item>
 			</paper-header-panel>
-			<paper-scroll-header-panel main class="flex" id="scrollHeader" fixed>
+			<paper-scroll-header-panel class="flex" main id="scrollHeader" fixed>
 				<paper-toolbar>
-					<paper-menu-button class="only-medium">
-						<paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-						<paper-menu class="dropdown-content" on-iron-select="onSelectedChange">
-							<paper-icon-item id="home"><iron-icon icon="icons:home" item-icon></iron-icon>Home</paper-icon-item>
-							<paper-icon-item id="takeaquiz"><iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz</paper-icon-item>
-							<paper-icon-item id="admin"><iron-icon icon="icons:settings" item-icon></iron-icon>Admin</paper-icon-item>
-						</paper-menu>
-					</paper-menu-button>
 					<span class="title">PolyQuiz 3.0</span>
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="home"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="takeaquiz"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
+					
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="admin"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 					
 				</paper-toolbar>
@@ -91,6 +89,10 @@
 				page: {
 					type: String,
 					observer: "onPageChange"
+				},
+				userName: {
+					type: String,
+					value: "Awesome User"
 				},
 				adminStatus: {
 					type: Object,
