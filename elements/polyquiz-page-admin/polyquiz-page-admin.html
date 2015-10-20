@@ -15,10 +15,7 @@
 	</style>
 
 	<template>
-		<iron-ajax id="adminStatusAjax" auto url="../../api/1.0/admin/status.php" handle-as="json" last-response="{{adminStatus}}"></iron-ajax>
-		<iron-ajax id="logoutAjax" url="../../api/1.0/admin/logout.php" handle-as="json" on-response="logOutCallback"></iron-ajax>
 		<div class="container">
-			
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[adminSubpage]]">
 				<div class="row" data-subpage="adminhome">
 					<div class="8u">
@@ -63,9 +60,6 @@
 	<script>
 		Polymer({
 			is: 'polyquiz-page-admin',
-			listeners: {
-				'admin-status-changed': 'doAdminCheck'
-			},
 			properties: {
 				ctx: {
 					type: Object,
@@ -79,21 +73,10 @@
 				isAdmin: {
 					type: Boolean,
 					value: false
-				},
-				adminStatus: {
-					type: Object,
-					observer: "onAdminStatusChanged"
 				}
 			},
-			doAdminCheck: function(details) {
-				this.$.adminStatusAjax.generateRequest();
-			},
-			doLogout: function(details) {
-				this.$.logoutAjax.generateRequest();
-			},
-			logOutCallback: function(e) {
-				console.log(e);
-				this.$.adminStatusAjax.generateRequest();
+			doLogout: function(e) {
+				this.fire('polyquiz-admin-do-logout');
 			},
 			onContextChanged: function(details) {
 				if(details.params.subpage != null) {
@@ -102,20 +85,17 @@
 					this.$.pageSelector.select(0);
 				}
 			},
-			onAdminStatusChanged: function(details) {
+			onAdminStatusChanged: function(e) {
+				var details = e.detail;
 				this.isAdmin = details.admin;
-				if(details.name != null || details.email != null) {
-					this.username = "";
-				}
-				if(details.name != null) {
+				if(this.isAdmin) {
 					this.username = details.name;
-				}
-				if(details.email != null) {
 					this.username += "[" + details.email + "]";
 				}
 			},
 			ready: function() {
-
+				var parent = document.querySelector("#mainapp");
+				parent.addEventListener('polyquiz-admin-status', this.onAdminStatusChanged.bind(this));
 			}
 		});
 	</script>

@@ -85,7 +85,7 @@
 				if(details.detail.response != null) {
 					if(details.detail.response.status) {
 						this.fire('firetoast', { message: "Logged In!"});
-						this.fire('admin-status-changed', {});
+						this.fire('polyquiz-admin-check-status');
 					} else {
 						this.$.pass.value = "";
 						this.fire('firetoast', { message: "Invalid Username And/Or Password!"});

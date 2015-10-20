@@ -33,6 +33,8 @@
 	</style>
 
 	<template>
+		<iron-ajax id="adminStatusAjax" auto url="../../api/1.0/admin/status.php" handle-as="json" last-response="{{adminStatus}}"></iron-ajax>
+		<iron-ajax id="logoutAjax" url="../../api/1.0/admin/logout.php" handle-as="json" on-response="logOutCallback"></iron-ajax>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
 			<paper-header-panel drawer>
 				<paper-toolbar>
@@ -90,13 +92,33 @@
 					type: String,
 					observer: "onPageChange"
 				},
+				adminStatus: {
+					type: Object,
+					observer: "adminStatusChangedAjax"
+				},
 				ctx: {
 					type: Object,
 					observer: "onContextChange"
 				}
 			},
 			listeners: {
-				'firetoast': 'fireToast'
+				'firetoast': 'fireToast',
+				'polyquiz-admin-check-status': 'logOutCallback',
+				'polyquiz-admin-do-logout': 'doLogout',
+				'polyquiz-admin-status': 'onAdminStatusChanged'
+			},
+			adminStatusChangedAjax: function(details) {
+				this.fire('polyquiz-admin-status', details);
+			},
+			onAdminStatusChanged: function(e) {
+				console.log("Admin Status Changed!");
+				console.log(e.detail);
+			},
+			doLogout: function(e) {
+				this.$.logoutAjax.generateRequest();
+			},
+			logOutCallback: function(e) {
+				this.$.adminStatusAjax.generateRequest();
 			},
 			notFound: function(details) {
 				//firetoast
