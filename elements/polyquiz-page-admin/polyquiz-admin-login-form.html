@@ -26,7 +26,7 @@
 		<form id="adminlogin">
 			<paper-input id="user" name="user" label="Username" on-input="loginFieldsCheck" on-keydown="checkForEnter"></paper-input>
 			<paper-input id="pass" name="pass" label="Password" on-input="loginFieldsCheck" on-keydown="checkForEnter" type="password"></paper-input>
-			<div class="layout horizontal">
+			<div class="layout horizontal" style="margin-top: 5px;">
 				<div class="flex"></div>
 					<paper-button id="loginButton" on-click="submitLogin" raised disabled><paper-spinner id="loginSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
 				<div class="flex"></div>
