@@ -12,6 +12,7 @@
 	<link rel="import" href="pages/polyquiz-page-home.html">
 	<link rel="import" href="pages/polyquiz-page-takeaquiz.html">
 	<link rel="import" href="polyquiz-page-admin/polyquiz-page-admin.html">
+	<link rel="import" href="polyquiz-page-admin/polyquiz-admin-login-form.html">
 
 	<style is="custom-style">
 		paper-drawer-panel {
@@ -51,7 +52,8 @@
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
 					</paper-icon-item>
 				</paper-menu>
-				<paper-icon-item on-click="">
+				<polyquiz-admin-login-form hidden="[[adminStatus.admin]]"></polyquiz-admin-login-form>
+				<paper-icon-item hidden="[[!adminStatus.admin]]" on-click="doLogout">
 					Log Out
 				</paper-icon-item>
 				<paper-item disabled>
