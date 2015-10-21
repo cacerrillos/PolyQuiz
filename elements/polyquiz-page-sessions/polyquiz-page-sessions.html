@@ -35,6 +35,17 @@
 					type: Object
 				}
 			},
+			onContextChanged: function(details) {
+				return;
+				if(details.params.subpage != null) {
+					switch(details.params.subpage) {
+						default:
+							this.$.pageSelector.select(0);
+					}
+				} else {
+					this.$.pageSelector.select(0);
+				}
+			},
 			onAdminStatusChanged: function(e) {
 				var details = e.detail;
 				this.adminData = e.detail;
