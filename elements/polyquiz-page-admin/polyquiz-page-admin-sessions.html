@@ -3,6 +3,12 @@
 	<link rel="import" href="../../bower_components/polymer/polymer.html">
 	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+		}
+	</style>
+	
 	<template>
 		<div class="container">
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[sessionSubpage]]">
@@ -15,9 +21,9 @@
 
 	<script>
 		Polymer({
-			is: 'polyquiz-page-sessions',
+			is: 'polyquiz-page-admin-sessions',
 			ready: function() {
-
+				this.$.pageSelector.select(0);
 			}
 		});
 	</script>
