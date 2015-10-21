@@ -1,0 +1,24 @@
+<!doctype html>
+<dom-module id="polyquiz-page-admin-sessions">
+	<link rel="import" href="../../bower_components/polymer/polymer.html">
+	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+	<template>
+		<div class="container">
+			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[sessionSubpage]]">
+				<paper-material>
+					<h3>Sessions</h3>
+				</paper-material>
+			</iron-pages>
+		</div>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'polyquiz-page-sessions',
+			ready: function() {
+
+			}
+		});
+	</script>
+</dom-module>

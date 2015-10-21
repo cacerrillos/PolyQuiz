@@ -51,6 +51,9 @@
 					<paper-icon-item on-click="goToPageOnClick" data-page="admin">
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
 					</paper-icon-item>
+					<paper-icon-item on-click="goToPageOnClick" data-page="admin/sessions">
+						<iron-icon icon="icons:settings" item-icon></iron-icon>Sessions
+					</paper-icon-item>
 				</paper-menu>
 				<polyquiz-admin-login-form hidden="[[adminStatus.admin]]"></polyquiz-admin-login-form>
 				<paper-icon-item hidden="[[!adminStatus.admin]]" on-click="doLogout">
