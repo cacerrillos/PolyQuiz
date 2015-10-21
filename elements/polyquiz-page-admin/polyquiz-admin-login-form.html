@@ -1,4 +1,38 @@
 <!doctype html>
+<dom-module id="polyquiz-admin-login-request">
+	
+	<style is="custom-style">
+		paper-dialog {
+			background-color: white;
+			padding: 10px;
+		}
+	</style>
+
+	<template>
+		<paper-dialog id="mainDialog" class="layout vertical">
+			<h2>Log In Required</h2>
+			<p>Please login to access this page.</p>
+			<polyquiz-admin-login-form></polyquiz-admin-login-form>
+		</paper-dialog>
+	</template>
+
+	<script>
+	Polymer({
+		is: 'polyquiz-admin-login-request',
+		properties: {
+
+		},
+		open: function() {
+			this.$.mainDialog.open();
+		},
+		close: function() {
+			this.$.mainDialog.close();
+		},
+		ready: function() {
+		}
+	});
+	</script>
+</dom-module>
 <dom-module id="polyquiz-admin-login-form">
 	<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 	<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
