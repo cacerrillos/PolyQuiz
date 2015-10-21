@@ -1,5 +1,5 @@
 <!doctype html>
-<dom-module id="polyquiz-page-admin-sessions">
+<dom-module id="polyquiz-page-sessions">
 	<link rel="import" href="../../bower_components/polymer/polymer.html">
 	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
@@ -21,9 +21,30 @@
 
 	<script>
 		Polymer({
-			is: 'polyquiz-page-admin-sessions',
+			is: 'polyquiz-page-sessions',
+			properties: {
+				ctx: {
+					type: Object,
+					observer: "onContextChanged"
+				},
+				isAdmin: {
+					type: Boolean,
+					value: false
+				},
+				adminData: {
+					type: Object
+				}
+			},
+			onAdminStatusChanged: function(e) {
+				var details = e.detail;
+				this.adminData = e.detail;
+				this.isAdmin = details.admin;
+			},
 			ready: function() {
 				this.$.pageSelector.select(0);
+
+				var parent = document.querySelector("#mainapp");
+				parent.addEventListener('polyquiz-admin-status', this.onAdminStatusChanged.bind(this));
 			}
 		});
 	</script>

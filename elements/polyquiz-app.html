@@ -14,6 +14,7 @@
 	<link rel="import" href="pages/polyquiz-page-takeaquiz.html">
 	<link rel="import" href="polyquiz-page-admin/polyquiz-page-admin.html">
 	<link rel="import" href="polyquiz-page-admin/polyquiz-admin-login-form.html">
+	<link rel="import" href="polyquiz-page-sessions/polyquiz-page-sessions.html">
 
 	<style is="custom-style">
 		paper-drawer-panel {
@@ -52,7 +53,7 @@
 					<paper-icon-item on-click="goToPageOnClick" data-page="admin">
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
 					</paper-icon-item>
-					<paper-icon-item on-click="goToPageOnClick" data-page="admin/sessions">
+					<paper-icon-item on-click="goToPageOnClick" data-page="sessions">
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Sessions
 					</paper-icon-item>
 				</paper-menu>
@@ -79,6 +80,7 @@
 					<neon-animatable data-page="takeaquiz"><polyquiz-page-takeaquiz ctx="[[ctx]]"></polyquiz-page-takeaquiz></neon-animatable>
 					<neon-animatable data-page="admin"><polyquiz-page-admin ctx="[[ctx]]"></polyquiz-page-admin></neon-animatable>
 					<neon-animatable data-page="login"><polyquiz-page-login ctx="[[ctx]]"></polyquiz-page-login></neon-animatable>
+					<neon-animatable data-page="sessions"><polyquiz-page-sessions ctx="[[ctx]]"></polyquiz-page-sessions></neon-animatable>
 				</neon-animated-pages>
 				
 			</paper-scroll-header-panel>

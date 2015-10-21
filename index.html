@@ -129,12 +129,22 @@ page('/takeaquiz/:sessionid/:sessionkey', handleTakeAQuiz);
 page('/admin', handleAdmin);
 page('/admin/:subpage', handleAdmin);
 
+
+page('/sessions', handleSessions);
+page('/sessions/:sessionid', handleSessions);
+
 page('*', function(ctx, next){
 	console.log(ctx);
 	mainapp.notFound(ctx);
 });
 
 page({hashbang: true });
+
+function handleSessions(ctx, next) {
+	mainapp.page = "sessions";
+	mainapp.ctx = ctx;
+	console.log(ctx);
+}
 
 function handleTakeAQuiz(ctx, next) {
 	mainapp.page = "takeaquiz";

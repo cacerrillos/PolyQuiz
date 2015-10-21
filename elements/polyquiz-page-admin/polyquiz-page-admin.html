@@ -5,7 +5,6 @@
 	<link rel="import" href="polyquiz-admin-login-form.html">
 	<link rel="import" href="polyquiz-admin-change-password-form.html">
 	<link rel="import" href="polyquiz-admin-register-form.html">
-	<link rel="import" href="polyquiz-page-admin-sessions.html">
 
 	<style is="custom-style">
 		paper-material {
@@ -41,7 +40,6 @@
 						</paper-material>
 					</div>
 				</div>
-				<polyquiz-page-admin-sessions data-subpage="sessions"></polyquiz-page-admin-sessions>
 				<div class"row">
 					<div class="12u">
 						<paper-material>
@@ -83,9 +81,6 @@
 			onContextChanged: function(details) {
 				if(details.params.subpage != null) {
 					switch(details.params.subpage) {
-						case "sessions":
-							this.$.pageSelector.select(1);
-							break;
 						default:
 							this.$.pageSelector.select(0);
 					}
