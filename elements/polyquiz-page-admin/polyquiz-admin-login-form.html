@@ -28,6 +28,10 @@
 		close: function() {
 			this.$.mainDialog.close();
 		},
+		onLoginCancel: function(e) {
+			this.close();
+			page('/admin');
+		},
 		ready: function() {
 		}
 	});
@@ -63,6 +67,7 @@
 			<div class="layout horizontal" style="margin-top: 5px;">
 				<div class="flex"></div>
 					<paper-button id="loginButton" on-click="submitLogin" raised disabled><paper-spinner id="loginSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
+					<paper-button id="loginButton" on-click="doCancel" raised hidden="[[!cancelable]]">Cancel</paper-button>
 				<div class="flex"></div>
 			</div>
 		</form>
@@ -72,6 +77,10 @@
 		Polymer({
 			is: "polyquiz-admin-login-form",
 			properties: {
+				cancelable: {
+					type: Boolean,
+					value: false
+				},
 				sidebarpage: {
 					type: Number,
 					value: 0
@@ -94,6 +103,11 @@
 				 if(e.keyCode === 13) {
 				 	this.submitLogin();
 				 }
+			},
+			doCancel: function() {
+				this.$.user.value = "";
+				this.$.pass.value = "";
+				this.fire('login-cancel');
 			},
 			submitLogin: function() {
 				if(this.loginFieldsCheck(null)){
