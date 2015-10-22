@@ -36,6 +36,7 @@
 	</style>
 
 	<template>
+	<polyquiz-admin-login-request id="loginoverlay"></polyquiz-admin-login-request>
 		<iron-ajax id="adminStatusAjax" auto url="../../api/1.0/admin/status.php" handle-as="json" last-response="{{adminStatus}}"></iron-ajax>
 		<iron-ajax id="logoutAjax" url="../../api/1.0/admin/logout.php" handle-as="json" on-response="logOutCallback"></iron-ajax>
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
@@ -184,6 +185,13 @@
 				//	this.$.scrollHeader.fixed = true;
 				}
 			},
+			openLoginOverlay: function() {
+				this.$.loginoverlay.open();
+			},
+			closeLoginOverlay: function() {
+				this.$.loginoverlay.close();
+			},
+
 			ready: function() {
 				this.$.mainPanel.responsiveWidth = "720px";
 			}
