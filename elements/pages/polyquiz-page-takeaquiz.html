@@ -180,6 +180,9 @@
 	<script>
 	Polymer({
 		is: "polyquiz-page-takeaquiz",
+		behaviors: [
+			Polymer.NeonAnimatableBehavior
+		],
 		listeners: {
 			"toastEvent": "fireToast"
 		},

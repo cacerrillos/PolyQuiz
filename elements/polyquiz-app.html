@@ -73,14 +73,12 @@
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="admin"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 					
 				</paper-toolbar>
-				
-
 				<neon-animated-pages id="pageSelector" attrForSelected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-					<neon-animatable data-page="home"><polyquiz-page-home></polyquiz-page-home></neon-animatable>
-					<neon-animatable data-page="takeaquiz"><polyquiz-page-takeaquiz ctx="[[ctx]]"></polyquiz-page-takeaquiz></neon-animatable>
-					<neon-animatable data-page="admin"><polyquiz-page-admin ctx="[[ctx]]"></polyquiz-page-admin></neon-animatable>
-					<neon-animatable data-page="login"><polyquiz-page-login ctx="[[ctx]]"></polyquiz-page-login></neon-animatable>
-					<neon-animatable data-page="sessions"><polyquiz-page-sessions ctx="[[ctx]]"></polyquiz-page-sessions></neon-animatable>
+					<polyquiz-page-home data-page="home"></polyquiz-page-home>
+					<polyquiz-page-takeaquiz data-page="takeaquiz" ctx="[[ctx]]"></polyquiz-page-takeaquiz>
+					<polyquiz-page-admin data-page="admin" ctx="[[ctx]]"></polyquiz-page-admin>
+					<polyquiz-page-login data-page="login" ctx="[[ctx]]"></polyquiz-page-login>
+					<polyquiz-page-sessions data-page="sessions" ctx="[[ctx]]"></polyquiz-page-sessions>
 				</neon-animated-pages>
 				
 			</paper-scroll-header-panel>
