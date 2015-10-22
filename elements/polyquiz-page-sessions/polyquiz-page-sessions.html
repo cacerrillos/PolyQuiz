@@ -53,12 +53,34 @@
 				var details = e.detail;
 				this.adminData = e.detail;
 				this.isAdmin = details.admin;
+				var parent = document.querySelector("#mainapp");
+				
+			},
+			loginOverlayCheck: function(e) {
+				console.log(e);
+				console.log(this);
+				var mainapp = document.querySelector("#mainapp");
+				if(this.parentNode.selectedItem == this) {
+					console.log("YESYESYES");
+					if(this.adminData) {
+						if(this.isAdmin) {
+							mainapp.closeLoginOverlay();
+							return;
+						}
+					}
+					mainapp.openLoginOverlay();
+				} else {
+					console.log("nonononon");
+				}
 			},
 			ready: function() {
 				this.$.pageSelector.select(0);
+				var mainapp = document.querySelector("#mainapp");
+				mainapp.addEventListener('polyquiz-admin-status', this.onAdminStatusChanged.bind(this));
 
-				var parent = document.querySelector("#mainapp");
-				parent.addEventListener('polyquiz-admin-status', this.onAdminStatusChanged.bind(this));
+				var parentSelector = this.parentNode;
+
+				parentSelector.addEventListener('iron-select', this.loginOverlayCheck.bind(this));
 			}
 		});
 	</script>
