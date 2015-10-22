@@ -9,10 +9,10 @@
 	</style>
 
 	<template>
-		<paper-dialog id="mainDialog" class="layout vertical">
+		<paper-dialog id="mainDialog" class="layout vertical" modal>
 			<h2>Log In Required</h2>
 			<p>Please login to access this page.</p>
-			<polyquiz-admin-login-form></polyquiz-admin-login-form>
+			<polyquiz-admin-login-form cancelable on-login-cancel="onLoginCancel"></polyquiz-admin-login-form>
 		</paper-dialog>
 	</template>
 
