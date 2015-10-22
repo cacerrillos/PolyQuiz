@@ -9,7 +9,7 @@
 	</style>
 
 	<template>
-		<paper-dialog id="mainDialog" class="layout vertical" modal>
+		<paper-dialog id="mainDialog" class="layout vertical" on-iron-overlay-closed="onClosed">
 			<h2>Log In Required</h2>
 			<p>Please login to access this page.</p>
 			<polyquiz-admin-login-form cancelable on-login-cancel="onLoginCancel"></polyquiz-admin-login-form>
@@ -28,11 +28,16 @@
 		close: function() {
 			this.$.mainDialog.close();
 		},
+		onClosed: function(e) {
+			if(this.$.mainDialog.canceled) {
+				page('/admin');
+			}
+		},
 		onLoginCancel: function(e) {
-			this.close();
-			page('/admin');
+			this.$.mainDialog.cancel();
 		},
 		ready: function() {
+			this.$.mainDialog.withBackdrop = true;
 		}
 	});
 	</script>
