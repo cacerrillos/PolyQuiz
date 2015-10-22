@@ -29,6 +29,7 @@
     "tinymce": "~4.2.3",
     "tinymce-decorator": "*",
     "page": "page.js#~1.6.4",
-    "gold-elements": "PolymerElements/gold-elements#~1.0.1"
+    "gold-elements": "PolymerElements/gold-elements#~1.0.1",
+    "autofill-event": "~1.0.0"
   }
 }
