@@ -112,6 +112,7 @@
 			submitLogin: function() {
 				if(this.loginFieldsCheck(null)){
 					this.$.loginButton.disabled = true;
+					this.$.cancelButton.disabled = true;
 
 					this.$.loginSpinner.style.display = "inline-block";
 					this.buttonText = "";
@@ -148,6 +149,7 @@
 				this.buttonText = "Log In";
 
 				this.$.loginButton.disabled = false;
+				this.$.cancelButton.disabled = false;
 				this.loginFieldsCheck(null);
 			},
 			ready: function() {
