@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-admin-session-row">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			padding: 5px;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	</style>
+<template>
+	<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/info.php" handle-as="json" on-response="quizInfoResp"></iron-ajax>
+	<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/info.php" handle-as="json" on-response="houseInfoResp"></iron-ajax>
+	<div class="row">
+		<div class="12u">
+				<div class="row">
+					<div class="12u"><center><paper-spinner id="spinner" active></paper-spinner></center></div>
+				</div>
+				<div class="row" id="contentRow" style="display:none;">
+					<div class="4u 5u(small) 4u(xsmall)">
+						<div class="row">
+							<div class="12u">[[sessionname]]</div>
+							<div class="-2u 10u">[[quizname]]</div>
+						</div>
+					</div>
+					<div class="2u">
+						<div class="row">
+							<div class="12u">[[sessionobject.sessionid]]</div>
+							<div class="12u">[[sessionobject.sessionkey]]</div>
+						</div>
+					</div>
+					<div class="2u 3u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
+					<div class="1u">[[house]]</div>
+					<div class="3u 2u(small)">
+						<polyquiz-admin-session-action-buttons id="actionButtons" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons>
+					</div>
+				</div>
+		</div>
+	</div>
+</template>
+<script>
+Polymer({
+	is: "polyquiz-admin-session-row",
+	properties: {
+		sessionobject: {
+			type: Object,
+			observer: "ready"
+		},
+		sessionname: {
+			type: String,
+			value: "Session Name Not Found"
+		},
+		quizname: {
+			type: String,
+			value: "Quiz Name Not Found"
+		}
+	},
+	unixDateToHumanDate: function(e){
+		var a = new Date(e * 1000);
+		var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+		var year = a.getFullYear();
+		var month = months[a.getMonth()];
+		var date = a.getDate();
+		var hour = a.getHours();
+		var min = a.getMinutes();
+		var sec = a.getSeconds();
+		var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+		return time;
+	},
+	stopSpinner: function(){
+		if(this.$.quizInfoAjax.lastResponse && this.$.houseInfoAjax.lastResponse){
+			this.$.spinner.active = false;
+			this.$.spinner.style.display = "none";
+			this.$.contentRow.style.display = "block";
+		}
+	},
+	quizInfoResp: function(e){
+		if(e.detail.response){
+			this.quizname = e.detail.response.name;
+		}
+		this.stopSpinner();
+	},
+	houseInfoResp: function(e){
+		if(e.detail.response){
+			this.house = e.detail.response.data.houseName;
+		}
+		this.stopSpinner();
+	},
+	ready: function(){
+		console.log(this.sessionobject);
+		if(this.sessionobject.data.status){
+			this.$.actionButtons.sessionopen = true;
+		} else {
+			this.$.actionButtons.sessionopen = false;
+		}
+		if(this.sessionobject.data.show){
+			this.$.actionButtons.sessionshow = true;
+		} else {
+			this.$.actionButtons.sessionshow = false;
+		}
+		if(this.sessionobject.name){
+			this.sessionname = this.sessionobject.name;
+		}
+		this.$.quizInfoAjax.params = {
+			uuid: this.sessionobject.quiz
+		};
+		this.$.houseInfoAjax.params = {
+			uuid: this.sessionobject.data.house
+		};
+		this.$.quizInfoAjax.generateRequest();
+		this.$.houseInfoAjax.generateRequest();
+	}
+});
+</script>
+</dom-module>

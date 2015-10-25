@@ -136,7 +136,7 @@ page('/sessions', handleSessions);
 page('/sessions/:sessionid', handleSessions);
 
 page('*', function(ctx, next){
-	console.log(ctx);
+	mainapp.ctx = ctx;
 	mainapp.notFound(ctx);
 });
 
@@ -145,7 +145,7 @@ page({hashbang: true });
 function handleSessions(ctx, next) {
 	mainapp.page = "sessions";
 	mainapp.ctx = ctx;
-	console.log(ctx);
+	//console.log(ctx);
 }
 
 function handleTakeAQuiz(ctx, next) {

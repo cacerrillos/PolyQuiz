@@ -54,7 +54,7 @@
 					<paper-icon-item on-click="goToPageOnClick" data-page="admin">
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
 					</paper-icon-item>
-					<paper-icon-item on-click="goToPageOnClick" data-page="sessions">
+					<paper-icon-item on-click="goToPageOnClick" data-page="sessions" hidden="[[!isAdmin]]">
 						<iron-icon icon="icons:settings" item-icon></iron-icon>Sessions
 					</paper-icon-item>
 				</paper-menu>
@@ -124,7 +124,6 @@
 				this.fire('polyquiz-admin-status', details);
 			},
 			onAdminStatusChanged: function(e) {
-				console.log("Admin Status Changed!");
 				console.log(e.detail);
 				if(this.isAdmin && !e.detail.admin) {
 					this.fireToastNonEvent('Logged Out!');
