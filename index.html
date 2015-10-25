@@ -105,6 +105,34 @@ skel.layout({
 	}
 		
 </style>
+<script>
+function PolyQuizPage(hash, friendlyName, icon, path, adminOnly) {
+	this.hash = hash;
+	this.friendlyName = friendlyName;
+	this.icon = icon;
+	this.path = path;
+	this.adminOnly = adminOnly;
+}
+var polyQuizPages = [
+	new PolyQuizPage("home", "Home", "icons:home", "/", false),
+	new PolyQuizPage("takeaquiz", "Take A Quiz", "icons:content-paste", "/", false),
+	new PolyQuizPage("admin", "Admin", "icons:settings", "/", false),
+	new PolyQuizPage("sessions", "Sessions", "icons:settings", "/", true),
+	new PolyQuizPage("quiz", "Quizzes", "icons:content-paste", "/", true)
+];
+function findPolyQuizPage(hash) {
+	for(var k in polyQuizPages) {
+		if(polyQuizPages.hasOwnProperty(k)) {
+			var o = polyQuizPages[k];
+			if(o.hash === hash) {
+				return o;
+			}
+		}
+	}
+	console.log("Error!");
+	return false;
+}
+</script>
 </head>
 <body>
 	<polyquiz-app id="mainapp"></polyquiz-app>
@@ -113,61 +141,63 @@ skel.layout({
 <script>
 var mainapp = document.querySelector("#mainapp");
 
-page('/', function(ctx, next){
-	mainapp.page = "home";
+page('/', function(ctx, next) {
+	page.redirect('/home');
 });
-page('/home', function(ctx, next){
-	mainapp.page = "home";
-});
+page('/home', handleSimplePage);
 
-page('/takeaquiz', function(ctx, next) {
-	mainapp.page = "takeaquiz";
-	console.log(ctx);
-	next();
-});
+page('/takeaquiz', handleSimplePage);
 page('/takeaquiz/:sessionid', handleTakeAQuiz);
 page('/takeaquiz/:sessionid/:sessionkey', handleTakeAQuiz);
 
-page('/admin', handleAdmin);
-page('/admin/:subpage', handleAdmin);
+page('/admin', handleSimplePage);
 
 
-page('/sessions', handleSessions);
-page('/sessions/:sessionid', handleSessions);
+page('/sessions', handleSimplePage);
+page('/sessions/:sessionid', handleSimplePage);
 
-page('*', function(ctx, next){
-	mainapp.ctx = ctx;
-	mainapp.notFound(ctx);
-});
+page('/quiz', handleSimplePage);
+page('/quiz/:quizid', handleQuizWithId);
+page('/quiz/:quizid/edit', handleQuizEdit);
+
+page('*', handleSimplePage);
 
 page({hashbang: true });
 
-function handleSessions(ctx, next) {
-	mainapp.page = "sessions";
+function handleSimplePage(ctx, next) {
 	mainapp.ctx = ctx;
-	//console.log(ctx);
+	var path = ctx.path.split("/");
+	var page = findPolyQuizPage(path[1]);
+	if(page) {
+		mainapp.page = page.hash;
+	} else {
+		//ddo404
+		mainapp.notFound(ctx);
+	}
+}
+function handleQuiz(ctx, next) {
+	//page that shows all quizes / add new quiz
+	mainapp.ctx = ctx;
+	console.log("QUIZ");
+	console.log(ctx);
+}
+function handleQuizWithId(ctx, next) {
+	//page that shows overview of this quiz, stats?, maybe list the questions as read only?
+	mainapp.ctx = ctx;
+	mainapp.page = "quizedit";
+	console.log("QUIZID");
+	console.log(ctx);
+}
+function handleQuizEdit(ctx, next) {
+	//page that lets you edit the quiz
+	console.log("QUIZIDEDIT");
+	console.log(ctx);
 }
 
 function handleTakeAQuiz(ctx, next) {
-	mainapp.page = "takeaquiz";
+	mainapp.page = polyQuizPages.takeaquiz.hash;
 	mainapp.ctx = ctx;
 	page.redirect('/takeaquiz'); //Prevents the sessionid/key being saved in browser history
 	next();
-}
-
-function handleAdmin(ctx, next) {
-	mainapp.page = "admin";
-	mainapp.ctx = ctx;
-	if(false) {
-
-	} else {
-		if(ctx.params.subpage != null){
-			if(!mainapp.isAdmin){
-				page.redirect('/admin');
-			} else {
-				console.log(ctx.params.subpage);
-			}
-		}
-	}
 }
 </script>
