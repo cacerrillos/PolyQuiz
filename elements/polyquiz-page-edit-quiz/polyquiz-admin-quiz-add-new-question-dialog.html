@@ -1,0 +1,95 @@
+<!doctype html>
+<dom-module id="polyquiz-admin-quiz-add-new-question-dialog">
+	<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+	<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+	<style is="custom-style">
+		paper-dialog {
+			background-color: white;
+			padding-left: 20px;
+			padding-right: 20px;
+			width: 768px;
+		}
+	</style>
+	<template>
+		<iron-collapse id="diag" on-iron-overlay-closed="closedEvent">
+			<div class="row">
+				<div class="12u">
+					<textarea class="mce" id="questionText"></textarea>
+				</div>
+				<div class="12u">
+					<paper-textarea label="Question"></paper-textarea>
+				</div>
+				<div class="12u">
+					<paper-dropdown-menu label="Type" id="selectType" on-iron-select="typeSelected">
+						<paper-menu class="dropdown-content">
+							<paper-item id="standard">Standard</paper-item>
+							<paper-item id="matching">Matching</paper-item>
+							<paper-item id="freeresponse">Free Response</paper-item>
+						</paper-menu>
+					</paper-dropdown-menu>
+				</div>
+				<div class="buttons">
+					<paper-button on-click="onCancel" raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+					<paper-button on-click="onAddClick" raised><iron-icon icon="check"></iron-icon>Add</paper-button>
+				</div>
+			</div>
+			<iron-collapse id="newStandard">
+				NEW STANDARD
+			</iron-collapse>
+			<iron-collapse id="newMatching">
+				NEW matcccc
+			</iron-collapse>
+			<iron-collapse id="newFreeResponse">
+				NEW freeee
+			</iron-collapse>
+		</iron-collapse>
+	</template>
+	<script>
+	Polymer({
+		is: "polyquiz-admin-quiz-add-new-question-dialog",
+		properties: {
+			
+		},
+		typeSelected: function(e){
+			console.log(e.detail);
+			switch(e.detail.item.id){
+				case "standard":
+					this.$.newStandard.show();
+					this.$.newMatching.hide();
+					this.$.newFreeResponse.hide();
+					break;
+				case "matching":
+					this.$.newStandard.hide();
+					this.$.newMatching.show();
+					this.$.newFreeResponse.hide();
+					break;
+				case "freeresponse":
+					this.$.newStandard.hide();
+					this.$.newMatching.hide();
+					this.$.newFreeResponse.show();;
+					break;
+				default:
+					break;
+			}
+		},
+		reset: function(){
+			var questionText = tinyMCE.get('questionText');
+			questionText.setContent("");
+		},
+		onAddClick: function(){
+			console.log(tinyMCE.get('questionText').getContent());
+		},
+		onCancel: function(e){
+			this.reset();
+		},
+		show: function(){
+			this.$.diag.toggle();
+		},
+		ready: function(){
+			///this.$.diag.fitInto = document.querySelector("#maincontainer");
+			this.$.diag.noCancelOnOutsideClick = true;
+		}
+	});
+	</script>
+</dom-module>

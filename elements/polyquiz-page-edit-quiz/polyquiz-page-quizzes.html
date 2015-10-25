@@ -1,8 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <dom-module id="stats-ajax">
-<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
 <template>
-<iron-ajax id="query" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
+<iron-ajax id="query" url="../../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
 <paper-button on-click="hanClick"><span id="totalshow" style="display:none;">TOTAL</span><span>[[house]]</span><br><span style="">[[count]]</span></paper-button>
 </template>
 <script>
@@ -25,9 +25,9 @@
 					this.zeroResultsToast();
 				} else {
 					if(this.house == ""){
-						window.location = "?p=results&uuid=" + this.uuid;
+						page('/quiz/' + this.uuid + "/results");
 					} else {
-						window.location = "?p=results&uuid=" + this.uuid + "&house=" + this.house;
+						page('/quiz/' + this.uuid + "/results/" + this.house);
 					}
 					
 				}
@@ -63,7 +63,7 @@
 
 <template>
 	<div class="row">
-		<iron-ajax id="quer" url="../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
+		<iron-ajax id="quer" url="../../api/1.0/quizresults/stats.php" handle-as="json" on-response="onResp"></iron-ajax>
 		<div class="2u">
 			<paper-button on-click="hanClick" class="total"><span>Total</span><br><span style="">[[totalCount]]</span></paper-button>
 		</div>
@@ -88,9 +88,9 @@ Polymer({
 	hanClick: function(e){
 		console.log(e);
 		if(e.model){
-			window.location = "?p=results&uuid=" + this.quizuuid + "&house=" + e.model.get('houses.data.houseData.data.houseId');
+			page('/quiz/' + this.quizuuid + "/results/" + e.model.get('houses.data.houseData.data.houseId'));
 		} else {
-			window.location = "?p=results&uuid=" + this.quizuuid;
+			page('/quiz/' + this.quizuuid + "/results");
 		}
 	},
 	onResp: function(e){
@@ -117,18 +117,18 @@ Polymer({
 });
 </script>
 </dom-module>
-<dom-module id="admin-quiz-management-page">
-	<link rel="import" href="admin-quiz-results/admin-quiz-results-delete-overlay.html">
-	<link rel="import" href="admin-quiz-results/admin-quiz-results-row.html">
-	<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-	<link rel="import" href="../bower_components/iron-icons/image-icons.html">
-	<link rel="import" href="../bower_components/iron-icons/editor-icons.html">
-	<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
-	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-	<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-	<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
-	<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<dom-module id="polyquiz-page-quizzes">
+	<link rel="import" href="../admin-quiz-results/admin-quiz-results-delete-overlay.html">
+	<link rel="import" href="../admin-quiz-results/admin-quiz-results-row.html">
+	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../../bower_components/iron-icons/editor-icons.html">
+	<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 	<style is="custom-style">
 		paper-material {
 			background-color: white;
@@ -139,7 +139,7 @@ Polymer({
 	<template>
 		<iron-ajax
 				id="resultsAjax"
-				url="../api/1.0/quiz/owned.php"
+				url="../../api/1.0/quiz/owned.php"
 				handle-as="json"
 				on-response="resultContentReceived">	
 			</iron-ajax>
@@ -218,7 +218,7 @@ Polymer({
 	</template>
 	<script>
 		Polymer({
-			is: "admin-quiz-management-page",
+			is: "polyquiz-page-quizzes",
 			properties: {
 				_get: {
 					type: Object
@@ -246,7 +246,8 @@ Polymer({
 				
 			},
 			_goEditQuiz: function(e){
-				window.location = "?p=editquiz&uuid=" + e.model.get('quizzes.uuid');
+				page('/quiz/' + e.model.get('quizzes.uuid'));
+				//window.location = "?p=editquiz&uuid=" + e.model.get('quizzes.uuid');
 			},
 			_count: function(data){
 				return data.length;

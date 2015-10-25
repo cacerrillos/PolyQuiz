@@ -15,6 +15,8 @@
 	<link rel="import" href="polyquiz-page-admin/polyquiz-page-admin.html">
 	<link rel="import" href="polyquiz-page-admin/polyquiz-admin-login-form.html">
 	<link rel="import" href="polyquiz-page-sessions/polyquiz-page-sessions.html">
+	<link rel="import" href="polyquiz-page-edit-quiz/polyquiz-page-edit-quiz.html">
+	<link rel="import" href="polyquiz-page-edit-quiz/polyquiz-page-quizzes.html">
 
 	<style is="custom-style">
 		paper-drawer-panel {
@@ -45,18 +47,11 @@
 					<div style="color:#FFFFFF">Application</div>
 				</paper-toolbar>
 				<paper-menu id="sidebarMenu" class="flex">
-					<paper-icon-item on-click="goToPageOnClick" data-page="home">
-						<iron-icon icon="icons:home" item-icon></iron-icon>Home
-					</paper-icon-item>
-					<paper-icon-item on-click="goToPageOnClick" data-page="takeaquiz">
-						<iron-icon icon="icons:content-paste" item-icon></iron-icon>Take A Quiz
-					</paper-icon-item>
-					<paper-icon-item on-click="goToPageOnClick" data-page="admin">
-						<iron-icon icon="icons:settings" item-icon></iron-icon>Admin
-					</paper-icon-item>
-					<paper-icon-item on-click="goToPageOnClick" data-page="sessions" hidden="[[!isAdmin]]">
-						<iron-icon icon="icons:settings" item-icon></iron-icon>Sessions
-					</paper-icon-item>
+					<template id="sidebarTemplate" is="dom-repeat" items="{{polyQuizPages}}" as="page">
+						<paper-icon-item on-click="goToPageOnClick" data-page="{{page.hash}}" hidden="{{computeHiddenIsAdmin(page.adminOnly, isAdmin)}}">
+							<iron-icon icon="[[page.icon]]" item-icon></iron-icon><span>[[page.friendlyName]]</span>
+						</paper-icon-item>
+					</template>
 				</paper-menu>
 				<polyquiz-admin-login-form hidden="[[adminStatus.admin]]"></polyquiz-admin-login-form>
 				<paper-icon-item hidden="[[!adminStatus.admin]]" on-click="doLogout">
@@ -80,6 +75,8 @@
 					<polyquiz-page-admin data-page="admin" ctx="[[ctx]]"></polyquiz-page-admin>
 					<polyquiz-page-login data-page="login" ctx="[[ctx]]"></polyquiz-page-login>
 					<polyquiz-page-sessions data-page="sessions" ctx="[[ctx]]"></polyquiz-page-sessions>
+					<polyquiz-page-quizzes data-page="quiz" ctx="[[ctx]]"></polyquiz-page-quizzes>
+					<polyquiz-page-edit-quiz data-page="quizedit" ctx="[[ctx]]"></polyquiz-page-edit-quiz>
 				</neon-animated-pages>
 				
 			</paper-scroll-header-panel>
@@ -93,6 +90,9 @@
 		Polymer({
 			is: "polyquiz-app",
 			properties: {
+				polyQuizPages: {
+					type: Array
+				},
 				page: {
 					type: String,
 					observer: "onPageChange"
@@ -120,6 +120,12 @@
 				'polyquiz-admin-do-logout': 'doLogout',
 				'polyquiz-admin-status': 'onAdminStatusChanged'
 			},
+			computeHiddenIsAdmin: function(adminOnly, isAdmin) {
+				if(adminOnly && !isAdmin) {
+					return true;
+				}
+				return false;
+			},
 			adminStatusChangedAjax: function(details) {
 				this.fire('polyquiz-admin-status', details);
 			},
@@ -145,12 +151,8 @@
 				this.fireToastNonEvent("Page not found! [ " + details.path + " ]");
 			},
 			goToPageOnClick: function(e){
-				if(e.target.getAttribute("data-page") != null){
-					page("/" + e.target.getAttribute("data-page"));
-					//this.page = e.target.getAttribute("page");
-				} else if(e.target.parentElement.getAttribute("data-page") != null) {
-					page("/" + e.target.parentElement.getAttribute("data-page"));
-					//this.page = e.target.parentElement.getAttribute("page");
+				if(e.model.page.hash !== null && e.model.page.hash !== "") {
+					page('/' + e.model.page.hash);
 				} else {
 					this.fireToastNonEvent("Page Does Not Exist! :'[");
 				}
@@ -197,6 +199,8 @@
 
 			ready: function() {
 				this.$.mainPanel.responsiveWidth = "720px";
+				this.polyQuizPages = polyQuizPages;
+				console.log(polyQuizPages);
 			}
 		});
 	</script>
