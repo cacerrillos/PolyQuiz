@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-house-manage-form">
 	<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../polyquiz-dropdown-input.html">
 
 	<style is="custom-style">
 		paper-material {
@@ -26,7 +27,7 @@
 		<iron-collapse id="houseCollapse">
 			<div class="12u"><paper-button raised>Add</paper-button></div>
 			<div class="12u">
-				<poly-dropdown-input id="" name="" objects="[[houses]]" defaulttext="Select A Quiz" raised on-selected-changed=""></poly-dropdown-input>
+				<polyquiz-dropdown-input id="" name="" objects="[[houses]]" defaulttext="Select A Quiz" raised on-selected-changed=""></polyquiz-dropdown-input>
 			</div>
 			<div class="12u">
 				<div class="row">
