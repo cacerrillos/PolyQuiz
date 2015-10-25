@@ -69,7 +69,7 @@
 		</div>
 		<template is="dom-repeat" items="[[ajaxResponse]]" as="houses">
 			<div class="2u">
-				<paper-button on-click="hanClick"><span>[[houses.data.houseData.data.houseName]]</span><br><span style="">[[houses.data.count]]</span></paper-button>
+				<paper-button on-click="hanClick"><span>[[houses.data.sessionData.name]]</span><br><span style="">[[houses.data.count]]</span></paper-button>
 			</div>
 		</template>
 	</div>
@@ -96,8 +96,9 @@ Polymer({
 	onResp: function(e){
 		var temp = e.detail.response;
 		var todelete = -5;
+		console.log(temp);
 		for(var x = 0; x < temp.length; x++){
-			if(temp[x].data.houseData == -1){
+			if(temp[x].data.sessionData == -1){
 				todelete = x;
 				this.totalCount = temp[x].data.count;
 			}
@@ -105,6 +106,7 @@ Polymer({
 		if(todelete !== -5){
 			delete temp[todelete];
 		}
+		console.log(e);
 		this.ajaxResponse = temp.filter(function(){return true;});
 		console.log(e.detail.response);
 	},

@@ -21,7 +21,7 @@ class PolyStats {
 			die($mysqli->error);
 		}
 		$sessions = PolySession::ownedBy($mysqli, $owner);
-		for($x = 0; $x < count($houses); $x++){
+		for($x = 0; $x < count($sessions); $x++){
 			if($stmt = $mysqli->prepare("SELECT COUNT(`id`) FROM `results` WHERE `session` = ? AND `quiz` = ? AND `owner` = ? LIMIT 1;")){
 				$stmt->bind_param("sii", $sessions[$x]->sessionid, $quiz, $owner);
 				$stmt->execute();
@@ -38,7 +38,7 @@ class PolyStats {
 		}
 		for($x = 0; $x < count($resultObject); $x++){
 			if($resultObject[$x]->data['sessionData'] != -1){
-				//$resultObject[$x]->data['sessionData'] = PolySession::fromMySQL($mysqli, $resultObject[$x]->data['sessionData'], $owner);
+				$resultObject[$x]->data['sessionData'] = PolySession::fromMySQL($mysqli, $resultObject[$x]->data['sessionData'], $owner);
 			}
 		}
 		return $resultObject;
