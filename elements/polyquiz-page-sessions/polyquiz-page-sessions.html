@@ -120,6 +120,7 @@
 				this.$.rowWrapper.style.display = "none";
 			},
 			onContextChanged: function(details) {
+				this.loginOverlayCheck();
 				return;
 				if(details.params.subpage != null) {
 					switch(details.params.subpage) {

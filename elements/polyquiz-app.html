@@ -10,13 +10,29 @@
 	<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
 	<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 
+
+	<link rel="import" href="../bower_components/paper-button/paper-button.html">
+	<link rel="import" href="../bower_components/paper-material/paper-material.html">
+	<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+	<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+	<link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+	<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+	<link rel="import" href="../bower_components/paper-item/paper-item.html">
+	<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+	<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+	<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+	<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+	<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+	<link rel="import" href="../bower_components/paper-input/paper-input.html">
+	<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+
 	<link rel="import" href="pages/polyquiz-page-home.html">
-	<link rel="import" href="pages/polyquiz-page-takeaquiz.html">
-	<link rel="import" href="polyquiz-page-admin/polyquiz-page-admin.html">
 	<link rel="import" href="polyquiz-page-admin/polyquiz-admin-login-form.html">
-	<link rel="import" href="polyquiz-page-sessions/polyquiz-page-sessions.html">
+	<link rel="import" href="polyquiz-page-admin/polyquiz-page-admin.html">
+	
 	<link rel="import" href="polyquiz-page-edit-quiz/polyquiz-page-edit-quiz.html">
-	<link rel="import" href="polyquiz-page-edit-quiz/polyquiz-page-quizzes.html">
 
 	<style is="custom-style">
 		paper-drawer-panel {
@@ -125,6 +141,11 @@
 					return true;
 				}
 				return false;
+			},
+			doLoad: function(hash) {
+				console.log("load: " + hash);
+				var p = findPolyQuizPage(hash);
+				this.importHref(p.path, function(e) { console.log(e); }, function(e) { console.log(e); });
 			},
 			adminStatusChangedAjax: function(details) {
 				this.fire('polyquiz-admin-status', details);

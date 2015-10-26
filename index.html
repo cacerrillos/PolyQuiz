@@ -56,6 +56,7 @@ skel.layout({
 });
 </script>
 <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="bower_components/polymer/polymer.html">
 <script src="bower_components/page/page.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/autofill-event/src/autofill-event.js"></script>
@@ -106,19 +107,20 @@ skel.layout({
 		
 </style>
 <script>
-function PolyQuizPage(hash, friendlyName, icon, path, adminOnly) {
+function PolyQuizPage(hash, friendlyName, icon, path, adminOnly, loaded) {
 	this.hash = hash;
 	this.friendlyName = friendlyName;
 	this.icon = icon;
 	this.path = path;
 	this.adminOnly = adminOnly;
+	this.loaded = loaded;
 }
 var polyQuizPages = [
-	new PolyQuizPage("home", "Home", "icons:home", "/", false),
-	new PolyQuizPage("takeaquiz", "Take A Quiz", "icons:content-paste", "/", false),
-	new PolyQuizPage("admin", "Admin", "icons:settings", "/", false),
-	new PolyQuizPage("sessions", "Sessions", "icons:settings", "/", true),
-	new PolyQuizPage("quiz", "Quizzes", "icons:content-paste", "/", true)
+	new PolyQuizPage("home", "Home", "icons:home", "/", false, true),
+	new PolyQuizPage("takeaquiz", "Take A Quiz", "icons:content-paste", "elements/polyquiz-page-takeaquiz/polyquiz-page-takeaquiz.html", false, false),
+	new PolyQuizPage("admin", "Admin", "icons:settings", "elements/polyquiz-page-admin/polyquiz-page-admin.html", false, true),
+	new PolyQuizPage("sessions", "Sessions", "icons:settings", "elements/polyquiz-page-sessions/polyquiz-page-sessions.html", true, false),
+	new PolyQuizPage("quiz", "Quizzes", "icons:content-paste", "elements/polyquiz-page-edit-quiz/polyquiz-page-quizzes.html", true, false)
 ];
 function findPolyQuizPage(hash) {
 	for(var k in polyQuizPages) {
@@ -169,6 +171,11 @@ function handleSimplePage(ctx, next) {
 	var path = ctx.path.split("/");
 	var page = findPolyQuizPage(path[1]);
 	if(page) {
+		if(!page.loaded) {
+			//do load
+			mainapp.doLoad(page.hash);
+			page.loaded = true;
+		}
 		mainapp.page = page.hash;
 	} else {
 		//ddo404
