@@ -104,10 +104,10 @@ Polymer({
 		
 		if(e.detail.response.status === true){
 			this.resetForm();
-			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Created a new Session!" } });
+			this.fire('firetoast', { message: "Created a new Session!"});
 			this.fire("reload-sessions", { });
 		} else {
-			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "FAILED to create a new Session!" } });
+			this.fire('firetoast', { message: "FAILED to create a new Session!"});
 		}
 		
 		console.log(e);

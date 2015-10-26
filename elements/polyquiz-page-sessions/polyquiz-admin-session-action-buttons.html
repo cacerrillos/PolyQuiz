@@ -173,15 +173,15 @@
 			},
 			onDeleteResp: function(e){
 				if(e.detail.response.status == true){
-					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Deleted session!" } });
+					this.fire('firetoast', { message: "Deleted session!"});
 					this.fire('session-deleted', {uuid: e.target.params.uuid});
 				} else {
 					if(e.detail.response.error){
 						if(e.detail.response.error == 1451){
-							this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete session! Still contains results!" } });
+							this.fire('firetoast', { message: "Failed to delete session! Still contains results!"});
 						}
 					} else {
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete session!" } });
+						this.fire('firetoast', { message: "Failed to delete session!"});
 					}
 				}
 			},
@@ -193,17 +193,17 @@
 					if(e.detail.response.status == true){
 						this.sessionopen = true;
 						this.ready();
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Opened session!" } });
+						this.fire('firetoast', { message: "Opened session!"});
 					} else {
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to open session!" } });
+						this.fire('firetoast', { message: "Failed to open session!"});
 					}
 				} else if(e.target.params.status == "false") {
 					if(e.detail.response.status == true){
 						this.sessionopen = false;
 						this.ready();
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Closed session!" } });
+						this.fire('firetoast', { message: "Closed session!"});
 					} else {
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to close session!" } });
+						this.fire('firetoast', { message: "Failed to close session!"});
 					}
 				}
 			},
@@ -215,17 +215,17 @@
 					if(e.detail.response.status == true){
 						this.sessionshow = true;
 						this.ready();
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Set scores to visible!" } });
+						this.fire('firetoast', { message: "Set scores to visible!"});
 					} else {
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to set scores to visible!" } });
+						this.fire('firetoast', { message: "Failed to set scores to visible!"});
 					}
 				} else if(e.target.params.show == "false") {
 					if(e.detail.response.status == true){
 						this.sessionshow = false;
 						this.ready();
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Set scores to NOT visible!" } });
+						this.fire('firetoast', { message: "Set scores to NOT visible!"});
 					} else {
-						this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to set scores to NOT visible!" } });
+						this.fire('firetoast', { message: "Failed to set scores to NOT visible!"});
 					}
 				}
 			},
@@ -248,10 +248,10 @@
 				this.$.editSpinner.style.display = "none";
 				this.$.editSpinner.active = false;
 				if(e.detail.response.status == true){
-					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Saved changes to session!" } });
+					this.fire('firetoast', { message: "Saved changes to session!"});
 					this.fire('session-deleted', { });
 				} else {
-					this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to save changes to session!" } });
+					this.fire('firetoast', { message: "Failed to save changes to session!"});
 				}
 			},
 			onSortBySession: function(){
