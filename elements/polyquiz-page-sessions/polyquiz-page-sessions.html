@@ -15,6 +15,15 @@
 			margin-top: 5px;
 			margin-bottom: 5px;
 		}
+		paper-fab.add {
+			position: absolute;
+			top: -28px;
+			right: 8px;
+			z-index: 5;
+		}
+		paper-dialog {
+			background-color: white;
+		}
 	</style>
 	
 	<template>
@@ -22,29 +31,18 @@
 		<div class="container">
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[sessionSubpage]]">
 				<div>
-					<div class="row">
-						<div class="12u">
-							<paper-material>
-								<h2>Session Management</h2>
-							</paper-material>
-						</div>
-					</div>
+					<polyquiz-admin-session-create-form id="newSessionDialog"></polyquiz-admin-session-create-form>
 					<div class="row">
 						<div class="6u 12u(xsmall)">
 							<paper-material>
-								<polyquiz-admin-session-create-form on-reload-sessions="onSessionDeleted"></polyquiz-admin-session-create-form>
-							</paper-material>
-						</div>
-						<div class="6u 12u(xsmall)">
-							<paper-material>
-								<polyquiz-admin-house-manage-form on-reload-sessions="onSessionDeleted"></polyquiz-admin-house-manage-form>
+								<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
 							</paper-material>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" style="padding-top: 28px;">
 						<div class="12u">
 							<paper-material>
-								<h3>Modify Session</h3>
+							<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
 									<div class="row">
 										<div class="12u">
 											<paper-material>
@@ -72,7 +70,7 @@
 									<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
 									<div id="rowWrapper">
 										<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
-											<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></polyquiz-admin-session-row>
+											<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
 										</template>
 									</div>
 							</paper-material>
@@ -100,20 +98,25 @@
 					type: Boolean,
 					value: false
 				},
-				adminData: {
+				adminStatus: {
 					type: Object
 				}
 			},
+			listeners: {
+				'reload-sessions': 'reloadSessions'
+			},
+			doAddNewSession: function() {
+				this.$.newSessionDialog.open();
+			},
 			onResp: function(e){
 				this.sessions = e.detail.response;
-				console.log(e);
 			},
 			spinnerOff: function(e){
 				this.$.rowSpinner.active = false;
 				this.$.rowSpinner.style.display = "none";
 				this.$.rowWrapper.style.display = "block";
 			},
-			onSessionDeleted: function(e){
+			reloadSessions: function(e){
 				this.$.query.generateRequest();
 				this.$.rowSpinner.active = true;
 				this.$.rowSpinner.style.display = "block";
@@ -133,18 +136,16 @@
 			},
 			onAdminStatusChanged: function(e) {
 				var details = e.detail;
-				this.adminData = e.detail;
+				this.adminStatus = e.detail;
 				this.isAdmin = details.admin;
 				this.loginOverlayCheck();
 			},
 			loginOverlayCheck: function(e) {
 				var mainapp = document.querySelector("#mainapp");
 				if(this.parentNode.selectedItem == this) {
-					if(this.adminData) {
-						if(this.isAdmin) {
-							mainapp.closeLoginOverlay();
-							return;
-						}
+					if(mainapp.isAdmin) {
+						mainapp.closeLoginOverlay();
+						return;
 					}
 					mainapp.openLoginOverlay();
 				}
@@ -157,7 +158,7 @@
 				var parentSelector = this.parentNode;
 
 				parentSelector.addEventListener('iron-select', this.loginOverlayCheck.bind(this));
-				this.onSessionDeleted();
+				this.reloadSessions();
 			}
 		});
 	</script>
