@@ -59,7 +59,7 @@
 		<paper-drawer-panel id="mainPanel" on-paper-responsive-change="onresp">
 			<paper-header-panel drawer class="vertical layout">
 				<paper-toolbar>
-					<div style="color:#FFFFFF">Application</div>
+					<div style="color:#FFFFFF">PolyQuiz 3.0</div>
 				</paper-toolbar>
 				<paper-menu id="sidebarMenu" class="flex">
 					<template id="sidebarTemplate" is="dom-repeat" items="{{polyQuizPages}}" as="page">
@@ -77,7 +77,7 @@
 			</paper-header-panel>
 			<paper-scroll-header-panel class="flex" main id="scrollheader" fixed>
 				<paper-toolbar>
-					<span class="title">PolyQuiz 3.0</span>
+					<span class="title">PolyQuiz 3.0 - <span>[[pageTitle]]</span></span>
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="home"><iron-icon icon="icons:home"></iron-icon><span class="not-small"> Home</span></paper-button>
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="takeaquiz"><iron-icon icon="icons:content-paste"></iron-icon><span class="not-small"> Take A Quiz</span></paper-button>
 					
@@ -112,6 +112,9 @@
 			properties: {
 				polyQuizPages: {
 					type: Array
+				},
+				pageTitle: {
+					type: String
 				},
 				page: {
 					type: String,
@@ -205,6 +208,10 @@
 				console.log(details);
 			},
 			onPageChange: function(details) {
+				var p = findPolyQuizPage(details);
+				if(p) {
+					this.pageTitle = p.friendlyName;
+				}
 				for(var x = 0; x < this.$.sidebarMenu.items.length; x++){
 					if(this.$.sidebarMenu.items[x].getAttribute("data-page") == details){
 						this.$.sidebarMenu.select(this.$.sidebarMenu.indexOf(this.$.sidebarMenu.items[x]));
