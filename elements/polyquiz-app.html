@@ -32,7 +32,6 @@
 	<link rel="import" href="polyquiz-page-admin/polyquiz-admin-login-form.html">
 	<link rel="import" href="polyquiz-page-admin/polyquiz-page-admin.html">
 	
-	<link rel="import" href="polyquiz-page-edit-quiz/polyquiz-page-edit-quiz.html">
 
 	<style is="custom-style">
 		paper-drawer-panel {
@@ -146,6 +145,16 @@
 					return true;
 				}
 				return false;
+			},
+			doLoadFromPath: function(path, ctx, page) {
+				this.importHref(path, function(e) {
+					console.log(e);
+						this.ctx = ctx;
+						this.page = page;
+				},
+				function(e) {
+					console.log(e);
+				});
 			},
 			doLoad: function(hash) {
 				this.$.pageLoadSpinner.active = true;
