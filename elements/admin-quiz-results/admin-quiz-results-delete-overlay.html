@@ -52,7 +52,8 @@ Polymer({
 	onAjaxResp: function(e){
 		if(e.detail.response.status == true){
 			this.$.thisDialog.close();
-			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Quiz result deleted!" } });
+
+			this.fire('firetoast', { message: "Quiz result deleted!" });
 			this.fire('result-deleted', {uuid: this.uuid});
 		} else {
 			this.$.cancelButton.disabled = false;
@@ -60,7 +61,7 @@ Polymer({
 			this.$.deleteButtonText.style.display = "block";
 			this.$.deleteSpinner.style.display = "none";
 			this.$.deleteSpinner.active = false;
-			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "Failed to delete quiz result!" } });
+			this.fire('firetoast', { message: "Failed to delete quiz result!" });
 		}
 	},
 	doDelete: function() {

@@ -33,7 +33,7 @@
 				}
 		},
 		zeroResultsToast: function() {
-			this.fire('iron-signal', {name: 'toast-event', data: { toastString: "There are 0 results!" } });
+			this.fire('firetoast', { message: "There are 0 results!" });
 		},
 		onResp: function(e){
 			var count = e.detail.response.count;
