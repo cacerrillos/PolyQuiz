@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<dom-module id="polyquiz-admin-session-action-buttons">
+<dom-module id="polyquiz-admin-session-action-buttons-small">
 	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 	<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
 	<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
@@ -60,34 +59,27 @@
 				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Save</paper-button>
 			</div>
 		</paper-dialog>
-		<div class="row">
-			<div class="1u">
+		<paper-menu-button id="menuButton">
+			<paper-icon-button icon="icons:menu" class="dropdown-trigger"></paper-icon-button>
+			<paper-menu class="dropdown-content">
 				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
-				<paper-spinner id="editSpinner" style="display:none;"></paper-spinner>
-			</div>
-			<div class="1u">
 				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
-				<paper-spinner id="lockSpinner" style="display:none;"></paper-spinner>
-			</div>
-			<div class="1u">
 				<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
-				<paper-spinner id="showSpinner" style="display:none;"></paper-spinner>
-			</div>
-			<div class="1u">
 				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
-			</div>
-		</div>
+			</paper-menu>
+		</paper-menu-button>
+		<paper-spinner id="spinnerAll" style="display:none;"></paper-spinner>
 
 		<polyquiz-admin-session-delete-prompt sessionid="[[sessionid]]" sessionname="[[sessionname]]" id="deletePrompt" on-delete-confirm="doDelete"></polyquiz-admin-session-delete-prompt>
 	</template>
 	<script>
 		Polymer({
-			is: "polyquiz-admin-session-action-buttons",
+			is: "polyquiz-admin-session-action-buttons-small",
 			properties: {
 				_get: {
 					type: Object
 				},
-				sessiondata: {
+				sessionData: {
 					type: Object,
 					observer: 'onSessionDataChanged'
 				},
@@ -140,8 +132,8 @@
 			},
 			toggleLock: function() {
 				this.$.openstat.style.display = "none";
-				this.$.lockSpinner.style.display = "block";
-				this.$.lockSpinner.active = true;
+				this.$.spinnerAll.style.display = "block";
+				this.$.spinnerAll.active = true;
 				if(this.sessionopen){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessionid,
@@ -157,8 +149,8 @@
 			},
 			toggleShow: function() {
 				this.$.showscore.style.display = "none";
-				this.$.showSpinner.style.display = "block";
-				this.$.showSpinner.active = true;
+				this.$.spinnerAll.style.display = "block";
+				this.$.spinnerAll.active = true;
 				if(this.sessionshow){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessionid,
@@ -185,6 +177,7 @@
 			onDeleteResp: function(e){
 				if(e.detail.response.status == true){
 					this.fire('firetoast', { message: "Deleted session!"});
+					this.fire('session-deleted', {uuid: e.target.params.uuid});
 				} else {
 					if(e.detail.response.error){
 						if(e.detail.response.error == 1451){
@@ -194,12 +187,11 @@
 						this.fire('firetoast', { message: "Failed to delete session!"});
 					}
 				}
-				this.fire('reload-sessions');
 			},
 			onToggleLockResp: function(e){
 				this.$.openstat.style.display = "block";
-				this.$.lockSpinner.style.display = "none";
-				this.$.lockSpinner.active = false;
+				this.$.spinnerAll.style.display = "none";
+				this.$.spinnerAll.active = false;
 				if(e.target.params.status == "true"){
 					if(e.detail.response.status == true){
 						this.sessionopen = true;
@@ -217,13 +209,11 @@
 						this.fire('firetoast', { message: "Failed to close session!"});
 					}
 				}
-				//fire session refresh
-				this.fire('reload-sessions');
 			},
 			onToggleShowResp: function(e){
 				this.$.showscore.style.display = "block";
-				this.$.showSpinner.style.display = "none";
-				this.$.showSpinner.active = false;
+				this.$.spinnerAll.style.display = "none";
+				this.$.spinnerAll.active = false;
 				if(e.target.params.show == "true"){
 					if(e.detail.response.status == true){
 						this.sessionshow = true;
@@ -241,7 +231,6 @@
 						this.fire('firetoast', { message: "Failed to set scores to NOT visible!"});
 					}
 				}
-				this.fire('reload-sessions');
 			},
 			editDialog: function(e){
 				this.$.sessionNameEdit.value = this.sessionname;
@@ -249,8 +238,8 @@
 			},
 			doEdit: function(e){
 				this.$.edit.style.display = "none";
-				this.$.editSpinner.style.display = "block";
-				this.$.editSpinner.active = true;
+				this.$.spinnerAll.style.display = "block";
+				this.$.spinnerAll.active = true;
 				this.$.editAjax.params = {
 					uuid: this.sessionid,
 					name: this.$.sessionNameEdit.value
@@ -259,19 +248,39 @@
 			},
 			onEditResp: function(e){
 				this.$.edit.style.display = "block";
-				this.$.editSpinner.style.display = "none";
-				this.$.editSpinner.active = false;
+				this.$.spinnerAll.style.display = "none";
+				this.$.spinnerAll.active = false;
 				if(e.detail.response.status == true){
 					this.fire('firetoast', { message: "Saved changes to session!"});
+					this.fire('session-deleted', { });
 				} else {
 					this.fire('firetoast', { message: "Failed to save changes to session!"});
 				}
-				this.fire('reload-sessions');
 			},
 			onSortBySession: function(){
 				window.location = "?p=results&sortby=session";
 			},
+			openChanged: function(e){
+				if(this.sessionopen){
+					this.$.openstat.icon = "icons:lock-open";
+					this.$.openstat.style.color = "#8BC34A";
+				} else {
+					this.$.openstat.icon = "icons:lock-outline";
+					this.$.openstat.style.color = "#D32F2F";
+				}
+			},
+			showChanged: function(e){
+				if(this.sessionshow){
+					this.$.showscore.style.color = "#8BC34A";
+				} else {
+					this.$.showscore.style.color = "#D32F2F";
+				}
+			},
 			ready: function() {
+				this.$.menuButton.horizontalAlign = "right";
+				this.openChanged();
+				this.showChanged();
+				
 				//this.$.resultsAjax.generateRequest();
 			}
 		});
