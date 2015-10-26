@@ -142,7 +142,7 @@
 				this.$.openstat.style.display = "none";
 				this.$.lockSpinner.style.display = "block";
 				this.$.lockSpinner.active = true;
-				if(this.sessionopen){
+				if(this.sessiondata.data.status){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessionid,
 						status: "false"
@@ -159,7 +159,7 @@
 				this.$.showscore.style.display = "none";
 				this.$.showSpinner.style.display = "block";
 				this.$.showSpinner.active = true;
-				if(this.sessionshow){
+				if(this.sessiondata.data.show){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessionid,
 						show: "false"
