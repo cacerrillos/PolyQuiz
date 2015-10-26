@@ -32,20 +32,13 @@
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[sessionSubpage]]">
 				<div>
 					<polyquiz-admin-session-create-form id="newSessionDialog"></polyquiz-admin-session-create-form>
-					<div class="row">
-						<div class="6u 12u(xsmall)">
-							<paper-material>
-								<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
-							</paper-material>
-						</div>
-					</div>
 					<div class="row" style="padding-top: 28px;">
 						<div class="12u">
 							<paper-material>
 							<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
 									<div class="row">
 										<div class="12u">
-											<paper-material>
+											<paper-material  elevation="0" style="margin-bottom: 16px;">
 												<div class="row">
 													<div class="4u 5u(small) 4u(xsmall)">
 														<div class="row">
@@ -73,6 +66,7 @@
 											<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
 										</template>
 									</div>
+									<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
 							</paper-material>
 						</div>
 					</div>
