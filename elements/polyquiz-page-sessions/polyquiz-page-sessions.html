@@ -72,7 +72,7 @@
 									<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
 									<div id="rowWrapper">
 										<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
-											<paper-item><polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></polyquiz-admin-session-row></paper-item>
+											<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="onSessionDeleted"></polyquiz-admin-session-row>
 										</template>
 									</div>
 							</paper-material>

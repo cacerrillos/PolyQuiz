@@ -13,6 +13,7 @@
 	<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/info.php" handle-as="json" on-response="houseInfoResp"></iron-ajax>
 	<div class="row">
 		<div class="12u">
+			<paper-material id="mainMat" elevation="0" on-mouseover="doHover" on-mouseout="killHover" animated>
 				<div class="row">
 					<div class="12u"><center><paper-spinner id="spinner" active></paper-spinner></center></div>
 				</div>
@@ -35,6 +36,7 @@
 						<polyquiz-admin-session-action-buttons id="actionButtons" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons>
 					</div>
 				</div>
+			</paper-material>
 		</div>
 	</div>
 </template>
@@ -54,6 +56,12 @@ Polymer({
 			type: String,
 			value: "Quiz Name Not Found"
 		}
+	},
+	doHover: function() {
+		this.$.mainMat.elevation = 3;
+	},
+	killHover: function() {
+		this.$.mainMat.elevation = 0;
 	},
 	unixDateToHumanDate: function(e){
 		var a = new Date(e * 1000);
