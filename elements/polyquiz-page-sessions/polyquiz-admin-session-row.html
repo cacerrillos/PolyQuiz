@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-row">
+	<link rel="import" href="polyquiz-admin-session-action-buttons-small.html">
 	<style is="custom-style">
 		paper-material {
 			background-color: white;
@@ -33,7 +34,8 @@
 					<div class="2u 3u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
 					<div class="1u">[[house]]</div>
 					<div class="3u 2u(small)">
-						<polyquiz-admin-session-action-buttons id="actionButtons" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons>
+						<polyquiz-admin-session-action-buttons class="not-medium" id="actionButtons" sessiondata="[[sessionobject]]" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons>
+						<polyquiz-admin-session-action-buttons-small class="only-medium" id="actionButtonsSmall" sessiondata="[[sessionobject]]" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons-small>
 					</div>
 				</div>
 			</paper-material>
