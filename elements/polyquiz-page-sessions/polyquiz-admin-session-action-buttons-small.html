@@ -79,7 +79,7 @@
 				_get: {
 					type: Object
 				},
-				sessionData: {
+				sessiondata: {
 					type: Object,
 					observer: 'onSessionDataChanged'
 				},
@@ -91,6 +91,7 @@
 				}
 			},
 			onSessionDataChanged: function(e) {
+				console.log(e);
 				if(e.data.status){
 					this.$.openstat.icon = "icons:lock-open";
 					this.$.openstat.style.color = "#8BC34A";
