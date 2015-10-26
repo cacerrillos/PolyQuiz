@@ -4,50 +4,54 @@
 	<link rel="import" href="../polyquiz-dropdown-input.html">
 
 	<style is="custom-style">
-		paper-material {
+		.nomargins { 
+			margin: 0px;
+		}
+		paper-dialog {
 			background-color: white;
-			margin-top: 5px;
-			margin-bottom: 5px;
 		}
 		.validButton {
 			background-color: #4285f4;
 			color: rgba(255,255,255,1.00);
 		}
+		paper-button {
+			margin-top: 8px;
+		}
 	</style>
 <template>
-	<iron-ajax id="createAjax" url="../../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
-	<div class="row">
-		<div class="12u"><paper-button on-click="toggleForm" id="createToggleButton" raised>Create New Session</paper-button></div>
-		<iron-collapse id="collapse">
-			<div class="12u"><paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input></div>
-			<div class="12u">
-				<iron-ajax id="housesAjax" url="../../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
-				<polyquiz-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
-			</div>
-			<div class="12u">
-				<iron-ajax id="allquizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
-				<polyquiz-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
-			</div>
-			<div class="12u">
-				<div class="row">
-					<div class="12u">
-						<paper-radio-group selected="open" id="status">
-							<paper-radio-button name="open">Open</paper-radio-button>
-							<paper-radio-button name="closed">Closed</paper-radio-button>
-						</paper-radio-group>
-					</div>
-					<div class="12u">
-						<paper-radio-group selected="show" id="show">
-							<paper-radio-button name="show">Show Scores</paper-radio-button>
-							<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
-						</paper-radio-group>
-					</div>
-				</div>
-			</div>
+	<paper-dialog id="mainDialog">
+		<div class="layout vertical">
+		<div class="layout horizontal">
+			<div class="flex"></div>
+				<h2 class="nomargins">Create New Session</h2>
+			<div class="flex"></div>
+		</div>
+		
+		<iron-ajax id="createAjax" url="../../api/1.0/sessions/create.php" handle-as="json" on-response="createResp"></iron-ajax>
+
+		<paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
+		<iron-ajax id="housesAjax" url="../../api/1.0/houses/houses.php" handle-as="json" on-response="housesResp" auto></iron-ajax>
+		<polyquiz-dropdown-input id="houseSelector" name="house" objects="[[houses]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
+		<iron-ajax id="allquizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" on-response="quizInfoResp" auto></iron-ajax>
+		<polyquiz-dropdown-input id="quizSelector" name="quiz" objects="[[quizzes]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
+
+		<paper-radio-group selected="open" id="status" class="layout horizontal">
+			<paper-radio-button name="open">Open</paper-radio-button>
+			<paper-radio-button name="closed">Closed</paper-radio-button>
+		</paper-radio-group>
+		<paper-radio-group selected="show" id="show" class="layout horizontal">
+			<paper-radio-button name="show">Show Scores</paper-radio-button>
+			<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
+		</paper-radio-group>
+		<div class="layout horizontal">
+			<div class="flex"></div>
 			<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
 			<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
-		</iron-collapse>
-	</div>
+			<div class="flex"></div>
+		</div>
+		
+		</div>
+	</paper-dialog>
 </template>
 <script>
 Polymer({
@@ -60,13 +64,8 @@ Polymer({
 		sessionname: String,
 		
 	},
-	toggleForm: function(e){
-		this.$.collapse.toggle();
-		if(this.$.collapse.opened){
-			this.$.createToggleButton.raised = false;
-		} else {
-			this.$.createToggleButton.raised = true;
-		}
+	open: function() {
+		this.$.mainDialog.open();
 	},
 	housesResp: function(e){
 		if(e.detail.response){
