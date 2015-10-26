@@ -85,6 +85,11 @@
 					<paper-button on-click="goToPageOnClick" class="smallbuttons" data-page="admin"><iron-icon icon="icons:settings"></iron-icon><span class="not-small"> Manage</span></paper-button>
 					
 				</paper-toolbar>
+				<div class="layout horizontal">
+					<div class="flex"></div>
+					<paper-spinner id="pageLoadSpinner"></paper-spinner>
+					<div class="flex"></div>
+				</div>
 				<neon-animated-pages id="pageSelector" attrForSelected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
 					<polyquiz-page-home data-page="home"></polyquiz-page-home>
 					<polyquiz-page-takeaquiz data-page="takeaquiz" ctx="[[ctx]]"></polyquiz-page-takeaquiz>
@@ -143,9 +148,18 @@
 				return false;
 			},
 			doLoad: function(hash) {
+				this.$.pageLoadSpinner.active = true;
+				this.$.pageLoadSpinner.hidden = false;
 				console.log("load: " + hash);
 				var p = findPolyQuizPage(hash);
-				this.importHref(p.path, function(e) { console.log(e); }, function(e) { console.log(e); });
+				this.importHref(p.path, function(e) {
+					console.log(e);
+					this.$.pageLoadSpinner.active = false;
+					this.$.pageLoadSpinner.hidden = true;
+				},
+				function(e) {
+					console.log(e);
+				});
 			},
 			adminStatusChangedAjax: function(details) {
 				this.fire('polyquiz-admin-status', details);
