@@ -43,11 +43,9 @@
 			</div>
 			<div class="flex">
 				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
-				<paper-spinner id="lockSpinner" style="display:none;"></paper-spinner>
 			</div>
 			<div class="flex">
 				<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
-				<paper-spinner id="showSpinner" style="display:none;"></paper-spinner>
 			</div>
 			<div class="flex">
 				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
@@ -63,7 +61,6 @@
 					<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
 				</paper-menu>
 			</paper-menu-button>
-			<paper-spinner id="spinnerAll" style="display:none;"></paper-spinner>
 		</div>
 	</template>
 	<script>
@@ -129,12 +126,9 @@
 				return arr;
 			},
 			toggleLock: function() {
-				this.$.menuButton.hidden = true;
-				this.$.openstat.style.display = "none";
-				this.$.lockSpinner.style.display = "block";
-				this.$.lockSpinner.active = true;
-				this.$.spinnerAll.hidden = false;
-				this.$.spinnerAll.active = true;
+				this.$.menuButton.disabled = true;
+				this.$.openstat.disabled = true;
+
 				if(this.sessiondata.data.status){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessiondata.sessionid,
@@ -149,12 +143,9 @@
 				this.$.toggleLockAjax.generateRequest();
 			},
 			toggleShow: function() {
-				this.$.menuButton.hidden = true;
-				this.$.showscore.style.display = "none";
-				this.$.showSpinner.style.display = "block";
-				this.$.showSpinner.active = true;
-				this.$.spinnerAll.hidden = false;
-				this.$.spinnerAll.active = true;
+				this.$.menuButton.disabled = true;
+				this.$.showscore.disabled = true;
+
 				if(this.sessiondata.data.show){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessiondata.sessionid,
@@ -172,12 +163,9 @@
 				this.fire('delete-session-request' , { sessionObject: this.sessiondata });
 			},
 			onToggleLockResp: function(e){
-				this.$.menuButton.hidden = false;
-				this.$.openstat.style.display = "block";
-				this.$.lockSpinner.style.display = "none";
-				this.$.lockSpinner.active = false;
-				this.$.spinnerAll.active = false;
-				this.$.spinnerAll.hidden = true;
+				this.$.menuButton.disabled = false;
+				this.$.openstat.disabled = false;
+
 				if(e.target.params.status == "true"){
 					if(e.detail.response.status == true){
 						this.sessionopen = true;
@@ -199,12 +187,9 @@
 				this.fire('reload-sessions');
 			},
 			onToggleShowResp: function(e){
-				this.$.menuButton.hidden = false;
-				this.$.showscore.style.display = "block";
-				this.$.showSpinner.style.display = "none";
-				this.$.showSpinner.active = false;
-				this.$.spinnerAll.active = false;
-				this.$.spinnerAll.hidden = true;
+				this.$.menuButton.disabled = false;
+				this.$.showscore.disabled = false;
+
 				if(e.target.params.show == "true"){
 					if(e.detail.response.status == true){
 						this.sessionshow = true;
