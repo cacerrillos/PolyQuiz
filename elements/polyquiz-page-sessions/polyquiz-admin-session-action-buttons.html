@@ -180,6 +180,7 @@
 						this.sessionopen = false;
 						this.ready();
 						this.fire('firetoast', { message: "Closed session!"});
+						this.fire('reload-sessions');
 					} else {
 						this.fire('firetoast', { message: "Failed to close session!"});
 					}
@@ -205,6 +206,7 @@
 						this.sessionshow = false;
 						this.ready();
 						this.fire('firetoast', { message: "Set scores to NOT visible!"});
+						this.fire('reload-sessions');
 					} else {
 						this.fire('firetoast', { message: "Failed to set scores to NOT visible!"});
 					}
