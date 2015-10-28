@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-admin-session-edit-prompt">
+	<style is="custom-style">
+
+	</style>
+
+	<template>
+		<paper-dialog id="editDialog" on-iron-overlay-closed="closedEvent" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<iron-ajax id="editAjax" url="../../api/1.0/sessions/edit.php" handle-as="json" on-response="onEditResp"></iron-ajax>
+			<div class="row">
+				<div class="12u">
+					Edit Session
+					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessiondata.name]]"></paper-input>
+				</div>
+			</div>
+			
+			<div class="buttons">
+				<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Save</paper-button>
+			</div>
+		</paper-dialog>
+	</template>
+	<script>
+	Polymer({
+		is: 'polyquiz-admin-session-edit-prompt',
+		ready: function() {
+			
+		}
+	});
+	</script>
+</dom-module>

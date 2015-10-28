@@ -28,6 +28,8 @@
 	
 	<template>
 		<iron-ajax id="query" url="../../api/1.0/sessions/owned.php" handle-as="json" on-response="onResp"></iron-ajax>
+		
+		<polyquiz-admin-session-edit-prompt id="editPrompt"></polyquiz-admin-session-edit-prompt>
 
 		<polyquiz-admin-session-delete-prompt id="deletePrompt"></polyquiz-admin-session-delete-prompt>
 
