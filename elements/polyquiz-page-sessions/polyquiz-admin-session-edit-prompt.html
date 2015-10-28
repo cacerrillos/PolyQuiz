@@ -5,8 +5,9 @@
 	</style>
 
 	<template>
-		<paper-dialog id="editDialog" on-iron-overlay-closed="closedEvent" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<iron-ajax id="editAjax" url="../../api/1.0/sessions/edit.php" handle-as="json" on-response="onEditResp"></iron-ajax>
+		<iron-ajax id="editAjax" url="../../api/1.0/sessions/edit.php" handle-as="json" on-response="onEditResp"></iron-ajax>
+
+		<paper-dialog id="editDialog" on-iron-overlay-closed="onDialogClosed" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<div class="row">
 				<div class="12u">
 					Edit Session
@@ -23,6 +24,46 @@
 	<script>
 	Polymer({
 		is: 'polyquiz-admin-session-edit-prompt',
+		properties: {
+			sessiondata: {
+				type: Object
+			},
+			reopen: {
+				type: Boolean,
+				value: false
+			}
+		},
+		onDialogClosed: function(e){
+			if(e.detail.confirmed){
+				this.$.editAjax.params = {
+					uuid: this.sessiondata.sessionid,
+					name: this.$.sessionNameEdit.value
+				};
+				this.$.editAjax.generateRequest();
+			}
+			if(this.reopen) {
+				this.$.dialog.open();
+				this.reopen = false;
+			}
+		},
+		onEditResp: function(e){
+			if(e.detail.response.status == true){
+				this.fire('firetoast', { message: "Saved changes to session!"});
+				this.fire('reload-sessions');
+			} else {
+				this.fire('firetoast', { message: "Failed to save changes to session!"});
+			}
+		},
+		open: function(e) {
+			this.sessiondata = e;
+			if(!this.$.editDialog.opened) {
+				this.$.editDialog.setAttribute("entry-animation", "scale-up-animation");
+				this.$.editDialog.open();
+			} else {
+				this.reopen = true;
+				this.$.editDialog.setAttribute("entry-animation", "fade-in-animation");
+			}
+		},
 		ready: function() {
 			
 		}

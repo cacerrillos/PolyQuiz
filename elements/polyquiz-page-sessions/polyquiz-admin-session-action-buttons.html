@@ -37,24 +37,6 @@
 		url="../../api/1.0/sessions/set_show_scores.php"
 		handle-as="json"
 	 	on-response="onToggleShowResp"></iron-ajax>
-		<paper-dialog id="editDialog" on-iron-overlay-closed="closedEvent" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<iron-ajax
-				id="editAjax"
-				url="../../api/1.0/sessions/edit.php"
-				handle-as="json"
-				on-response="onEditResp"></iron-ajax>
-			<div class="row">
-				<div class="12u">
-					Edit Session
-					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessiondata.name]]"></paper-input>
-				</div>
-			</div>
-			
-			<div class="buttons">
-				<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
-				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Save</paper-button>
-			</div>
-		</paper-dialog>
 		<div class="layout horizontal">
 			<div class="flex">
 				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
@@ -214,29 +196,7 @@
 				this.fire('reload-sessions');
 			},
 			editDialog: function(e){
-				this.$.sessionNameEdit.value = this.sessiondata.name;
-				this.$.editDialog.open();
-			},
-			doEdit: function(e){
-				this.$.edit.style.display = "none";
-				this.$.editSpinner.style.display = "block";
-				this.$.editSpinner.active = true;
-				this.$.editAjax.params = {
-					uuid: this.sessiondata.sessionid,
-					name: this.$.sessionNameEdit.value
-				};
-				this.$.editAjax.generateRequest();
-			},
-			onEditResp: function(e){
-				this.$.edit.style.display = "block";
-				this.$.editSpinner.style.display = "none";
-				this.$.editSpinner.active = false;
-				if(e.detail.response.status == true){
-					this.fire('firetoast', { message: "Saved changes to session!"});
-				} else {
-					this.fire('firetoast', { message: "Failed to save changes to session!"});
-				}
-				this.fire('reload-sessions');
+				this.fire('edit-session-request' , { sessionObject: this.sessiondata });
 			},
 			onSortBySession: function(){
 				window.location = "?p=results&sortby=session";

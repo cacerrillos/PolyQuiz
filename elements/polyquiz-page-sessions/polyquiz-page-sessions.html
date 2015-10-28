@@ -4,6 +4,7 @@
 	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 	<link rel="import" href="polyquiz-admin-house-manage-form.html">
 	<link rel="import" href="polyquiz-admin-session-delete-prompt.html">
+	<link rel="import" href="polyquiz-admin-session-edit-prompt.html">
 	<link rel="import" href="polyquiz-admin-session-action-buttons.html">
 	<link rel="import" href="polyquiz-admin-session-create-form.html">
 	<link rel="import" href="polyquiz-admin-session-row.html">
@@ -87,7 +88,8 @@
 			},
 			listeners: {
 				'reload-sessions': 'reloadSessions',
-				'delete-session-request': 'doDeleteSession'
+				'delete-session-request': 'doDeleteSession',
+				'edit-session-request': 'doEditSession'
 			},
 			doAddNewSession: function() {
 				this.$.newSessionDialog.open();
@@ -108,6 +110,9 @@
 			},
 			doDeleteSession: function(e) {
 				this.$.deletePrompt.open(e.detail.sessionObject);
+			},
+			doEditSession: function(e) {
+				this.$.editPrompt.open(e.detail.sessionObject);
 			},
 			onContextChanged: function(details) {
 				this.loginOverlayCheck();
