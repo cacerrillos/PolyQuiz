@@ -51,11 +51,16 @@
 									<div class="flex">House</div>
 									<div class="flex"></div>
 								</div>
-								<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
+								
 								<div id="rowWrapper">
 									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff">
 										<polyquiz-admin-session-row sessionobject="{{session}}" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
 									</template>
+								</div>
+								<div class="layout horizontal">
+									<div class="flex"></div>
+									<paper-spinner id="rowSpinner" active></paper-spinner>
+									<div class="flex"></div>
 								</div>
 								<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
 							</paper-material>
