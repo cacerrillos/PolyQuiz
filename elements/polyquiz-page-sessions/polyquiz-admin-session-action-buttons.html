@@ -171,6 +171,7 @@
 						this.sessionopen = true;
 						this.ready();
 						this.fire('firetoast', { message: "Opened session!"});
+						this.fire('reload-sessions');
 					} else {
 						this.fire('firetoast', { message: "Failed to open session!"});
 					}
@@ -184,7 +185,7 @@
 					}
 				}
 				//fire session refresh
-				this.fire('reload-sessions');
+						this.fire('reload-sessions');
 			},
 			onToggleShowResp: function(e){
 				this.$.menuButton.disabled = false;
@@ -195,6 +196,7 @@
 						this.sessionshow = true;
 						this.ready();
 						this.fire('firetoast', { message: "Set scores to visible!"});
+						this.fire('reload-sessions');
 					} else {
 						this.fire('firetoast', { message: "Failed to set scores to visible!"});
 					}
@@ -207,7 +209,7 @@
 						this.fire('firetoast', { message: "Failed to set scores to NOT visible!"});
 					}
 				}
-				this.fire('reload-sessions');
+						this.fire('reload-sessions');
 			},
 			editDialog: function(e){
 				this.fire('edit-session-request' , { sessionObject: this.sessiondata });
