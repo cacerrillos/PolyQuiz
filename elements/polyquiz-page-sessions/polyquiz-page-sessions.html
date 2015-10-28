@@ -104,14 +104,13 @@
 			},
 			spinnerOff: function(e){
 				this.$.rowSpinner.active = false;
-				this.$.rowSpinner.style.display = "none";
-				this.$.rowWrapper.style.display = "block";
+				this.$.rowSpinner.hidden = true;
+				this.$.rowWrapper.hidden = false;
 			},
 			reloadSessions: function(e){
 				this.$.query.generateRequest();
 				this.$.rowSpinner.active = true;
-				this.$.rowSpinner.style.display = "block";
-				this.$.rowWrapper.style.display = "none";
+				this.$.rowSpinner.hidden = false;
 			},
 			doDeleteSession: function(e) {
 				this.$.deletePrompt.open(e.detail.sessionObject);
@@ -155,6 +154,7 @@
 				var parentSelector = this.parentNode;
 
 				parentSelector.addEventListener('iron-select', this.loginOverlayCheck.bind(this));
+				this.$.rowWrapper.hidden = true;
 				this.reloadSessions();
 			}
 		});
