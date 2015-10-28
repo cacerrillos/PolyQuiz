@@ -50,7 +50,7 @@
 			<div class="row">
 				<div class="12u">
 					Edit Session
-					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessionname]]"></paper-input>
+					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessiondata.name]]"></paper-input>
 				</div>
 			</div>
 			
@@ -61,7 +61,7 @@
 		</paper-dialog>
 		<paper-menu-button id="menuButton">
 			<paper-icon-button icon="icons:menu" class="dropdown-trigger"></paper-icon-button>
-			<paper-menu class="dropdown-content">
+			<paper-menu class="dropdown-content layout horizontal">
 				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
 				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
 				<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
@@ -70,7 +70,7 @@
 		</paper-menu-button>
 		<paper-spinner id="spinnerAll" style="display:none;"></paper-spinner>
 
-		<polyquiz-admin-session-delete-prompt sessionid="[[sessionid]]" sessionname="[[sessionname]]" id="deletePrompt" on-delete-confirm="doDelete"></polyquiz-admin-session-delete-prompt>
+		<polyquiz-admin-session-delete-prompt sessionid="[[sessiondata.sessionid]]" sessionname="[[sessiondata.name]]" id="deletePrompt" on-delete-confirm="doDelete"></polyquiz-admin-session-delete-prompt>
 	</template>
 	<script>
 		Polymer({
@@ -84,8 +84,6 @@
 					observer: 'onSessionDataChanged'
 				},
 				houses: Object,
-				sessionid: String,
-				sessionname: String,
 				resultsObject: {
 					type: Array
 				}
@@ -137,12 +135,12 @@
 				this.$.spinnerAll.active = true;
 				if(this.sessionopen){
 					this.$.toggleLockAjax.params = {
-						uuid: this.sessionid,
+						uuid: this.sessiondata.sessionid,
 						status: "false"
 					};
 				} else {
 					this.$.toggleLockAjax.params = {
-						uuid: this.sessionid,
+						uuid: this.sessiondata.sessionid,
 						status: "true"
 					};
 				}
@@ -154,12 +152,12 @@
 				this.$.spinnerAll.active = true;
 				if(this.sessionshow){
 					this.$.toggleShowAjax.params = {
-						uuid: this.sessionid,
+						uuid: this.sessiondata.sessionid,
 						show: "false"
 					};
 				} else {
 					this.$.toggleShowAjax.params = {
-						uuid: this.sessionid,
+						uuid: this.sessiondata.sessionid,
 						show: "true"
 					};
 				}
@@ -171,7 +169,7 @@
 			doDelete: function(e){
 				console.log(e);
 				this.$.deleteAjax.params = {
-					uuid: this.sessionid
+					uuid: this.sessiondata.sessionid
 				};
 				this.$.deleteAjax.generateRequest();
 			},
@@ -234,7 +232,7 @@
 				}
 			},
 			editDialog: function(e){
-				this.$.sessionNameEdit.value = this.sessionname;
+				this.$.sessionNameEdit.value = this.sessiondata.name;
 				this.$.editDialog.open();
 			},
 			doEdit: function(e){
@@ -242,7 +240,7 @@
 				this.$.spinnerAll.style.display = "block";
 				this.$.spinnerAll.active = true;
 				this.$.editAjax.params = {
-					uuid: this.sessionid,
+					uuid: this.sessiondata.sessionid,
 					name: this.$.sessionNameEdit.value
 				};
 				this.$.editAjax.generateRequest();
