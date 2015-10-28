@@ -13,7 +13,7 @@
 
 	<template>
 		<iron-ajax id="deleteAjax" url="../../api/1.0/sessions/delete.php" handle-as="json" on-response="onDeleteResp"></iron-ajax>
-		<paper-dialog id="dialog" on-iron-overlay-closed="closedEvent" on-iron-overlay-opened="onDialogOpened" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+		<paper-dialog id="dialog" on-iron-overlay-closed="onDialogOpened" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<h2>Delete Session?</h2>
 			Id: <span style="font-weight:bold;">[[sessionObject.sessionid]]</span><br>
 			Name: <span style="font-weight:bold;">[[sessionObject.name]]</span>
@@ -34,7 +34,7 @@
 					value: false
 				}
 			},
-			closedEvent: function(e){
+			onDialogOpened: function(e){
 				if(e.detail.confirmed){
 					this.$.deleteAjax.params = {
 						uuid: this.sessionObject.sessionid
@@ -46,9 +46,6 @@
 					this.$.dialog.open();
 					this.reopen = false;
 				}
-			},
-			onDialogOpened: function(e) {
-			
 			},
 			onDeleteResp: function(e){
 				if(e.detail.response.status == true){
