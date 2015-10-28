@@ -35,43 +35,27 @@
 					<div class="row" style="padding-top: 28px;">
 						<div class="12u">
 							<paper-material>
-							<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
-									<div class="row">
-										<div class="12u">
-											<paper-material  elevation="0" style="margin-bottom: 16px;">
-												<div class="row">
-													<div class="4u 5u(small) 4u(xsmall)">
-														<div class="row">
-															<div class="12u">Session Name</div>
-															<div class="-2u 10u">Quiz Name</div>
-														</div>
-													</div>
-													<div class="2u">
-														<div class="row">
-															<div class="12u">Id</div>
-															<div class="12u">Key</div>
-														</div>
-													</div>
-													<div class="2u 3u(xsmall)">Date</div>
-													<div class="1u">House</div>
-													<div class="3u 2u(small)">
-													</div>
-												</div>
-											</paper-material>
-										</div>
-									</div>
-									<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
-									<div id="rowWrapper">
-										<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
-											<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
-										</template>
-									</div>
-									<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
+								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
+								<div class="layout horizontal">
+									<div class="flex-2">Session Name</div>
+									<div class="flex-2">Quiz</div>
+									<div class="flex">Id</div>
+									<div class="flex">Key</div>
+									<div class="flex-2">Date</div>
+									<div class="flex">House</div>
+									<div class="flex"></div>
+								</div>
+								<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
+								<div id="rowWrapper">
+									<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
+										<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
+									</template>
+								</div>
+								<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
 							</paper-material>
 						</div>
 					</div>
 				</div>
-				
 			</iron-pages>
 		</div>
 	</template>
