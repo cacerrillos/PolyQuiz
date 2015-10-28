@@ -172,6 +172,7 @@
 						this.ready();
 						this.fire('firetoast', { message: "Opened session!"});
 						this.fire('reload-sessions');
+						this.fire('show-badge-on-row');
 					} else {
 						this.fire('firetoast', { message: "Failed to open session!"});
 					}
@@ -181,12 +182,12 @@
 						this.ready();
 						this.fire('firetoast', { message: "Closed session!"});
 						this.fire('reload-sessions');
+						this.fire('show-badge-on-row');
 					} else {
 						this.fire('firetoast', { message: "Failed to close session!"});
 					}
 				}
 				//fire session refresh
-						this.fire('reload-sessions');
 			},
 			onToggleShowResp: function(e){
 				this.$.menuButton.disabled = false;
@@ -198,6 +199,7 @@
 						this.ready();
 						this.fire('firetoast', { message: "Set scores to visible!"});
 						this.fire('reload-sessions');
+						this.fire('show-badge-on-row');
 					} else {
 						this.fire('firetoast', { message: "Failed to set scores to visible!"});
 					}
@@ -207,11 +209,11 @@
 						this.ready();
 						this.fire('firetoast', { message: "Set scores to NOT visible!"});
 						this.fire('reload-sessions');
+						this.fire('show-badge-on-row');
 					} else {
 						this.fire('firetoast', { message: "Failed to set scores to NOT visible!"});
 					}
 				}
-						this.fire('reload-sessions');
 			},
 			editDialog: function(e){
 				this.fire('edit-session-request' , { sessionObject: this.sessiondata });
