@@ -1,44 +1,82 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-delete-prompt">
-<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
-<style is="custom-style">
-	paper-dialog {
-		background-color: white;
-		padding-left: 20px;
-		padding-right: 20px;
-	}
-</style>
-<template>
-<paper-dialog id="dialog" on-iron-overlay-closed="closedEvent" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-	<h2>Delete Session?</h2>
-	Id: <span style="font-weight:bold;">[[sessionid]]</span><br>
-	Name: <span style="font-weight:bold;">[[sessionname]]</span>
-	<div class="buttons">
-		<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
-		<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Delete</paper-button>
-	</div>
-</paper-dialog>
-</template>
-<script>
-Polymer({
-	is: "polyquiz-admin-session-delete-prompt",
-	properties: {
-		sessionid: String,
-		sessionname: String
-	},
-	closedEvent: function(e){
-		if(e.detail.confirmed){
-			this.fire("delete-confirm", { sessionid: this.sessionid });
+	<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+
+	<style is="custom-style">
+		paper-dialog {
+			background-color: white;
+			padding-left: 20px;
+			padding-right: 20px;
 		}
-		console.log(e);
-	},
-	open: function(){
-		this.$.dialog.open();
-	},
-	ready: function(){
-		
-	}
-});
-</script>
+	</style>
+
+	<template>
+		<iron-ajax id="deleteAjax" url="../../api/1.0/sessions/delete.php" handle-as="json" on-response="onDeleteResp"></iron-ajax>
+		<paper-dialog id="dialog" on-iron-overlay-closed="closedEvent" on-iron-overlay-opened="onDialogOpened" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<h2>Delete Session?</h2>
+			Id: <span style="font-weight:bold;">[[sessionObject.sessionid]]</span><br>
+			Name: <span style="font-weight:bold;">[[sessionObject.name]]</span>
+			<div class="buttons">
+				<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Delete</paper-button>
+			</div>
+		</paper-dialog>
+	</template>
+
+	<script>
+		Polymer({
+			is: "polyquiz-admin-session-delete-prompt",
+			properties: {
+				sessionObject: Object,
+				reopen: {
+					type: Boolean,
+					value: false
+				}
+			},
+			closedEvent: function(e){
+				if(e.detail.confirmed){
+					this.$.deleteAjax.params = {
+						uuid: this.sessionObject.sessionid
+					};
+					this.$.deleteAjax.generateRequest();
+				}
+				console.log(e);
+				if(this.reopen) {
+					this.$.dialog.open();
+					this.reopen = false;
+				}
+			},
+			onDialogOpened: function(e) {
+			
+			},
+			onDeleteResp: function(e){
+				if(e.detail.response.status == true){
+					this.fire('firetoast', { message: "Deleted session!"});
+					this.fire('reload-sessions');
+				} else {
+					if(e.detail.response.error){
+						if(e.detail.response.error == 1451){
+							this.fire('firetoast', { message: "Failed to delete session! Still contains results!"});
+						}
+					} else {
+						this.fire('firetoast', { message: "Failed to delete session!"});
+					}
+				}
+			},
+			open: function(sessionObject){
+				this.sessionObject = sessionObject;
+				if(!this.$.dialog.opened) {
+					this.$.dialog.setAttribute("entry-animation", "scale-up-animation");
+					this.$.dialog.open();
+				} else {
+					this.reopen = true;
+					this.$.dialog.setAttribute("entry-animation", "fade-in-animation");
+				}
+			},
+			ready: function(){
+				
+			}
+		});
+	</script>
 </dom-module>

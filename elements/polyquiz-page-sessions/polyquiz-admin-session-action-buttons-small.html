@@ -36,11 +36,6 @@
 		url="../../api/1.0/sessions/set_show_scores.php"
 		handle-as="json"
 	 	on-response="onToggleShowResp"></iron-ajax>
-		<iron-ajax
-		id="deleteAjax"
-		url="../../api/1.0/sessions/delete.php"
-		handle-as="json"
-	 	on-response="onDeleteResp"></iron-ajax>
 		<paper-dialog id="editDialog" on-iron-overlay-closed="closedEvent" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<iron-ajax
 				id="editAjax"
@@ -69,8 +64,6 @@
 			</paper-menu>
 		</paper-menu-button>
 		<paper-spinner id="spinnerAll" style="display:none;"></paper-spinner>
-
-		<polyquiz-admin-session-delete-prompt sessionid="[[sessiondata.sessionid]]" sessionname="[[sessiondata.name]]" id="deletePrompt" on-delete-confirm="doDelete"></polyquiz-admin-session-delete-prompt>
 	</template>
 	<script>
 		Polymer({
@@ -164,28 +157,7 @@
 				this.$.toggleShowAjax.generateRequest();
 			},
 			onDeleteClick: function(){
-				this.$.deletePrompt.open();				
-			},
-			doDelete: function(e){
-				console.log(e);
-				this.$.deleteAjax.params = {
-					uuid: this.sessiondata.sessionid
-				};
-				this.$.deleteAjax.generateRequest();
-			},
-			onDeleteResp: function(e){
-				if(e.detail.response.status == true){
-					this.fire('firetoast', { message: "Deleted session!"});
-					this.fire('session-deleted', {uuid: e.target.params.uuid});
-				} else {
-					if(e.detail.response.error){
-						if(e.detail.response.error == 1451){
-							this.fire('firetoast', { message: "Failed to delete session! Still contains results!"});
-						}
-					} else {
-						this.fire('firetoast', { message: "Failed to delete session!"});
-					}
-				}
+				this.fire('delete-session-request' , { sessionObject: this.sessiondata });			
 			},
 			onToggleLockResp: function(e){
 				this.$.openstat.style.display = "block";

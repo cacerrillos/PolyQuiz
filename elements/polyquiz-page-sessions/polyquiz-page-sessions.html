@@ -28,6 +28,9 @@
 	
 	<template>
 		<iron-ajax id="query" url="../../api/1.0/sessions/owned.php" handle-as="json" on-response="onResp"></iron-ajax>
+
+		<polyquiz-admin-session-delete-prompt id="deletePrompt"></polyquiz-admin-session-delete-prompt>
+
 		<div class="container">
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[sessionSubpage]]">
 				<div>
@@ -47,8 +50,8 @@
 								</div>
 								<center><paper-spinner id="rowSpinner" active></paper-spinner></center>
 								<div id="rowWrapper">
-									<template id="sessionRows" is="dom-repeat" items="[[sessions]]" as="session" on-dom-change="spinnerOff">
-										<polyquiz-admin-session-row sessionobject="[[session]]" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
+									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff">
+										<polyquiz-admin-session-row sessionobject="{{session}}" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
 									</template>
 								</div>
 								<polyquiz-admin-house-manage-form></polyquiz-admin-house-manage-form>
@@ -81,7 +84,8 @@
 				}
 			},
 			listeners: {
-				'reload-sessions': 'reloadSessions'
+				'reload-sessions': 'reloadSessions',
+				'delete-session-request': 'doDeleteSession'
 			},
 			doAddNewSession: function() {
 				this.$.newSessionDialog.open();
@@ -99,6 +103,9 @@
 				this.$.rowSpinner.active = true;
 				this.$.rowSpinner.style.display = "block";
 				this.$.rowWrapper.style.display = "none";
+			},
+			doDeleteSession: function(e) {
+				this.$.deletePrompt.open(e.detail.sessionObject);
 			},
 			onContextChanged: function(details) {
 				this.loginOverlayCheck();
