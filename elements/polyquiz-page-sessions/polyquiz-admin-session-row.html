@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-row">
-	<link rel="import" href="polyquiz-admin-session-action-buttons-small.html">
 	<style is="custom-style">
 		paper-material {
 			background-color: white;
@@ -29,8 +28,7 @@
 						<div class="flex-2">[[unixDateToHumanDate(sessionobject.date)]]</div>
 						<div class="flex">[[houseObject.data.houseName]]</div>
 					</div>
-					<polyquiz-admin-session-action-buttons class="not-medium" id="actionButtons" sessiondata="[[sessionobject]]"></polyquiz-admin-session-action-buttons>
-					<polyquiz-admin-session-action-buttons-small class="only-medium" id="actionButtonsSmall" sessiondata="[[sessionobject]]"></polyquiz-admin-session-action-buttons-small>
+					<polyquiz-admin-session-action-buttons id="actionButtons" sessiondata="[[sessionobject]]"></polyquiz-admin-session-action-buttons>
 				</div>
 			</div>
 		</paper-material>
@@ -80,16 +78,6 @@ Polymer({
 	},
 	onSessionObjectChanged: function(e) {
 		console.log(this.sessionobject);
-		if(this.sessionobject.data.status){
-			this.$.actionButtons.sessionopen = true;
-		} else {
-			this.$.actionButtons.sessionopen = false;
-		}
-		if(this.sessionobject.data.show){
-			this.$.actionButtons.sessionshow = true;
-		} else {
-			this.$.actionButtons.sessionshow = false;
-		}
 		this.$.quizInfoAjax.params = {
 			uuid: this.sessionobject.quiz
 		};

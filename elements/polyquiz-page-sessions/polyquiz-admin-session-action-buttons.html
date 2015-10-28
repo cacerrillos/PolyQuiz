@@ -37,10 +37,9 @@
 		url="../../api/1.0/sessions/set_show_scores.php"
 		handle-as="json"
 	 	on-response="onToggleShowResp"></iron-ajax>
-		<div class="layout horizontal">
+		<div class="layout horizontal not-medium">
 			<div class="flex">
 				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
-				<paper-spinner id="editSpinner" style="display:none;"></paper-spinner>
 			</div>
 			<div class="flex">
 				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
@@ -53,6 +52,18 @@
 			<div class="flex">
 				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
 			</div>
+		</div>
+		<div class="layout horizontal only-medium">
+			<paper-menu-button id="menuButton">
+				<paper-icon-button icon="icons:menu" class="dropdown-trigger"></paper-icon-button>
+				<paper-menu class="dropdown-content layout horizontal">
+					<paper-icon-button icon="icons:create" on-click="editDialog" id="editSmall"></paper-icon-button>
+					<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstatSmall"></paper-icon-button>
+					<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscoreSmall"></paper-icon-button>
+					<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
+				</paper-menu>
+			</paper-menu-button>
+			<paper-spinner id="spinnerAll" style="display:none;"></paper-spinner>
 		</div>
 	</template>
 	<script>
@@ -75,14 +86,20 @@
 				if(e.data.status){
 					this.$.openstat.icon = "icons:lock-open";
 					this.$.openstat.style.color = "#8BC34A";
+					this.$.openstatSmall.icon = "icons:lock-open";
+					this.$.openstatSmall.style.color = "#8BC34A";
 				} else {
 					this.$.openstat.icon = "icons:lock-outline";
 					this.$.openstat.style.color = "#D32F2F";
+					this.$.openstatSmall.icon = "icons:lock-outline";
+					this.$.openstatSmall.style.color = "#D32F2F";
 				}
 				if(e.data.show){
 					this.$.showscore.style.color = "#8BC34A";
+					this.$.showscoreSmall.style.color = "#8BC34A";
 				} else {
 					this.$.showscore.style.color = "#D32F2F";
+					this.$.showscoreSmall.style.color = "#D32F2F";
 				}
 			},
 			housesResp: function(e){
@@ -112,9 +129,12 @@
 				return arr;
 			},
 			toggleLock: function() {
+				this.$.menuButton.hidden = true;
 				this.$.openstat.style.display = "none";
 				this.$.lockSpinner.style.display = "block";
 				this.$.lockSpinner.active = true;
+				this.$.spinnerAll.hidden = false;
+				this.$.spinnerAll.active = true;
 				if(this.sessiondata.data.status){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessiondata.sessionid,
@@ -129,9 +149,12 @@
 				this.$.toggleLockAjax.generateRequest();
 			},
 			toggleShow: function() {
+				this.$.menuButton.hidden = true;
 				this.$.showscore.style.display = "none";
 				this.$.showSpinner.style.display = "block";
 				this.$.showSpinner.active = true;
+				this.$.spinnerAll.hidden = false;
+				this.$.spinnerAll.active = true;
 				if(this.sessiondata.data.show){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessiondata.sessionid,
@@ -149,9 +172,12 @@
 				this.fire('delete-session-request' , { sessionObject: this.sessiondata });
 			},
 			onToggleLockResp: function(e){
+				this.$.menuButton.hidden = false;
 				this.$.openstat.style.display = "block";
 				this.$.lockSpinner.style.display = "none";
 				this.$.lockSpinner.active = false;
+				this.$.spinnerAll.active = false;
+				this.$.spinnerAll.hidden = true;
 				if(e.target.params.status == "true"){
 					if(e.detail.response.status == true){
 						this.sessionopen = true;
@@ -173,9 +199,12 @@
 				this.fire('reload-sessions');
 			},
 			onToggleShowResp: function(e){
+				this.$.menuButton.hidden = false;
 				this.$.showscore.style.display = "block";
 				this.$.showSpinner.style.display = "none";
 				this.$.showSpinner.active = false;
+				this.$.spinnerAll.active = false;
+				this.$.spinnerAll.hidden = true;
 				if(e.target.params.show == "true"){
 					if(e.detail.response.status == true){
 						this.sessionshow = true;
