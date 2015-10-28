@@ -10,36 +10,30 @@
 		}
 	</style>
 <template>
-	<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/info.php" handle-as="json" on-response="quizInfoResp"></iron-ajax>
-	<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/info.php" handle-as="json" on-response="houseInfoResp"></iron-ajax>
-	<div class="row">
-		<div class="12u">
-			<paper-material id="mainMat" elevation="0" on-mouseover="doHover" on-mouseout="killHover" animated>
-				<div class="row">
-					<div class="12u"><center><paper-spinner id="spinner" active></paper-spinner></center></div>
+	<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/info.php" handle-as="json" last-response="{{quizobject}}"></iron-ajax>
+	<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/info.php" handle-as="json" last-response="{{houseObject}}"></iron-ajax>
+	<div class="layout vertical">
+		<paper-material class="flex" id="mainMat" elevation="0" on-mouseover="doHover" on-mouseout="killHover" animated>
+			<div class="layout horizontal">
+				<div class="flex"></div>
+				<paper-spinner id="spinner" active></paper-spinner>
+				<div class="flex"></div>
+			</div>
+			<div id="contentRow" style="display:none;">
+				<div class="layout horizontal">
+					<div class="layout horizontal flex">
+						<div class="flex-2">[[sessionobject.name]]</div>
+						<div class="flex-2">[[quizobject.name]]</div>
+						<div class="flex">[[sessionobject.sessionid]]</div>
+						<div class="flex">[[sessionobject.sessionkey]]</div>
+						<div class="flex-2">[[unixDateToHumanDate(sessionobject.date)]]</div>
+						<div class="flex">[[house]]</div>
+					</div>
+					<polyquiz-admin-session-action-buttons class="not-medium" id="actionButtons" sessiondata="[[sessionobject]]"></polyquiz-admin-session-action-buttons>
+					<polyquiz-admin-session-action-buttons-small class="only-medium" id="actionButtonsSmall" sessiondata="[[sessionobject]]"></polyquiz-admin-session-action-buttons-small>
 				</div>
-				<div class="row" id="contentRow" style="display:none;">
-					<div class="4u 5u(small) 4u(xsmall)">
-						<div class="row">
-							<div class="12u">[[sessionname]]</div>
-							<div class="-2u 10u">[[quizname]]</div>
-						</div>
-					</div>
-					<div class="2u">
-						<div class="row">
-							<div class="12u">[[sessionobject.sessionid]]</div>
-							<div class="12u">[[sessionobject.sessionkey]]</div>
-						</div>
-					</div>
-					<div class="2u 3u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
-					<div class="1u">[[house]]</div>
-					<div class="3u 2u(small)">
-						<polyquiz-admin-session-action-buttons class="not-medium" id="actionButtons" sessiondata="[[sessionobject]]" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons>
-						<polyquiz-admin-session-action-buttons-small class="only-medium" id="actionButtonsSmall" sessiondata="[[sessionobject]]" sessionid="[[sessionobject.sessionid]]" sessionname="[[sessionname]]"></polyquiz-admin-session-action-buttons-small>
-					</div>
-				</div>
-			</paper-material>
-		</div>
+			</div>
+		</paper-material>
 	</div>
 </template>
 <script>
@@ -50,13 +44,13 @@ Polymer({
 			type: Object,
 			observer: "ready"
 		},
-		sessionname: {
-			type: String,
-			value: "Session Name Not Found"
+		quizobject: {
+			type: Object,
+			observer: 'onQuizObjectChanged'
 		},
-		quizname: {
-			type: String,
-			value: "Quiz Name Not Found"
+		houseObject: {
+			type: Object,
+			observer: 'onHouseObjectChanged'
 		}
 	},
 	doHover: function() {
@@ -84,19 +78,7 @@ Polymer({
 			this.$.contentRow.style.display = "block";
 		}
 	},
-	quizInfoResp: function(e){
-		if(e.detail.response){
-			this.quizname = e.detail.response.name;
-		}
-		this.stopSpinner();
-	},
-	houseInfoResp: function(e){
-		if(e.detail.response){
-			this.house = e.detail.response.data.houseName;
-		}
-		this.stopSpinner();
-	},
-	ready: function(){
+	onSessionObjectChanged: function(e) {
 		console.log(this.sessionobject);
 		if(this.sessionobject.data.status){
 			this.$.actionButtons.sessionopen = true;
@@ -108,9 +90,6 @@ Polymer({
 		} else {
 			this.$.actionButtons.sessionshow = false;
 		}
-		if(this.sessionobject.name){
-			this.sessionname = this.sessionobject.name;
-		}
 		this.$.quizInfoAjax.params = {
 			uuid: this.sessionobject.quiz
 		};
@@ -119,6 +98,15 @@ Polymer({
 		};
 		this.$.quizInfoAjax.generateRequest();
 		this.$.houseInfoAjax.generateRequest();
+	},
+	onQuizObjectChanged: function(e) {
+		this.stopSpinner();
+	},
+	onHouseObjectChanged: function(e) {
+		this.stopSpinner();
+	},
+	ready: function(){
+		this.onSessionObjectChanged();
 	}
 });
 </script>
