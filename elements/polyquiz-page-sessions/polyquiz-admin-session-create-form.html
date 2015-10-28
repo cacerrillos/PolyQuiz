@@ -19,7 +19,7 @@
 		}
 	</style>
 <template>
-	<paper-dialog id="mainDialog">
+	<paper-dialog id="mainDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 		<div class="layout vertical">
 		<div class="layout horizontal">
 			<div class="flex"></div>
@@ -47,6 +47,7 @@
 			<div class="flex"></div>
 			<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
 			<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
+			<paper-button raised dialog-dismiss>Cancel</paper-button>
 			<div class="flex"></div>
 		</div>
 		
