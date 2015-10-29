@@ -10,6 +10,7 @@
 		}
 	</style>
 <template>
+	<iron-ajax id="sessionInfoAjax" url="../../api/1.0/sessions/info.php" handle-as="json" last-response="{{sessionobject}}"></iron-ajax>
 	<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/info.php" handle-as="json" last-response="{{quizobject}}"></iron-ajax>
 	<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/info.php" handle-as="json" last-response="{{houseObject}}"></iron-ajax>
 	<div class="layout vertical">
@@ -30,7 +31,7 @@
 						<div class="flex-2">[[unixDateToHumanDate(sessionobject.date)]]</div>
 						<div class="flex">[[houseObject.data.houseName]]</div>
 					</div>
-					<polyquiz-admin-session-action-buttons id="actionButtons" sessiondata="[[sessionobject]]"></polyquiz-admin-session-action-buttons>
+					<polyquiz-admin-session-action-buttons id="actionButtons" sessiondata="{{sessionobject}}"></polyquiz-admin-session-action-buttons>
 				</div>
 			</div>
 		</paper-material>
@@ -42,7 +43,8 @@ Polymer({
 	properties: {
 		sessionobject: {
 			type: Object,
-			observer: "ready"
+			observer: "ready",
+			notify: true
 		},
 		quizobject: {
 			type: Object,
@@ -54,7 +56,14 @@ Polymer({
 		}
 	},
 	listeners: {
-		'show-badge-on-row': 'onShowBadgeOnRow'
+		'show-badge-on-row': 'onShowBadgeOnRow',
+		'session-reload': 'doSessionReload'
+	},
+	doSessionReload: function() {
+		this.$.sessionInfoAjax.params = {
+			'uuid': this.sessionobject.sessionid
+		};
+		this.$.sessionInfoAjax.generateRequest();
 	},
 	onShowBadgeOnRow: function() {
 		this.$.changedBadge.hidden  = false;
