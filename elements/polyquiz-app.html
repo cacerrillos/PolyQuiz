@@ -61,7 +61,7 @@
 				<paper-toolbar>
 					<div style="color:#FFFFFF">PolyQuiz 3.0</div>
 				</paper-toolbar>
-				<paper-menu id="sidebarMenu" class="flex">
+				<paper-menu id="sidebarMenu" class="flex" attr-for-selected="data-page">
 					<template id="sidebarTemplate" is="dom-repeat" items="{{polyQuizPages}}" as="page">
 						<paper-icon-item on-click="goToPageOnClick" data-page="{{page.hash}}" hidden="{{computeHiddenIsAdmin(page.adminOnly, isAdmin)}}">
 							<iron-icon icon="[[page.icon]]" item-icon></iron-icon><span>[[page.friendlyName]]</span>
@@ -89,7 +89,7 @@
 					<paper-spinner id="pageLoadSpinner"></paper-spinner>
 					<div class="flex"></div>
 				</div>
-				<neon-animated-pages id="pageSelector" attrForSelected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+				<neon-animated-pages id="pageSelector" attr-for-selected="data-page" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
 					<polyquiz-page-home data-page="home"></polyquiz-page-home>
 					<polyquiz-page-takeaquiz data-page="takeaquiz" ctx="[[ctx]]"></polyquiz-page-takeaquiz>
 					<polyquiz-page-admin data-page="admin" ctx="[[ctx]]"></polyquiz-page-admin>
@@ -196,12 +196,21 @@
 				}
 				this.fireToastNonEvent("Page not found! [ " + details.path + " ]");
 			},
-			goToPageOnClick: function(e){
-				if(e.model.page.hash !== null && e.model.page.hash !== "") {
-					page('/' + e.model.page.hash);
+			goToPageOnClick: function(e) {
+				if(e.model) {
+					if(e.model.page.hash !== null && e.model.page.hash !== "") {
+						page('/' + e.model.page.hash);
+					} else {
+						this.fireToastNonEvent("Page Does Not Exist! :'[");
+					}
 				} else {
-					this.fireToastNonEvent("Page Does Not Exist! :'[");
+					if(e.target.getAttribute("data-page") != null) {
+						page('/' + e.target.getAttribute("data-page"));
+					} else if(e.target.parentNode.getAttribute("data-page") != null) {
+						page('/' + e.target.parentNode.getAttribute("data-page"));
+					}
 				}
+				
 			},
 			onContextChange: function(details) {
 				console.log(details);
@@ -211,18 +220,8 @@
 				if(p) {
 					this.pageTitle = p.friendlyName;
 				}
-				for(var x = 0; x < this.$.sidebarMenu.items.length; x++){
-					if(this.$.sidebarMenu.items[x].getAttribute("data-page") == details){
-						this.$.sidebarMenu.select(this.$.sidebarMenu.indexOf(this.$.sidebarMenu.items[x]));
-						break;
-					}
-				}
-				for(var x = 0; x < this.$.pageSelector.items.length; x++){
-					if(this.$.pageSelector.items[x].getAttribute("data-page") == details){
-						this.$.pageSelector.select(this.$.pageSelector.indexOf(this.$.pageSelector.items[x]));
-						break;
-					}
-				}
+				this.$.sidebarMenu.select(details);
+				this.$.pageSelector.select(details);
 			},
 			fireToast: function(details) {
 				this.fireToastNonEvent(details.detail.message);
