@@ -42,15 +42,20 @@
 						<div class="12u">
 							<paper-material>
 								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
-								<div class="layout horizontal">
-									<div class="flex-2">Session Name</div>
-									<div class="flex-2">Quiz</div>
-									<div class="flex">Id</div>
-									<div class="flex">Key</div>
-									<div class="flex-2">Date</div>
-									<div class="flex">House</div>
-									<div class="flex"></div>
-								</div>
+								<paper-material elevation="0">
+									<div class="layout horizontal">
+										<div class="layout horizontal flex">
+											<div class="flex-2">Session Name</div>
+											<div class="flex-2">Quiz</div>
+											<div class="flex">Id</div>
+											<div class="flex">Key</div>
+											<div class="flex-2">Date</div>
+											<div class="flex">House</div>
+										</div>
+										<polyquiz-admin-session-action-buttons style="visibility: hidden;"></polyquiz-admin-session-action-buttons>
+									</div>
+								</paper-material>
+								
 								
 								<div id="rowWrapper">
 									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff">
