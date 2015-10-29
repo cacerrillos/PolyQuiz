@@ -25,6 +25,11 @@
 		paper-dialog {
 			background-color: white;
 		}
+		.sortArrowIcon {
+			transform: rotate(90deg);
+			--iron-icon-width: 16px;
+			--iron-icon-height: 16px;
+		}
 	</style>
 	
 	<template>
@@ -45,12 +50,18 @@
 								<paper-material elevation="0">
 									<div class="layout horizontal">
 										<div class="layout horizontal flex">
-											<div class="flex-2">Session Name</div>
-											<div class="flex-2">Quiz</div>
+											<div class="flex-2" on-click="changeSort" data-sort-options="name">
+												<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('name', sortBy)}}"></iron-icon>Session Name
+											</div>
+											<div class="flex-2" on-click="changeSort" data-sort-options="quiz">
+												<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('quiz', sortBy)}}"></iron-icon>Quiz
+											</div>
 											<div class="flex">Id</div>
 											<div class="flex">Key</div>
 											<div class="flex-2">Date</div>
-											<div class="flex">House</div>
+											<div class="flex" on-click="changeSort" data-sort-options="house">
+												<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('house', sortBy)}}"></iron-icon>House
+											</div>
 										</div>
 										<polyquiz-admin-session-action-buttons style="visibility: hidden;"></polyquiz-admin-session-action-buttons>
 									</div>
@@ -58,7 +69,7 @@
 								
 								
 								<div id="rowWrapper">
-									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff">
+									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff" sort="{{sessionSort(sortBy)}}">
 										<polyquiz-admin-session-row sessionobject="{{session}}" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
 									</template>
 								</div>
@@ -84,6 +95,10 @@
 			],
 			properties: {
 				sessions: Array,
+				sortBy: {
+					type: Object,
+					value: { by: 'name', direction: true }
+				},
 				ctx: {
 					type: Object,
 					observer: "onContextChanged"
@@ -100,6 +115,74 @@
 				'reload-sessions': 'reloadSessions',
 				'delete-session-request': 'doDeleteSession',
 				'edit-session-request': 'doEditSession'
+			},
+			_computeShowSortIcon: function(thisSortBy, sortBy) {
+				if(sortBy.by == thisSortBy) {
+					return false;
+				} else {
+					return true;
+				}
+			},
+			_computeSortDirectionIcon: function(sortBy) {
+				if(sortBy.direction) {
+					return 'icons:arrow-forward';
+				} else {
+					return 'icons:arrow-back';
+				}
+			},
+			sessionSort: function(sort) {
+				console.log("doing sort");
+				console.log(sort);
+				switch(sort.by) {
+					case 'name':
+						return function(a, b) {
+							if(sort.direction) {
+								return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+							} else {
+								return a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1;
+							}
+						};
+					case 'quiz'://TODO
+						return function(a, b) {
+							if(sort.direction) {
+								return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+							} else {
+								return a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1;
+							}
+						};
+					case 'house'://TODO
+						return function(a, b) {
+							if(sort.direction) {
+								return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+							} else {
+								return a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1;
+							}
+						};
+					default:
+						return function(a, b) { return 0; };
+				}
+			},
+			changeSort: function(e) {
+				var sortOption = e.target.getAttribute("data-sort-options");
+				if(sortOption != null) {
+					switch(sortOption) {
+						case 'name':
+						case 'quiz':
+						case 'house':
+							if(this.sortBy.by == sortOption) {
+								this.sortBy = { by: sortOption, direction: !this.sortBy.direction };
+							} else {
+								this.sortBy = { by: sortOption, direction: true };
+							}
+							break;
+						default:
+							 console.log("sort error 1");
+							 break;
+					}
+				} else {
+					console.log("Sort click error!");
+					console.log(e);
+				}
 			},
 			doAddNewSession: function() {
 				this.$.newSessionDialog.open();
