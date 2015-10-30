@@ -34,7 +34,7 @@ class PolyHouse {
 			$stmt->bind_result($houseid, $housename);
 			$stmt->store_result();
 			while($stmt->fetch()){
-				array_push($resultObject, new self($houseid, $housename));
+				$resultObject[$houseid] = new self($houseid, $housename);
 			}
 			$stmt->close();
 		} else {

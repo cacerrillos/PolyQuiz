@@ -35,7 +35,7 @@ class PolyQuiz {
 				$thisQuiz->uuid = $quizuuid;
 				$thisQuiz->name = $quizname;
 				$thisQuiz->version = $version;
-				array_push($toReturn, $thisQuiz);
+				$toReturn[$quizuuid] = $thisQuiz;
 			}
 			$stmt->close();
 		} else {
