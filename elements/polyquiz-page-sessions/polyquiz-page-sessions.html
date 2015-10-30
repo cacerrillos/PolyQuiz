@@ -34,7 +34,9 @@
 	
 	<template>
 		<iron-ajax id="query" url="../../api/1.0/sessions/owned.php" handle-as="json" on-response="onResp"></iron-ajax>
-		
+		<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizdata}}" auto></iron-ajax>
+		<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/houses.php" handle-as="json" last-response="{{housedata}}" auto></iron-ajax>
+
 		<polyquiz-admin-session-edit-prompt id="editPrompt"></polyquiz-admin-session-edit-prompt>
 
 		<polyquiz-admin-session-delete-prompt id="deletePrompt"></polyquiz-admin-session-delete-prompt>
@@ -49,18 +51,26 @@
 								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
 								<paper-material elevation="0">
 									<div class="layout horizontal">
-										<div class="layout horizontal flex">
-											<div class="flex-2" on-click="changeSort" data-sort-options="name">
-												<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('name', sortBy)}}"></iron-icon>Session Name
-											</div>
-											<div class="flex-2" on-click="changeSort" data-sort-options="quiz">
-												<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('quiz', sortBy)}}"></iron-icon>Quiz
-											</div>
-											<div class="flex">Id</div>
-											<div class="flex">Key</div>
-											<div class="flex-2 not-smedium">Date</div>
-											<div class="flex" on-click="changeSort" data-sort-options="house">
-												<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('house', sortBy)}}"></iron-icon>House
+										<div class="flex">
+											<div class="row">
+												<div class="3u" on-click="changeSort" data-sort-options="name">
+													<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('name', sortBy)}}"></iron-icon>Session Name
+												</div>
+												<div class="3u" on-click="changeSort" data-sort-options="quiz">
+													<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('quiz', sortBy)}}"></iron-icon>Quiz
+												</div>
+												<div class="1u">
+													Id
+												</div>
+												<div class="1u">
+													Key
+												</div>
+												<div class="2u not-smedium">
+													Date
+												</div>
+												<div class="2u" on-click="changeSort" data-sort-options="house">
+													<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('house', sortBy)}}"></iron-icon>House
+												</div>
 											</div>
 										</div>
 										<polyquiz-admin-session-action-buttons style="visibility: hidden;"></polyquiz-admin-session-action-buttons>
@@ -69,8 +79,8 @@
 								
 								
 								<div id="rowWrapper">
-									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff" sort="{{sessionSort(sortBy)}}">
-										<polyquiz-admin-session-row sessionobject="{{session}}" on-session-deleted="reloadSessions"></polyquiz-admin-session-row>
+									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff" sort="{{sessionSort(sortBy, housedata, quizdata)}}">
+										<polyquiz-admin-session-row sessionobject="{{session}}" on-session-deleted="reloadSessions" quizdata="{{_computeQuizData(quizdata, session.quiz)}}" housedata="{{_computeHouseData(housedata, session.house)}}"></polyquiz-admin-session-row>
 									</template>
 								</div>
 								<div class="layout horizontal">
@@ -95,6 +105,12 @@
 			],
 			properties: {
 				sessions: Array,
+				quizdata: {
+					type: Object
+				},
+				housedata: {
+					type: Object
+				},
 				sortBy: {
 					type: Object,
 					value: { by: 'name', direction: true }
@@ -116,6 +132,12 @@
 				'delete-session-request': 'doDeleteSession',
 				'edit-session-request': 'doEditSession'
 			},
+			_computeQuizData: function(quizdata, quizid) {
+				return this.quizdata[quizid];
+			},
+			_computeHouseData: function(housedata, houseid) {
+				return this.housedata[houseid];
+			},
 			_computeShowSortIcon: function(thisSortBy, sortBy) {
 				if(sortBy.by == thisSortBy) {
 					return false;
@@ -130,9 +152,10 @@
 					return 'icons:arrow-back';
 				}
 			},
-			sessionSort: function(sort) {
+			sessionSort: function(sort, housedata, quizdata) {
 				console.log("doing sort");
 				console.log(sort);
+				console.log(quizdata);
 				switch(sort.by) {
 					case 'name':
 						return function(a, b) {
@@ -145,17 +168,17 @@
 					case 'quiz'://TODO
 						return function(a, b) {
 							if(sort.direction) {
-								return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+								return quizdata[a.quiz].name.toUpperCase() < quizdata[b.quiz].name.toUpperCase() ? -1 : 1;
 							} else {
-								return a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1;
+								return quizdata[a.quiz].name.toUpperCase() < quizdata[b.quiz].name.toUpperCase() ? 1 : -1;
 							}
 						};
 					case 'house'://TODO
 						return function(a, b) {
 							if(sort.direction) {
-								return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+								return housedata[a.house].data.houseName.toUpperCase() < housedata[b.house].data.houseName.toUpperCase() ? -1 : 1;
 							} else {
-								return a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1;
+								return housedata[a.house].data.houseName.toUpperCase() < housedata[b.house].data.houseName.toUpperCase() ? 1 : -1;
 							}
 						};
 					default:
