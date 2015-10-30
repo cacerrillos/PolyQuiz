@@ -52,14 +52,15 @@
 			</div>
 		</div>
 		<div class="layout horizontal only-medium">
-			<paper-menu-button id="menuButton">
+			<paper-menu-button id="menuButton" horizontal-align="right">
 				<paper-icon-button icon="icons:menu" class="dropdown-trigger"></paper-icon-button>
-				<paper-menu class="dropdown-content layout horizontal">
+				<div class="dropdown-content layout horizontal" style="background-color: white; padding-top: 8px; padding-bottom: 8px;">
 					<paper-icon-button icon="icons:create" on-click="editDialog" id="editSmall"></paper-icon-button>
 					<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstatSmall"></paper-icon-button>
 					<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscoreSmall"></paper-icon-button>
 					<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
-				</paper-menu>
+					<paper-icon-button icon="icons:close" on-click="closeMiniButtons"></paper-icon-button>
+				</div>
 			</paper-menu-button>
 		</div>
 	</template>
@@ -79,6 +80,9 @@
 				resultsObject: {
 					type: Array
 				}
+			},
+			closeMiniButtons: function() {
+				this.$.menuButton.close();
 			},
 			onSessionDataChanged: function(e) {
 				if(e.data.status){
