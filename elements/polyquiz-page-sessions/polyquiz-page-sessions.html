@@ -22,6 +22,12 @@
 			right: 8px;
 			z-index: 5;
 		}
+		paper-fab.addWindow {
+			position: fixed;
+			bottom: 28px;
+			right: 28px;
+			z-index: 5;
+		}
 		paper-dialog {
 			background-color: white;
 		}
@@ -56,8 +62,9 @@
 					<polyquiz-admin-session-create-form id="newSessionDialog"></polyquiz-admin-session-create-form>
 					<div class="row" style="padding-top: 28px;">
 						<div class="12u">
-							<paper-material>
-								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession"></paper-fab>
+							<paper-material style="margin-bottom: 112px;">
+								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession" hidden="[[fab]]"></paper-fab>
+								<paper-fab icon="icons:add" class="addWindow" on-click="doAddNewSession" hidden="[[!fab]]"></paper-fab>
 								<paper-material elevation="0">
 									<div class="layout horizontal">
 										<div class="flex">
@@ -113,7 +120,9 @@
 				Polymer.NeonAnimatableBehavior
 			],
 			properties: {
-				sessions: Array,
+				sessions: {
+					type: Array
+				},
 				quizdata: {
 					type: Object
 				},
@@ -132,6 +141,10 @@
 					type: Boolean,
 					value: false
 				},
+				fab: {
+					type: Boolean,
+					value: false
+				},
 				adminStatus: {
 					type: Object
 				}
@@ -140,6 +153,13 @@
 				'reload-sessions': 'reloadSessions',
 				'delete-session-request': 'doDeleteSession',
 				'edit-session-request': 'doEditSession'
+			},
+			_onPageResized: function() {
+				console.log("Swag");
+				var div = document.getElementById('mainContainer');
+				var hasVerticalScrollbar= div.scrollHeight>div.clientHeight;
+				var hasHorizontalScrollbar= div.scrollWidth>div.clientWidth;
+				this.fab = hasVerticalScrollbar;
 			},
 			_computeQuizData: function(quizdata, quizid) {
 				return this.quizdata[quizid];
@@ -162,9 +182,6 @@
 				}
 			},
 			sessionSort: function(sort, housedata, quizdata) {
-				console.log("doing sort");
-				console.log(sort);
-				console.log(quizdata);
 				switch(sort.by) {
 					case 'name':
 						return function(a, b) {
@@ -226,6 +243,7 @@
 				this.$.rowSpinner.active = false;
 				this.$.rowSpinner.hidden = true;
 				this.$.rowWrapper.hidden = false;
+				this._onPageResized();
 			},
 			reloadSessions: function(e){
 				this.$.query.generateRequest();
@@ -267,6 +285,8 @@
 				}
 			},
 			ready: function() {
+				window.addEventListener('resize', function() { this._onPageResized() }.bind(this));
+
 				this.$.pageSelector.select(0);
 				var mainapp = document.querySelector("#mainapp");
 				mainapp.addEventListener('polyquiz-admin-status', this.onAdminStatusChanged.bind(this));
