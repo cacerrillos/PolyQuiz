@@ -257,16 +257,7 @@
 				this.$.editPrompt.open(e.detail.sessionObject);
 			},
 			onContextChanged: function(details) {
-				this.loginOverlayCheck();
-				return;
-				if(details.params.subpage != null) {
-					switch(details.params.subpage) {
-						default:
-							this.$.pageSelector.select(0);
-					}
-				} else {
-					this.$.pageSelector.select(0);
-				}
+				console.log("SESSIONs CONTEXT CHANGEDD");			
 			},
 			onAdminStatusChanged: function(e) {
 				var details = e.detail;
@@ -275,10 +266,13 @@
 				this.loginOverlayCheck();
 			},
 			loginOverlayCheck: function(e) {
+				//TODO, figure out why 'iron-select' is called so many times 
+				console.log(e);
 				var mainapp = document.querySelector("#mainapp");
 				if(this.parentNode.selectedItem == this) {
 					if(mainapp.isAdmin) {
 						mainapp.closeLoginOverlay();
+						this.reloadSessions();
 						return;
 					}
 					mainapp.openLoginOverlay();
@@ -295,7 +289,6 @@
 
 				parentSelector.addEventListener('iron-select', this.loginOverlayCheck.bind(this));
 				this.$.rowWrapper.hidden = true;
-				this.reloadSessions();
 			}
 		});
 	</script>
