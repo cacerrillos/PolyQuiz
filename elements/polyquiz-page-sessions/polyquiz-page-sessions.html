@@ -30,6 +30,15 @@
 			--iron-icon-width: 16px;
 			--iron-icon-height: 16px;
 		}
+		.sortdivbutton {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
 	</style>
 	
 	<template>
@@ -53,10 +62,10 @@
 									<div class="layout horizontal">
 										<div class="flex">
 											<div class="row">
-												<div class="3u" on-click="changeSort" data-sort-options="name">
+												<div class="3u sortdivbutton" on-click="changeSort" data-sort-options="name">
 													<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('name', sortBy)}}"></iron-icon>Session Name
 												</div>
-												<div class="3u" on-click="changeSort" data-sort-options="quiz">
+												<div class="3u sortdivbutton" on-click="changeSort" data-sort-options="quiz">
 													<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('quiz', sortBy)}}"></iron-icon>Quiz
 												</div>
 												<div class="1u">
@@ -68,7 +77,7 @@
 												<div class="2u not-smedium">
 													Date
 												</div>
-												<div class="2u" on-click="changeSort" data-sort-options="house">
+												<div class="2u sortdivbutton" on-click="changeSort" data-sort-options="house">
 													<iron-icon icon="{{_computeSortDirectionIcon(sortBy)}}" class="sortArrowIcon" hidden="{{_computeShowSortIcon('house', sortBy)}}"></iron-icon>House
 												</div>
 											</div>
