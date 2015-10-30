@@ -5,6 +5,7 @@ class PolySession {
 	public $name;
 	public $owner;
 	public $quiz;
+	public $house;
 	public $date;
 	public $data = array();
 	public function __construct(){
@@ -12,7 +13,7 @@ class PolySession {
 		$this->quiz = 1;
 		$this->data['status'] = true;
 		$this->data['show'] = true;
-		$this->data['house'] = 0;
+		$this->house = 0;
 		$date = new DateTime();
 		$this->date = $date->getTimestamp();
 	}
@@ -46,10 +47,10 @@ class PolySession {
 	}
 	public static function ownedBy($mysqli, $owner){
 		$toReturn = array();
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date` FROM `sessions` WHERE `owner`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`, `house` FROM `sessions` WHERE `owner`=?;")){
 			$stmt->bind_param("i", $owner);
 			$stmt->execute();
-			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date);
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date, $house);
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
@@ -58,6 +59,7 @@ class PolySession {
 				$thisThang->owner = $owner;
 				$thisThang->name = $name;
 				$thisThang->quiz = $quiz;
+				$thisThang->house = $house;
 				$thisThang->date = $date;
 				$thisThang->data = json_decode($data);
 				
@@ -109,8 +111,8 @@ class PolySession {
 	public function saveToMysql($mysqli, $owner){
 		$toReturn = false;
 		if($this->owner == $owner){
-			if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`) VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?, `data`=?;")){
-				$stmt->bind_param("ssiississ", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, json_encode($this->data), $this->date, $this->name, json_encode($this->data));
+			if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`, `house`) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?, `data`=?;")){
+				$stmt->bind_param("ssiissiiss", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, json_encode($this->data), $this->date, $this->house, $this->name, json_encode($this->data));
 				$stmt->execute();
 				$stmt->close();
 				$toReturn = true;
@@ -122,10 +124,10 @@ class PolySession {
 	}
 	public static function fromMySQL($mysqli, $uuid, $owner){
 		$toReturn = false;
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`, `house` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
 			$stmt->bind_param("is", $owner, $uuid);
 			$stmt->execute();
-			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date);
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date, $house);
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
@@ -134,6 +136,7 @@ class PolySession {
 				$thisThang->owner = $owner;
 				$thisThang->name = $name;
 				$thisThang->quiz = $quiz;
+				$thisThang->house = $house;
 				$thisThang->date = $date;
 				$thisThang->data = (array)json_decode($data);
 				$toReturn = $thisThang;
