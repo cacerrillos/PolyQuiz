@@ -8,6 +8,9 @@
 			margin-top: 5px;
 			margin-bottom: 5px;
 		}
+		.row {
+			margin-bottom: 5px;
+		}
 	</style>
 <template>
 	<iron-ajax id="sessionInfoAjax" url="../../api/1.0/sessions/info.php" handle-as="json" last-response="{{sessionobject}}"></iron-ajax>
@@ -23,12 +26,24 @@
 				<div class="layout horizontal">
 					<div class="flex">
 						<div class="row">
-							<div class="3u">[[sessionobject.name]]</div>
-							<div class="3u">[[quizdata.name]]</div>
-							<div class="1u">[[sessionobject.sessionid]]</div>
-							<div class="1u">[[sessionobject.sessionkey]]</div>
-							<div class="2u">[[unixDateToHumanDate(sessionobject.date)]]</div>
-							<div class="2u">[[housedata.data.houseName]]</div>
+							<div class="6u 12u(xsmall)">
+								<div class="row">
+									<div class="6u">[[sessionobject.name]]</div>
+									<div class="6u">[[quizdata.name]]</div>
+								</div>
+							</div>
+							<div class="2u 12u(xsmall)">
+								<div class="row">
+									<div class="12u 6u(xsmall)">[[sessionobject.sessionid]]</div>
+									<div class="12u 6u(xsmall)">[[sessionobject.sessionkey]]</div>
+								</div>
+							</div>
+							<div class="4u 12u(xsmall)">
+								<div class="row">
+									<div class="2u 6u(xsmall)">[[unixDateToHumanDate(sessionobject.date)]]</div>
+									<div class="2u 6u(xsmall)">[[housedata.data.houseName]]</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<polyquiz-admin-session-action-buttons id="actionButtons" sessiondata="{{sessionobject}}"></polyquiz-admin-session-action-buttons>
