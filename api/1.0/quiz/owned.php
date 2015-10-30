@@ -6,7 +6,7 @@ $debug = false;
 if(isset($_SESSION["is_admin"])){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	$mysqli -> select_db($db_name);
-	echo json_encode(PolyQuiz::AllOwned($mysqli, ""));
+	echo json_encode(PolyQuiz::AllOwned($mysqli, $_SESSION['dbext']));
 	exit();
 	$resultObject = array();
 	if($stmt = $mysqli->prepare(

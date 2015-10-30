@@ -24,8 +24,9 @@ class PolyQuiz {
 	public static function AllOwned($mysqli, $owner) {
 		$toReturn = array();
 		if($stmt = $mysqli->prepare(
-			"SELECT `uuid`, `quizname`, `version`, `owner` FROM `quizzes` LIMIT 1;"
+			"SELECT `uuid`, `quizname`, `version`, `owner` FROM `quizzes` WHERE `owner` = ?;"
 		)){
+			$stmt->bind_param("i", $owner);
 			$stmt->execute();
 			$stmt->bind_result($quizuuid, $quizname, $version, $owner);
 			$stmt->store_result();
