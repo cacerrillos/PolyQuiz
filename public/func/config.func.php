@@ -17,7 +17,7 @@ if(file_exists("func/secret.obj.php")){
 } else if(file_exists("secret.obj.php")){
 	include_once("secret.obj.php");
 }
-if(file_exists("production")) { 
+if(file_exists("PRODUCTION")) { 
 	$db_host = "localhost";
 	$db_user = "polyquiz";
 	$db_password = "polyquiz";
