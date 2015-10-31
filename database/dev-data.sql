@@ -1,3 +1,4 @@
+SET FOREIGN_KEY_CHECKS = 0;
 
 INSERT INTO `houses` (`houseid`, `housename`, `owner`) VALUES
 (0, 'Other', -1337),
@@ -42,4 +43,5 @@ INSERT INTO `users` (`id`, `email`, `name`, `password`) VALUES
 (10, 'hee', '', '81dc9bdb52d04dc20036dbd8313ed055'),
 (11, 'dhedman', '', 'c50aacae8c9de6b2f424caebad1a06b8'),
 (12, 'pellegrini', '', 'e79581ee1998185d7cb41ab84352b97e');
+SET FOREIGN_KEY_CHECKS=1;
 
