@@ -13,7 +13,7 @@ if(count($_POST) > 0){
 	$mysqli = new mysqli($db_host, $db_user, $db_password);
 	$mysqli -> select_db($db_name);
 	if(mysqli_connect_errno()) {
-		$result['error'] = "Connection Failed: " . mysqli_connect_errno();
+		$result['status_details'] = "Connection Failed: " . mysqli_connect_errno();
 	} else {
 		if($stmt = $mysqli -> prepare("SELECT `id`, `email`, `name` FROM users WHERE email = ? AND password = ?")){
 			$stmt -> bind_param("ss", $_POST['user'], md5($_POST['pass']));
@@ -24,7 +24,7 @@ if(count($_POST) > 0){
 			$num = $stmt -> num_rows;
 			$stmt -> close();
 		} else {
-			echo $mysqli->error;
+			$result['status_details'] = $mysqli->error;
 		}
 		$mysqli -> close();
 		if($num==1){
