@@ -140,6 +140,8 @@
 					if(details.detail.response.status) {
 						this.fire('firetoast', { message: "Logged In!"});
 						this.fire('polyquiz-admin-check-status');
+					} else if(details.detail.response.status_details != null) { 
+						this.fire('firetoast', { message: "Failed To Login! Server Encountered an Error!"});
 					} else {
 						this.$.pass.value = "";
 						this.fire('firetoast', { message: "Invalid Username And/Or Password!"});
@@ -155,6 +157,7 @@
 
 				this.$.loginButton.disabled = false;
 				this.$.cancelButton.disabled = false;
+				this.$.pass.value = "";
 				this.loginFieldsCheck(null);
 			},
 			ready: function() {
