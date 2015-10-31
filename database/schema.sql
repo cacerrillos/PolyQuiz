@@ -134,4 +134,3 @@ ALTER TABLE `sessions`
   ADD CONSTRAINT `sessions_ibfk_1` FOREIGN KEY (`house`) REFERENCES `houses` (`houseid`) ON UPDATE CASCADE,
   ADD CONSTRAINT `sessions_ibfk_2` FOREIGN KEY (`quiz`) REFERENCES `quizzes` (`uuid`) ON UPDATE CASCADE,
   ADD CONSTRAINT `sessions_ibfk_3` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-SET FOREIGN_KEY_CHECKS=1;
