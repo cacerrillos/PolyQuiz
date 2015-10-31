@@ -1,4 +1,6 @@
-SET FOREIGN_KEY_CHECKS = 0;
+DROP DATABASE `polyquiz3`;
+CREATE DATABASE `polyquiz3`;
+USE `polyquiz3`;
 
 DROP TABLE IF EXISTS `houses`;
 CREATE TABLE `houses` (
