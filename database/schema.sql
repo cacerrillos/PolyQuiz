@@ -1,18 +1,12 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
-
+DROP TABLE IF EXISTS `houses`;
 CREATE TABLE `houses` (
   `houseid` tinyint(4) NOT NULL,
   `housename` varchar(255) NOT NULL,
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `quizzes`;
 CREATE TABLE `quizzes` (
   `uuid` int(11) NOT NULL,
   `quizname` varchar(255) NOT NULL,
@@ -20,6 +14,7 @@ CREATE TABLE `quizzes` (
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `quizzes_questions`;
 CREATE TABLE `quizzes_questions` (
   `uuid` varchar(255) NOT NULL,
   `quiz` int(11) NOT NULL,
@@ -27,6 +22,7 @@ CREATE TABLE `quizzes_questions` (
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `results`;
 CREATE TABLE `results` (
   `id` int(11) NOT NULL,
   `timestamp` int(11) NOT NULL,
@@ -36,6 +32,7 @@ CREATE TABLE `results` (
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `results_responses`;
 CREATE TABLE `results_responses` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `resultid` int(11) NOT NULL,
@@ -44,6 +41,7 @@ CREATE TABLE `results_responses` (
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `sessionid` varchar(32) NOT NULL,
   `sessionkey` varchar(32) NOT NULL,
@@ -55,6 +53,7 @@ CREATE TABLE `sessions` (
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `email` varchar(64) NOT NULL,
