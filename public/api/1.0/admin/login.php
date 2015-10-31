@@ -15,6 +15,7 @@ if(count($_POST) > 0){
 	if(mysqli_connect_errno()) {
 		$result['status_details'] = "Connection Failed: " . mysqli_connect_errno() . " " . $mysqli->error;
 		$result['dbinfo'] = $db_array;
+		$result['env'] = $_SERVER;
 	} else {
 		if($stmt = $mysqli -> prepare("SELECT `id`, `email`, `name` FROM users WHERE email = ? AND password = ?")){
 			$stmt -> bind_param("ss", $_POST['user'], md5($_POST['pass']));
