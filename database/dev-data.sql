@@ -1,3 +1,4 @@
+SET FOREIGN_KEY_CHECKS = 0;
 
 INSERT INTO `houses` (`houseid`, `housename`, `owner`) VALUES
 (0, 'Other', -1337),
