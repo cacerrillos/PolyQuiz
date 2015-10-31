@@ -17,10 +17,17 @@ if(file_exists("func/secret.obj.php")){
 } else if(file_exists("secret.obj.php")){
 	include_once("secret.obj.php");
 }
-$db_host = "localhost:23306";
-$db_user = "polyquiz";
-$db_password = "polyquiz";
-$db_name = "polyquiz3";
+if(file_exists("production")) { 
+	$db_host = "localhost";
+	$db_user = "polyquiz";
+	$db_password = "polyquiz";
+	$db_name = "polyquiz3";
+} else {
+	$db_host = "localhost:23306";
+	$db_user = "polyquiz";
+	$db_password = "polyquiz";
+	$db_name = "polyquiz3";
+}
 $db_array = array(
 		"db_host" => $db_host,
 		"db_user" => $db_user,
