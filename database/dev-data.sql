@@ -42,6 +42,7 @@ INSERT INTO `users` (`id`, `email`, `name`, `password`) VALUES
 (10, 'hee', '', '81dc9bdb52d04dc20036dbd8313ed055'),
 (11, 'dhedman', '', 'c50aacae8c9de6b2f424caebad1a06b8'),
 (12, 'pellegrini', '', 'e79581ee1998185d7cb41ab84352b97e');
+SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
