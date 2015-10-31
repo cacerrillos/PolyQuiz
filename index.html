@@ -55,6 +55,9 @@ skel.layout({
 		}
 	}
 });
+skel.on("change", function() {
+	console.log(skel.stateId);
+});
 </script>
 <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 <link rel="import" href="bower_components/polymer/polymer.html">
