@@ -135,7 +135,7 @@
 				//console.log(details);
 			},
 			loginCallback: function(details) {
-
+				console.log(details);
 				if(details.detail.response != null) {
 					if(details.detail.response.status) {
 						this.fire('firetoast', { message: "Logged In!"});
