@@ -2,6 +2,7 @@
 <dom-module id="polyquiz-page-sessions">
 	<link rel="import" href="../../bower_components/polymer/polymer.html">
 	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 	<link rel="import" href="polyquiz-admin-house-manage-form.html">
 	<link rel="import" href="polyquiz-admin-session-delete-prompt.html">
 	<link rel="import" href="polyquiz-admin-session-edit-prompt.html">
@@ -45,6 +46,9 @@
 			user-select: none;
 			cursor: pointer;
 		}
+		.trapmusic {
+			white-space: nowrap;
+		}
 	</style>
 	
 	<template>
@@ -61,6 +65,23 @@
 				<div>
 					<polyquiz-admin-session-create-form id="newSessionDialog"></polyquiz-admin-session-create-form>
 					<div class="row" style="padding-top: 28px;">
+						<div class="12u">
+						<paper-material>
+							<div class="row">
+								<div class="1u 1u(large) 1u$(xsmall) trapmusic">
+									Houses <paper-icon-button icon="icons:add"></paper-icon-button>
+								</div>
+								<div class="11u 11u(large) 12u(xsmall)">
+									<paper-tabs selected="-1" no-bar scrollable class="flex">
+									<template is="dom-repeat" items="{{housedata}}" as="house" sort="{{houseSort(housedata)}}">
+											<paper-tab>[[house.data.houseName]]</paper-tab>
+									</template>
+								</paper-tabs>
+								</div>
+							</div>
+								
+						</paper-material>
+						</div>
 						<div class="12u">
 							<paper-material style="margin-bottom: 112px;">
 								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession" hidden="[[fab]]"></paper-fab>
@@ -178,6 +199,11 @@
 					return 'icons:arrow-forward';
 				} else {
 					return 'icons:arrow-back';
+				}
+			},
+			houseSort: function(housedata) {
+				return function(a, b) {
+					return a.data.houseName.toUpperCase() < b.data.houseName.toUpperCase() ? -1 : 1;
 				}
 			},
 			sessionSort: function(sort, housedata, quizdata) {
