@@ -7,12 +7,13 @@ class PolySession {
 	public $quiz;
 	public $house;
 	public $date;
-	public $data = array();
+	public $active;
+	public $show_scores;
 	public function __construct(){
 		$this->name = "DEFAULT NAME";
 		$this->quiz = 1;
-		$this->data['status'] = true;
-		$this->data['show'] = true;
+		$this->active = true;
+		$this->show_scores = true;
 		$this->house = 0;
 		$date = new DateTime();
 		$this->date = $date->getTimestamp();
@@ -47,10 +48,10 @@ class PolySession {
 	}
 	public static function ownedBy($mysqli, $owner){
 		$toReturn = array();
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`, `house` FROM `sessions` WHERE `owner`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `date`, `house`, `active`, `show_scores` FROM `sessions` WHERE `owner`=?;")){
 			$stmt->bind_param("i", $owner);
 			$stmt->execute();
-			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date, $house);
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $date, $house, $active, $show_scores);
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
@@ -61,7 +62,8 @@ class PolySession {
 				$thisThang->quiz = $quiz;
 				$thisThang->house = $house;
 				$thisThang->date = $date;
-				$thisThang->data = json_decode($data);
+				$thisThang->active = $active ? true : false;
+				$thisThang->show_scores = $show_scores ? true : false;
 				
 				array_push($toReturn, $thisThang);
 			}
@@ -91,9 +93,9 @@ class PolySession {
 	public function setStatus($setTo){
 		$status = false;
 		if($setTo){
-			$this->data['status'] = true;
+			$this->active = true;
 		} else {
-			$this->data['status'] = false;
+			$this->active = false;
 		}
 		$status = true;
 		return $status;
@@ -101,9 +103,9 @@ class PolySession {
 	public function setShowScores($setTo){
 		$status = false;
 		if($setTo){
-			$this->data['show'] = true;
+			$this->show_scores = true;
 		} else {
-			$this->data['show'] = false;
+			$this->show_scores = false;
 		}
 		$status = true;
 		return $status;
@@ -111,8 +113,8 @@ class PolySession {
 	public function saveToMysql($mysqli, $owner){
 		$toReturn = false;
 		if($this->owner == $owner){
-			if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`, `house`) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?, `data`=?;")){
-				$stmt->bind_param("ssiissiiss", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, json_encode($this->data), $this->date, $this->house, $this->name, json_encode($this->data));
+			if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `active`, `show_scores`, `date`, `house`) VALUES (?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?, `active`=?, `show_scores`=?;")){
+				$stmt->bind_param("ssiisiiiisii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, intval($this->active), intval($this->show_scores), $this->date, $this->house, $this->name, intval($this->active), intval($this->show_scores));
 				$stmt->execute();
 				$stmt->close();
 				$toReturn = true;
@@ -124,10 +126,10 @@ class PolySession {
 	}
 	public static function fromMySQL($mysqli, $uuid, $owner){
 		$toReturn = false;
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `data`, `date`, `house` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `date`, `house`, `active`, `show_scores` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
 			$stmt->bind_param("is", $owner, $uuid);
 			$stmt->execute();
-			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $data, $date, $house);
+			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $date, $house, $active, $show_scores);
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
@@ -138,7 +140,8 @@ class PolySession {
 				$thisThang->quiz = $quiz;
 				$thisThang->house = $house;
 				$thisThang->date = $date;
-				$thisThang->data = (array)json_decode($data);
+				$thisThang->active = $active ? true : false;
+				$thisThang->show_scores = $show_scores ? true : false;
 				$toReturn = $thisThang;
 			}
 			$stmt->close();

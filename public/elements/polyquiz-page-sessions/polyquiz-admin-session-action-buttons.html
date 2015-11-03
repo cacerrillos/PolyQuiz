@@ -85,7 +85,7 @@
 				this.$.menuButton.close();
 			},
 			onSessionDataChanged: function(e) {
-				if(e.data.status){
+				if(e.active){
 					this.$.openstat.icon = "icons:lock-open";
 					this.$.openstat.style.color = "#8BC34A";
 					this.$.openstatSmall.icon = "icons:lock-open";
@@ -96,7 +96,7 @@
 					this.$.openstatSmall.icon = "icons:lock-outline";
 					this.$.openstatSmall.style.color = "#D32F2F";
 				}
-				if(e.data.show){
+				if(e.show_scores){
 					this.$.showscore.style.color = "#8BC34A";
 					this.$.showscoreSmall.style.color = "#8BC34A";
 				} else {
@@ -134,7 +134,7 @@
 				this.$.menuButton.disabled = true;
 				this.$.openstat.disabled = true;
 
-				if(this.sessiondata.data.status){
+				if(this.sessiondata.active){
 					this.$.toggleLockAjax.params = {
 						uuid: this.sessiondata.sessionid,
 						status: "false"
@@ -151,7 +151,7 @@
 				this.$.menuButton.disabled = true;
 				this.$.showscore.disabled = true;
 
-				if(this.sessiondata.data.show){
+				if(this.sessiondata.show_scores){
 					this.$.toggleShowAjax.params = {
 						uuid: this.sessiondata.sessionid,
 						show: "false"

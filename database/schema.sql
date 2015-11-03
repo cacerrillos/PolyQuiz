@@ -49,7 +49,8 @@ CREATE TABLE `sessions` (
   `house` tinyint(4) NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT 'DEFAULT NAME',
   `date` int(11) NOT NULL,
-  `data` text NOT NULL,
+  `active` tinyint(1) DEFAULT '1',
+  `show_scores` tinyint(1) DEFAULT '1',
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
