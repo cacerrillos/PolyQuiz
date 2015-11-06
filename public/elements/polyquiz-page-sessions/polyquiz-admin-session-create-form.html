@@ -86,7 +86,6 @@ Polymer({
 		return arr;
 	},
 	_computeQuizData: function(e) {
-		console.log(e);
 		var arr = [];
 		var roww = function(id, text){
 			this.id = id;
@@ -109,12 +108,9 @@ Polymer({
 				'active': this.$.status.selected == "open" ? true : false,
 				'show': this.$.show.selected == "show" ? true : false
 			});
-		console.log(this.$.createAjax.body);
 		this.$.createAjax.generateRequest();
-		
 	},
 	createResp: function(e){
-		
 		if(e.detail.response.status === true){
 			this.resetForm();
 			this.fire('firetoast', { message: "Created a new Session!"});
