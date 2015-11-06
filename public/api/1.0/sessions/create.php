@@ -14,7 +14,7 @@ if(isset($_SESSION["is_admin"]) && isset($_GET['sessionname']) && isset($_GET['q
 	
 	$obj->name = $_GET['sessionname'];
 	$obj->quiz = $_GET['quiz'];
-	$obj->data['house'] = $_GET['house'];
+	$obj->house = $_GET['house'];
 	if($_GET['status']=="open"){
 		$obj->setStatus(true);
 	} else if($_GET['status']=="closed"){
