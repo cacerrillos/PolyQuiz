@@ -29,12 +29,14 @@
 	<template>
 		<iron-ajax
 		id="toggleLockAjax"
-		url="../../api/1.0/sessions/set_status.php"
+		method="PUT"
+		url="../../api/1.1/sessions"
 		handle-as="json"
 	 	on-response="onToggleLockResp"></iron-ajax>
 		<iron-ajax
 		id="toggleShowAjax"
-		url="../../api/1.0/sessions/set_show_scores.php"
+		method="PUT"
+		url="../../api/1.1/sessions"
 		handle-as="json"
 	 	on-response="onToggleShowResp"></iron-ajax>
 		<div class="layout horizontal not-medium">
@@ -134,34 +136,22 @@
 				this.$.menuButton.disabled = true;
 				this.$.openstat.disabled = true;
 
-				if(this.sessiondata.active){
-					this.$.toggleLockAjax.params = {
-						uuid: this.sessiondata.sessionid,
-						status: "false"
-					};
-				} else {
-					this.$.toggleLockAjax.params = {
-						uuid: this.sessiondata.sessionid,
-						status: "true"
-					};
-				}
+				this.$.toggleLockAjax.params = {
+					id: this.sessiondata.sessionid
+				};
+				this.$.toggleLockAjax.body = JSON.stringify({'active': !this.sessiondata.active });
+
 				this.$.toggleLockAjax.generateRequest();
 			},
 			toggleShow: function() {
 				this.$.menuButton.disabled = true;
 				this.$.showscore.disabled = true;
 
-				if(this.sessiondata.show_scores){
-					this.$.toggleShowAjax.params = {
-						uuid: this.sessiondata.sessionid,
-						show: "false"
-					};
-				} else {
-					this.$.toggleShowAjax.params = {
-						uuid: this.sessiondata.sessionid,
-						show: "true"
-					};
-				}
+				this.$.toggleShowAjax.params = {
+					id: this.sessiondata.sessionid
+				};
+				this.$.toggleShowAjax.body = JSON.stringify({'show': !this.sessiondata.show_scores });
+
 				this.$.toggleShowAjax.generateRequest();
 			},
 			onDeleteClick: function(){
@@ -170,54 +160,35 @@
 			onToggleLockResp: function(e){
 				this.$.menuButton.disabled = false;
 				this.$.openstat.disabled = false;
-
-				if(e.target.params.status == "true"){
-					if(e.detail.response.status == true){
-						this.sessionopen = true;
-						this.ready();
-						this.fire('firetoast', { message: "Opened session!"});
-						this.fire('session-reload');
-						this.fire('show-badge-on-row');
-					} else {
-						this.fire('firetoast', { message: "Failed to open session!"});
+				if(e.detail.response.status == true){
+					this.sessionopen = true;
+					this.ready();
+					this.fire('firetoast', { message: "Updated Session!"});
+					this.fire('session-reload');
+					this.fire('show-badge-on-row');
+				} else {
+					var det = "NO_DETAILS";
+					if(e.detail.response.sub.status_details) {
+						det = e.detail.response.sub.status_details;
 					}
-				} else if(e.target.params.status == "false") {
-					if(e.detail.response.status == true){
-						this.sessionopen = false;
-						this.ready();
-						this.fire('firetoast', { message: "Closed session!"});
-						this.fire('session-reload');
-						this.fire('show-badge-on-row');
-					} else {
-						this.fire('firetoast', { message: "Failed to close session!"});
-					}
+					this.fire('firetoast', { message: "Failed to update Session! [" + det + "]"});
 				}
-				//fire session refresh
 			},
 			onToggleShowResp: function(e){
 				this.$.menuButton.disabled = false;
 				this.$.showscore.disabled = false;
-
-				if(e.target.params.show == "true"){
-					if(e.detail.response.status == true){
-						this.sessionshow = true;
-						this.ready();
-						this.fire('firetoast', { message: "Set scores to visible!"});
-						this.fire('session-reload');
-						this.fire('show-badge-on-row');
-					} else {
-						this.fire('firetoast', { message: "Failed to set scores to visible!"});
+				if(e.detail.response.status == true){
+					this.sessionshow = true;
+					this.ready();
+					this.fire('firetoast', { message: "Updated Session!"});
+					this.fire('session-reload');
+					this.fire('show-badge-on-row');
+				} else {
+					var det = "NO_DETAILS";
+					if(e.detail.response.sub.status_details) {
+						det = e.detail.response.sub.status_details;
 					}
-				} else if(e.target.params.show == "false") {
-					if(e.detail.response.status == true){
-						this.sessionshow = false;
-						this.ready();
-						this.fire('firetoast', { message: "Set scores to NOT visible!"});
-						this.fire('session-reload');
-						this.fire('show-badge-on-row');
-					} else {
-						this.fire('firetoast', { message: "Failed to set scores to NOT visible!"});
-					}
+					this.fire('firetoast', { message: "Failed to update Session! [" + det + "]"});
 				}
 			},
 			editDialog: function(e){
