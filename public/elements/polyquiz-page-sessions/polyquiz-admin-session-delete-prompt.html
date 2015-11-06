@@ -12,7 +12,7 @@
 	</style>
 
 	<template>
-		<iron-ajax id="deleteAjax" url="../../api/1.0/sessions/delete.php" handle-as="json" on-response="onDeleteResp"></iron-ajax>
+		<iron-ajax method="DELETE" id="deleteAjax" url="../../api/1.1/sessions" handle-as="json" on-response="onDeleteResp"></iron-ajax>
 		<paper-dialog id="dialog" on-iron-overlay-closed="onDialogClosed" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
 			<h2>Delete Session?</h2>
 			Id: <span style="font-weight:bold;">[[sessionObject.sessionid]]</span><br>
@@ -37,7 +37,7 @@
 			onDialogClosed: function(e){
 				if(e.detail.confirmed){
 					this.$.deleteAjax.params = {
-						uuid: this.sessionObject.sessionid
+						id: this.sessionObject.sessionid
 					};
 					this.$.deleteAjax.generateRequest();
 				}
