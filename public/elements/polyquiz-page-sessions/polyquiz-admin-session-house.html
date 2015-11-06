@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<dom-module id="polyquiz-admin-session-house">
+	<link rel="import" href="polyquiz-admin-house-create-form.html">
+	<link rel="import" href="polyquiz-admin-house-edit-form.html">
+	<link rel="import" href="polyquiz-admin-house-delete-form.html">
+	<style is="custom-style">
+	paper-material {
+			background-color: white;
+			padding: 5px;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		paper-fab.addhouse {
+			position: absolute;
+			bottom: -28px;
+			right: 8px;
+			z-index: 5;
+		}
+		paper-fab.edithouse {
+			position: absolute;
+			bottom: -28px;
+			right: 132px;
+			z-index: 3;
+			--paper-fab-background: var(--paper-blue-500);
+		}
+		paper-fab.deletehouse {
+			position: absolute;
+			bottom: -28px;
+			right: 70px;
+			z-index: 4;
+			--paper-fab-background: var(--paper-red-800);
+		}
+		paper-tab {
+			--paper-tab-ink: var(--paper-grey-300);
+		}
+		paper-tab.iron-selected {
+			color: var(--default-primary-color);
+		}
+		paper-dialog { 
+			background-color: white;
+			padding: 5px;
+		}
+	</style>
+	<template>
+		
+		<paper-dialog id="newHouseDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<polyquiz-admin-house-create-form></polyquiz-admin-house-create-form>
+		</paper-dialog>
+
+		<paper-dialog id="editHouseDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<polyquiz-admin-house-edit-form house-data="[[selectedHouse]]"></polyquiz-admin-house-edit-form>
+		</paper-dialog>
+
+		<paper-dialog id="deleteHouseDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+			<polyquiz-admin-house-delete-form house-data="[[selectedHouse]]"></polyquiz-admin-house-create-form>
+		</paper-dialog>
+
+		<paper-material style="margin-bottom: 42px; padding-top:24px; padding-bottom: 24px;">
+			<paper-fab icon="icons:add" class="addhouse" on-click="doAddNewHouse"></paper-fab>
+			<paper-fab id="editHouseButton" icon="icons:more-vert" class="edithouse" on-click="doEditHouse"></paper-fab>
+			<paper-fab id="deleteHouseButton" icon="icons:delete" class="deletehouse" on-click="doDeleteHouse"></paper-fab>
+			<div class="row">
+				<div class="12u 12u(large) 12u(xsmall)">
+					<paper-tabs id="housesl" selected="-1" no-bar scrollable class="flex" on-iron-select="onHouseSelected" on-iron-deselect="onHouseDeselected">
+					<template is="dom-repeat" items="{{_objectArrayToArray(housedata)}}" as="house" sort="{{houseSort(housedata)}}">
+							<paper-tab data-id="[[house.id]]">[[house.name]]</paper-tab>
+					</template>
+				</paper-tabs>
+				</div>
+			</div>
+		</paper-material>
+	</template>
+	<script>
+	Polymer({
+		is: 'polyquiz-admin-session-house',
+		behaviors: [
+			Polymer.NeonAnimationRunnerBehavior
+		],
+		properties: {
+			housedata: {
+				type: Object,
+				observer: 'onHouseDataChanged'
+			},
+			selectedHouse: {
+				type: Object
+			},
+			showFabs: {
+				type: Boolean,
+				value: false
+			},
+			animationStarted: {
+				type: Boolean,
+				value: false
+			},
+			animationOneDone: {
+				type: Boolean,
+				value: false
+			},
+			animationTwoDone: {
+				type: Boolean,
+				value: false
+			},
+			animationConfig: {
+				value: function() {
+					return {
+						'entry_edit': {
+							name: 'transform-animation',
+							node: this.$.editHouseButton,
+							transformFrom: 'translateX(200%)',
+							transformTo: 'none'
+						},
+						'entry_edit_o': {
+							name: 'fade-in-animation',
+							node: this.$.editHouseButton
+						},
+						'entry_delete': {
+							name: 'transform-animation',
+							node: this.$.deleteHouseButton,
+							transformFrom: 'translateX(100%)',
+							transformTo: 'none'
+						},
+						'entry_delete_o': {
+							name: 'fade-in-animation',
+							node: this.$.deleteHouseButton
+						},
+						'exit_edit': {
+							name: 'transform-animation',
+							node: this.$.editHouseButton,
+							transformFrom: 'none',
+							transformTo: 'translateX(220%)'
+						},
+						'exit_edit_o': {
+							name: 'fade-out-animation',
+							node: this.$.editHouseButton
+						},
+						'exit_delete': {
+							name: 'transform-animation',
+							node: this.$.deleteHouseButton,
+							transformFrom: 'none',
+							transformTo: 'translateX(110%)'
+						},
+						'exit_delete_o': {
+							name: 'fade-out-animation',
+							node: this.$.deleteHouseButton
+						}
+					}
+				}
+			}
+		},
+		listeners: {
+			'neon-animation-finish': '_onNeonAnimationFinish'
+		},
+		_objectArrayToArray: function(arr) {
+			return $.map(arr, function(value, index) { return [value]; });
+		},
+		onHouseDataChanged: function(e) {
+			this.deselectHouse();
+		},
+		onHouseDeselected: function(e) {
+			//console.log(e);
+		},
+		onHouseSelected: function(e) {
+			this.selectedHouse = this.housedata[e.detail.item.dataId];
+			this.show();
+		},
+		doAddNewHouse: function(e) {
+			this.deselectHouse();
+			this.$.newHouseDialog.open();
+		},
+		doEditHouse: function(e) {
+			this.$.editHouseDialog.open();
+		},
+		doDeleteHouse: function(e) {
+			this.$.deleteHouseDialog.open();
+		},
+		deselectHouse: function(e) {
+			this.$.housesl.select(-1);
+			this.selectedHouse = null;
+			this.hide();
+		},
+		show: function() {
+			if(!this.animationStarted && !this.showFabs) {
+				this.animationStarted = true;
+				this.showFabs = true;
+				this.$.editHouseButton.style.display = 'inline-block';
+				this.$.deleteHouseButton.style.display = 'inline-block';
+				this.playAnimation('entry_edit', 'entry_edit');
+				this.playAnimation('entry_edit_o', 'entry_edit_o');
+				this.playAnimation('entry_delete', 'entry_delete');
+				this.playAnimation('entry_delete_o', 'entry_delete_o');
+			}
+
+		},
+		hide: function() {
+			if(!this.animationStarted && this.showFabs) {
+				this.animationStarted = true;
+				this.showFabs = false;
+				this.playAnimation('exit_edit', 'exit_edit');
+				this.playAnimation('exit_edit_o', 'exit_edit_o');
+				this.playAnimation('exit_delete', 'exit_delete');
+				this.playAnimation('exit_delete_o', 'exit_delete_o');
+			}
+
+		},
+		houseSort: function(housedata) {
+			return function(a, b) {
+				return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+			}
+		},
+		_onNeonAnimationFinish: function(e, a) {
+			if(a == 'entry_edit' || a == 'exit_edit') {
+				this.animationOneDone = true;
+			}
+			if(a == 'entry_delete' || a == 'exit_delete') {
+				this.animationTwoDone = true;
+			}
+			if(this.animationOneDone && this.animationTwoDone) {
+				this.animationOneDone = false;
+				this.animationTwoDone = false;
+				this.animationStarted = false;
+				if(!this.showFabs) {
+					this.$.editHouseButton.style.display = 'none';
+					this.$.deleteHouseButton.style.display = 'none';
+				}
+			}
+		},
+		ready: function() {
+			this.$.editHouseButton.style.display = 'none';
+				this.$.deleteHouseButton.style.display = 'none';
+		}
+	});
+	</script>
+</dom-module>
+
+
