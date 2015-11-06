@@ -114,8 +114,14 @@ $app->put('/sessions/:id', function($id) {
 
 $app->delete('/sessions', function() {
 	global $mysqli;
+	$result = array();
+	$result['status'] = false;
 	if(isset($_GET['id'])) {
-		echo json_encode(PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext'])->delete($mysqli, $_SESSION['dbext']), JSON_PRETTY_PRINT);
+		$obj = PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext']);
+		
+		$result['status'] = $obj->delete($mysqli, $_SESSION['dbext']);
+
+		echo json_encode($result, JSON_PRETTY_PRINT);
 	} else {
 		//DELETE ALL
 	}
@@ -123,7 +129,14 @@ $app->delete('/sessions', function() {
 
 $app->delete('/sessions/:id', function($id) {
 	global $mysqli;
-	echo json_encode(PolySession::fromMySQL($mysqli, $id, $_SESSION['dbext'])->delete($mysqli, $_SESSION['dbext']), JSON_PRETTY_PRINT);
+	$result = array();
+	$result['status'] = false;
+
+	$obj = PolySession::fromMySQL($mysqli, $id, $_SESSION['dbext']);
+		
+	$result['status'] = $obj->delete($mysqli, $_SESSION['dbext']);
+
+	echo json_encode($result, JSON_PRETTY_PRINT);
 });
 
 ?>
