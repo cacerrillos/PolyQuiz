@@ -71,9 +71,19 @@ class PolyHouse {
 		$resultObject = array();
 		if($stmt = $mysqli->prepare("DELETE FROM `houses` WHERE `houses`.`houseid` = ? AND `houses`.`owner` = ? LIMIT 1;")) {
 			$stmt->bind_param("ii", $houseid, $owner);
-			$stmt->execute();
+			if($stmt->execute()) {
+				if($stmt->affected_rows == 0) {
+					$resultObject['status'] = false;
+					$resultObject['status_details'] = 'Not Found';
+				} else {
+					$resultObject['status'] = true;
+				}
+			} else {
+				$resultObject['status'] = false;
+				$resultObject['status_details'] = $stmt->errno;
+			}
+			
 			$stmt->close();
-			$resultObject['status'] = true;
 		} else {
 			$resultObject['error'] = $mysqli->error;
 		}
