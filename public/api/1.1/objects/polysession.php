@@ -9,6 +9,7 @@ class PolySession {
 	public $date;
 	public $active;
 	public $show_scores;
+	public $inDB = false;
 	public function __construct(){
 		$this->name = "DEFAULT NAME";
 		$this->quiz = 1;
@@ -111,16 +112,38 @@ class PolySession {
 		return $status;
 	}
 	public function saveToMysql($mysqli, $owner){
-		$toReturn = false;
+		$toReturn = array();
+		$toReturn['status'] = false;
 		if($this->owner == $owner){
-			if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `active`, `show_scores`, `date`, `house`) VALUES (?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?, `active`=?, `show_scores`=?;")){
-				$stmt->bind_param("ssiisiiiisii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, intval($this->active), intval($this->show_scores), $this->date, $this->house, $this->name, intval($this->active), intval($this->show_scores));
-				$stmt->execute();
-				$stmt->close();
-				$toReturn = true;
+			if($inDB) {
+				if($stmt = $mysqli->prepare("UPDATE `sessions` SET `name`=?, `active`=?, `show_scores`=? WHERE `sessionid` = ? AND `owner` = ? LIMIT 1;")){
+					$stmt->bind_param("siisi",  $this->name, intval($this->active), intval($this->show_scores), $this->sessionid, $owner);
+					if($stmt->execute()) {
+						$toReturn['status'] = true;
+					} else {
+						$toReturn['status_details'] = $stmt->errno;
+						$toReturn['status_details_message'] = $stmt->error;
+					}
+					$stmt->close();
+				} else {
+					$toReturn['status_details'] = $mysqli->error;
+				}
 			} else {
-				$toReturn = $mysqli->error;
+				if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `active`, `show_scores`, `date`, `house`) VALUES (?,?,?,?,?,?,?,?,?);")){
+					$stmt->bind_param("ssiisiiii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, intval($this->active), intval($this->show_scores), $this->date, $this->house);
+					if($stmt->execute()) {
+						$toReturn['status'] = true;
+					} else {
+						$toReturn['status_details'] = $stmt->errno;
+						$toReturn['status_details_message'] = $stmt->error;
+					}
+					$stmt->close();
+				} else {
+					$toReturn['status_details'] = $mysqli->error;
+				}
+				$inDB = true;
 			}
+			
 		}
 		return $toReturn;
 	}
@@ -133,6 +156,7 @@ class PolySession {
 			$stmt->execute();
 			while($stmt->fetch()){
 				$thisThang = new self();
+				$thisThang->inDB = true;
 				$thisThang->sessionid = $sessionid;
 				$thisThang->sessionkey = $sessionkey;
 				$thisThang->owner = $owner;

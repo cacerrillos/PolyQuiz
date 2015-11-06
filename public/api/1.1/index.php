@@ -24,6 +24,8 @@ include_once('PolyQuizAdminAPI.php');
 
 include_once('PolyHouseAPI.php');
 
+include_once('PolySessionAPI.php');
+
 $app->run();
 
 ?>
