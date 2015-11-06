@@ -115,6 +115,18 @@ $app->put('/houses/:houseid', function($houseid) {
 	}
 
 });
+$app->put('/houses', function() {
+	global $mysqli;
+
+	global $_POST_JSON;
+
+	if(isset($_GET['id'])) {
+		if($_POST_JSON && isset($_POST_JSON['name'])) {
+			echo json_encode(PolyHouse::put($mysqli, $_GET['id'], $_POST_JSON['name'], $_SESSION['dbext']), JSON_PRETTY_PRINT);
+		}
+	}
+
+});
 
 $app->delete('/houses/:houseid', function($houseid) {
 	global $mysqli;
