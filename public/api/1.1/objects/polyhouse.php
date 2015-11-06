@@ -1,10 +1,11 @@
 <?
 class PolyHouse {
 	public $version = 0;
-	public $data = array();
+	public $id;
+	public $name;
 	public function __construct($houseid, $housename){
-		$this->data['houseId'] = $houseid;
-		$this->data['houseName'] = $housename;
+		$this->id = $houseid;
+		$this->name = $housename;
 	}
 	public static function get($mysqli, $houseid, $owner){
 		$toReturn = false;
@@ -48,6 +49,7 @@ class PolyHouse {
 			$stmt->bind_param("si", $housename, $owner);
 			$stmt->execute();
 			$stmt->close();
+			$resultObject['status'] = true;
 		} else {
 			$resultObject['error'] = $mysqli->error;
 		}
