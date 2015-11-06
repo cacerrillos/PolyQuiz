@@ -13,7 +13,7 @@
 		}
 	</style>
 <template>
-	<iron-ajax id="sessionInfoAjax" url="../../api/1.0/sessions/info.php" handle-as="json" last-response="{{sessionobject}}"></iron-ajax>
+	<iron-ajax id="sessionInfoAjax" url="../../api/1.1/sessions" handle-as="json" last-response="{{sessionobject}}"></iron-ajax>
 	<div class="layout vertical">
 		<paper-material class="flex" id="mainMat" elevation="0" on-mouseover="doHover" on-mouseout="killHover" animated>
 			<paper-badge id="changedBadge" hidden></paper-badge>
@@ -74,7 +74,7 @@ Polymer({
 	},
 	doSessionReload: function() {
 		this.$.sessionInfoAjax.params = {
-			'uuid': this.sessionobject.sessionid
+			'id': this.sessionobject.sessionid
 		};
 		this.$.sessionInfoAjax.generateRequest();
 	},
