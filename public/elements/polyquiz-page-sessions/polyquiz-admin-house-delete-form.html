@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-admin-house-delete-form">
+	<style is="custom-style">
+		.nomargins { 
+			margin: 0px;
+		}
+		.validButton {
+			background-color: #4285f4;
+			color: rgba(255,255,255,1.00);
+		}
+		paper-button {
+			margin-top: 8px;
+		}
+	</style>
+	<template>
+		<iron-ajax id="deleteAjax" method="DELETE" handle-as="json" on-response="onDeleteAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
+		<h2>Are you sure?</h2>
+		<p>Delete <div>[[houseData.name]]</div></p>
+		<div class="layout horizontal">
+			<div class="flex"></div>
+			<paper-button raised on-click="deleteHouse" dialog-confirm>Delete</paper-button>
+			<paper-button raised dialog-dismiss>Cancel</paper-button>
+			<div class="flex"></div>
+		</div>
+	</template>
+	<script>
+	Polymer({
+		is: "polyquiz-admin-house-delete-form",
+		properties: {
+			houseData: {
+				type: Object
+			}
+		},
+		deleteHouse: function(e) {
+			if(this.houseData) {
+				this.$.deleteAjax.params = {
+					id: this.houseData.id
+				};
+				this.$.deleteAjax.generateRequest();
+			}
+		},
+		onDeleteAjaxResponse: function(e) {
+			if(e.detail.response.status) {
+				this.fire('firetoast', { message: "Deleted!"});
+				this.fire('reload-houses');
+			} else {
+				var det = "NO_DETAILS";
+				if(e.detail.response.status_details) {
+					det = e.detail.response.status_details;
+				}
+				this.fire('firetoast', { message: "Failed to delete! [" + det + "]" });
+			}
+		},
+		ready: function(){
+			
+		}
+	});
+	</script>
+</dom-module>
