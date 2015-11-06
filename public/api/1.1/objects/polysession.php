@@ -115,7 +115,7 @@ class PolySession {
 		$toReturn = array();
 		$toReturn['status'] = false;
 		if($this->owner == $owner){
-			if($inDB) {
+			if($this->inDB) {
 				if($stmt = $mysqli->prepare("UPDATE `sessions` SET `name`=?, `active`=?, `show_scores`=? WHERE `sessionid` = ? AND `owner` = ? LIMIT 1;")){
 					$stmt->bind_param("siisi",  $this->name, intval($this->active), intval($this->show_scores), $this->sessionid, $owner);
 					if($stmt->execute()) {
@@ -133,6 +133,7 @@ class PolySession {
 					$stmt->bind_param("ssiisiiii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, intval($this->active), intval($this->show_scores), $this->date, $this->house);
 					if($stmt->execute()) {
 						$toReturn['status'] = true;
+						$inDB = true;
 					} else {
 						$toReturn['status_details'] = $stmt->errno;
 						$toReturn['status_details_message'] = $stmt->error;
@@ -141,7 +142,6 @@ class PolySession {
 				} else {
 					$toReturn['status_details'] = $mysqli->error;
 				}
-				$inDB = true;
 			}
 			
 		}
