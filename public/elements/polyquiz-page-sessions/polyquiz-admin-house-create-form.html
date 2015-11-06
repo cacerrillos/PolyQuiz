@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-admin-house-create-form">
+	<style is="custom-style">
+		.nomargins { 
+			margin: 0px;
+		}
+		.validButton {
+			background-color: #4285f4;
+			color: rgba(255,255,255,1.00);
+		}
+		paper-button {
+			margin-top: 8px;
+		}
+	</style>
+	<template>
+		<div class="layout vertical">
+			<div class="layout horizontal">
+				<div class="flex"></div>
+					<h2 class="nomargins">Create New House</h2>
+				<div class="flex"></div>
+			</div>
+			
+			<iron-ajax id="createAjax" url="../../api/1.1/houses" handle-as="json" on-response="createResp" method="POST"></iron-ajax>
+
+			<paper-input name="housename" label="House Name" on-change="formDataChanged" id="housename" style="padding-left:12px; padding-right:12px;"></paper-input>
+
+			<div class="layout horizontal">
+				<div class="flex"></div>
+				<paper-button raised id="submitButton" class="" on-click="doForm">Create</paper-button>
+				<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
+				<paper-button raised dialog-dismiss>Cancel</paper-button>
+				<div class="flex"></div>
+			</div>
+		
+		</div>
+	</template>
+	<script>
+	Polymer({
+		is: "polyquiz-admin-house-create-form",
+		properties: {
+		
+		},
+		doForm: function(e){
+			this.$.createAjax.body = JSON.stringify({'name': this.$.housename.value });
+			this.$.createAjax.generateRequest();
+		},
+		createResp: function(e){
+			if(e.detail.response.status === true){
+				this.resetForm();
+				this.fire('firetoast', { message: "Created new House!"});
+				this.fire("reload-houses", { });
+			} else {
+				this.fire('firetoast', { message: "FAILED to create new House!"});
+			}
+			
+			console.log(e);
+		},
+		resetForm: function(e){
+			this.$.housename.value = "";
+		},
+		formDataChanged: function(e){
+			//check if house name exists
+		},
+		ready: function(){
+			this.formDataChanged();
+		}
+	});
+	</script>
+</dom-module>
