@@ -51,16 +51,65 @@ $app->post('/sessions', function() {
 });
 
 $app->put('/sessions', function() {
-	global $mysqli;
+	global $mysqli, $_POST_JSON;
+	$status = array();
 	if(isset($_GET['id'])) {
-
+		$obj = PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext']);
+		if(isset($_POST_JSON['name'])) {
+			$obj->name = $_POST_JSON['name'];
+		}
+		if(isset($_POST_JSON['quiz'])) {
+			$obj->quiz = $_POST_JSON['quiz'];
+		}
+		if(isset($_POST_JSON['house'])) {
+			$obj->house = $_POST_JSON['house'];
+		}
+		if(isset($_POST_JSON['active'])) {
+			$obj->setStatus($_POST_JSON['active']);
+		}
+		if(isset($_POST_JSON['show'])) {
+			$obj->setShowScores($_POST_JSON['show']);
+		}
+		$status['sex'] = $obj->inDB;
+		$subStatus = $obj->saveToMysql($mysqli, $_SESSION['dbext']);
+		$status['status'] = $subStatus['status'];
+		if($subStatus['status']){
+			$status['status'] = true;
+		} else {
+			$status['sub'] = $subStatus;
+		}
+		
 	} else {
 		
 	}
+	echo json_encode($status, JSON_PRETTY_PRINT);
 });
 
 $app->put('/sessions/:id', function($id) {
-	global $mysqli;
+	global $mysqli, $_POST_JSON;
+
+	$obj = PolySession::fromMySQL($mysqli, $id, $_SESSION['dbext']);
+	if(isset($_POST_JSON['name'])) {
+		$obj->name = $_POST_JSON['name'];
+	}
+	if(isset($_POST_JSON['quiz'])) {
+		$obj->quiz = $_POST_JSON['quiz'];
+	}
+	if(isset($_POST_JSON['house'])) {
+		$obj->house = $_POST_JSON['house'];
+	}
+	if(isset($_POST_JSON['active'])) {
+		$obj->setStatus($_POST_JSON['active']);
+	}
+	if(isset($_POST_JSON['show'])) {
+		$obj->setShowScores($_POST_JSON['show']);
+	}
+	$subStatus = $obj->saveToMysql($mysqli, $_SESSION['dbext']);
+	if($subStatus['status']){
+		$status['status'] = true;
+	} else {
+		$status['sub'] = $subStatus;
+	}
 });
 
 $app->delete('/sessions', function() {
@@ -68,7 +117,7 @@ $app->delete('/sessions', function() {
 	if(isset($_GET['id'])) {
 		echo json_encode(PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext'])->delete($mysqli, $_SESSION['dbext']), JSON_PRETTY_PRINT);
 	} else {
-		
+		//DELETE ALL
 	}
 });
 
