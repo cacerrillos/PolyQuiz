@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-admin-house-edit-form">
+	<style is="custom-style">
+		.nomargins { 
+			margin: 0px;
+		}
+		.validButton {
+			background-color: #4285f4;
+			color: rgba(255,255,255,1.00);
+		}
+		paper-button {
+			margin-top: 8px;
+		}
+	</style>
+	<template>
+		<iron-ajax id="editAjax" method="PUT" handle-as="json" on-response="onEditAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
+		<h2>Edit House</h2>
+		<paper-input id="houseName" label="House Name" value="[[houseData.name]]"></paper-input>
+		<div class="layout horizontal">
+			<div class="flex"></div>
+			<paper-button raised on-click="editHouse" dialog-confirm>Edit</paper-button>
+			<paper-button raised dialog-dismiss>Cancel</paper-button>
+			<div class="flex"></div>
+		</div>
+	</template>
+	<script>
+	Polymer({
+		is: "polyquiz-admin-house-edit-form",
+		properties: {
+			houseData: {
+				type: Object
+			}
+		},
+		editHouse: function(e) {
+			if(this.houseData) {
+				this.$.editAjax.params = {
+					id: this.houseData.id
+				};
+				this.$.editAjax.body = JSON.stringify({'name': this.$.houseName.value });
+				this.$.editAjax.generateRequest();
+			}
+		},
+		onEditAjaxResponse: function(e) {
+			if(e.detail.response.status) {
+				this.fire('firetoast', { message: "Edited!"});
+				this.fire('reload-houses');
+			} else {
+				var det = "NO_DETAILS";
+				if(e.detail.response.status_details) {
+					det = e.detail.response.status_details;
+				}
+				this.fire('firetoast', { message: "Failed to edit! [" + det + "]" });
+			}
+		},
+		ready: function(){
+			
+		}
+	});
+	</script>
+</dom-module>
