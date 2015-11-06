@@ -44,23 +44,6 @@ Polymer({
 		selectedText: String,
 		selectedInternal: Number
 	},
-	quizInfoResp: function(e){
-		if(e.detail.response){
-			var arr = [];
-			var roww = function(id, text){
-					this.id = id;
-					this.text = text;
-				};
-			for(var x = 0; x < e.detail.response.length; x++){
-				var tis = e.detail.response[x];
-				arr.push(new roww(tis.uuid, tis.name));
-			}
-			if(arr.length > 0){
-				this.objects = arr;
-			}
-		}
-		
-	},
 	onobjchange: function(e){
 		this.redraww();
 		//this.selected = this.rightarray.selected;
