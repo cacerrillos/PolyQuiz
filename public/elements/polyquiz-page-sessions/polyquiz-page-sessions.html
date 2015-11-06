@@ -8,7 +8,7 @@
 	<link rel="import" href="polyquiz-admin-session-action-buttons.html">
 	<link rel="import" href="polyquiz-admin-session-create-form.html">
 	<link rel="import" href="polyquiz-admin-session-row.html">
-	
+	<link rel="import" href="polyquiz-admin-session-house.html">
 	<style is="custom-style">
 		paper-material {
 			background-color: white;
@@ -48,18 +48,13 @@
 		.trapmusic {
 			white-space: nowrap;
 		}
-		paper-tab {
-			--paper-tab-ink: var(--paper-grey-300);
-		}
-		paper-tab.iron-selected {
-			color: var(--default-primary-color);
-		}
+		
 	</style>
 	
 	<template>
 		<iron-ajax id="query" url="../../api/1.0/sessions/owned.php" handle-as="json" on-response="onResp"></iron-ajax>
 		<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizdata}}" auto></iron-ajax>
-		<iron-ajax id="houseInfoAjax" url="../../api/1.0/houses/houses.php" handle-as="json" last-response="{{housedata}}" auto></iron-ajax>
+		<iron-ajax id="houseInfoAjax" url="../../api/1.1/houses" handle-as="json" last-response="{{housedata}}" auto></iron-ajax>
 
 		<polyquiz-admin-session-edit-prompt id="editPrompt"></polyquiz-admin-session-edit-prompt>
 
@@ -69,24 +64,12 @@
 			<iron-pages id="pageSelector" attrForSelected="data-subpage" selected="[[sessionSubpage]]">
 				<div>
 					<polyquiz-admin-session-create-form id="newSessionDialog"></polyquiz-admin-session-create-form>
+					
 					<div class="row" style="padding-top: 28px;">
 						<div class="12u">
-						<paper-material>
-							<div class="row">
-								<div class="1u 1u(large) 1u$(xsmall) trapmusic">
-									Houses <paper-icon-button icon="icons:add"></paper-icon-button>
-								</div>
-								<div class="11u 11u(large) 12u(xsmall)">
-									<paper-tabs selected="-1" no-bar scrollable class="flex">
-									<template is="dom-repeat" items="{{housedata}}" as="house" sort="{{houseSort(housedata)}}">
-											<paper-tab>[[house.data.houseName]]</paper-tab>
-									</template>
-								</paper-tabs>
-								</div>
-							</div>
-								
-						</paper-material>
+							<polyquiz-admin-session-house housedata="{{housedata}}"></polyquiz-admin-session-house>
 						</div>
+
 						<div class="12u">
 							<paper-material style="margin-bottom: 112px;">
 								<paper-fab icon="icons:add" class="add" on-click="doAddNewSession" hidden="[[fab]]"></paper-fab>
@@ -176,8 +159,12 @@
 			},
 			listeners: {
 				'reload-sessions': 'reloadSessions',
+				'reload-houses': 'reloadHouses',
 				'delete-session-request': 'doDeleteSession',
 				'edit-session-request': 'doEditSession'
+			},
+			_objectArrayToArray: function(arr) {
+				return $.map(arr, function(value, index) { return [value]; });
 			},
 			_onPageResized: function() {
 				var div = document.getElementById('mainContainer');
@@ -205,11 +192,6 @@
 					return 'icons:arrow-back';
 				}
 			},
-			houseSort: function(housedata) {
-				return function(a, b) {
-					return a.data.houseName.toUpperCase() < b.data.houseName.toUpperCase() ? -1 : 1;
-				}
-			},
 			sessionSort: function(sort, housedata, quizdata) {
 				switch(sort.by) {
 					case 'name':
@@ -231,9 +213,9 @@
 					case 'house'://TODO
 						return function(a, b) {
 							if(sort.direction) {
-								return housedata[a.house].data.houseName.toUpperCase() < housedata[b.house].data.houseName.toUpperCase() ? -1 : 1;
+								return housedata[a.house].name.toUpperCase() < housedata[b.house].name.toUpperCase() ? -1 : 1;
 							} else {
-								return housedata[a.house].data.houseName.toUpperCase() < housedata[b.house].data.houseName.toUpperCase() ? 1 : -1;
+								return housedata[a.house].name.toUpperCase() < housedata[b.house].name.toUpperCase() ? 1 : -1;
 							}
 						};
 					default:
@@ -279,6 +261,9 @@
 				this.$.rowSpinner.active = true;
 				this.$.rowSpinner.hidden = false;
 			},
+			reloadHouses: function(e) {
+				this.$.houseInfoAjax.generateRequest();
+			},
 			doDeleteSession: function(e) {
 				this.$.deletePrompt.open(e.detail.sessionObject);
 			},
@@ -297,8 +282,8 @@
 			loginOverlayCheck: function(selectorTarget, mainapp) {
 				return function(e) {
 					if(selectorTarget == e.srcElement) {
-						console.log(e);
 						if(this.parentNode.selectedItem == this) {
+							console.log(e);
 							if(mainapp.isAdmin) {
 								mainapp.closeLoginOverlay();
 								this.reloadSessions();
