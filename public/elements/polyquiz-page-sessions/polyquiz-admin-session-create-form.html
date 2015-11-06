@@ -116,7 +116,18 @@ Polymer({
 			this.fire('firetoast', { message: "Created a new Session!"});
 			this.fire("reload-sessions", { });
 		} else {
-			this.fire('firetoast', { message: "FAILED to create a new Session!"});
+			var det = "NO_DETAILS";
+			if(e.detail.response.status_details) {
+				det = e.detail.response.status_details;
+				switch(det) {
+					case 1062:
+						det = "Duplicate House Name";
+						break;
+					default:
+						break;
+				}
+			}
+			this.fire('firetoast', { message: "FAILED to create a new Session! [" + det + "]"});
 		}
 		
 		console.log(e);
