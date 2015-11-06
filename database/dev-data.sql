@@ -1,12 +1,11 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 INSERT INTO `houses` (`houseid`, `housename`, `owner`) VALUES
-(0, 'Other', -1337),
-(1, 'North', -1337),
-(2, 'South', -1337),
 (3, 'East', -1337),
-(4, 'West', -1337),
-(5, 'dfghjkl', -1337);
+(1, 'North', -1337),
+(6, 'Other', -1337),
+(5, 'South', -1337),
+(4, 'West', -1337);
 
 INSERT INTO `quizzes` (`uuid`, `quizname`, `version`, `owner`) VALUES
 (1, 'My Quiz', 0, -1337),
@@ -27,11 +26,11 @@ INSERT INTO `results_responses` (`id`, `resultid`, `questionuuid`, `data`, `owne
 (1, 1, 'PolyQuestion_55bbdd0282fe7', 'qwrdq21313', -1337);
 
 INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `house`, `name`, `date`, `active`, `show_scores`, `owner`) VALUES
-('0d1537', 'ef', 1, 4, 'qwdqwd32r3r23', 1445818125, 1, 0, -1337),
-('46e655', '03', 2, 1, 'My Second Session', 1445835078, 0, 1, -1337),
-('4d0342', 'b5', 3, 5, 'My Sesszzz', 1445833037, 0, 1, -1337),
-('aaaa', 'aa', 4, 3, 'My First Session', 1439010222, 1, 0, -1337),
-('b8ec77', '1b', 1, 0, 'asdasddddddd', 1446001592, 0, 1, -1337);
+('0d1537', 'ef', 1, 4, 'qwdqwd32r3r23!!!', 1445818125, 1, 1, -1337),
+('46e655', '03', 2, 1, 'My Second Session', 1445835078, 1, 1, -1337),
+('4d0342', 'b5', 3, 5, 'My Sesszzz', 1445833037, 1, 1, -1337),
+('aaaa', 'aa', 4, 3, 'My First Session', 1439010222, 1, 1, -1337),
+('b8ec77', '1b', 1, 6, 'asdasddddddd', 1446001592, 1, 1, -1337);
 
 INSERT INTO `users` (`id`, `email`, `name`, `password`) VALUES
 (-1337, 'cacerrillos@gmail.com', 'Caboolean', 'f7fa564375eec84eb35cddeba7617c57'),

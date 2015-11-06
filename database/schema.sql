@@ -1,7 +1,7 @@
 
 DROP TABLE IF EXISTS `houses`;
 CREATE TABLE `houses` (
-  `houseid` tinyint(4) NOT NULL,
+  `houseid` int(10) UNSIGNED NOT NULL,
   `housename` varchar(255) NOT NULL,
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -46,7 +46,7 @@ CREATE TABLE `sessions` (
   `sessionid` varchar(32) NOT NULL,
   `sessionkey` varchar(32) NOT NULL,
   `quiz` int(11) NOT NULL,
-  `house` tinyint(4) NOT NULL,
+  `house` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT 'DEFAULT NAME',
   `date` int(11) NOT NULL,
   `active` tinyint(1) DEFAULT '1',
@@ -64,8 +64,8 @@ CREATE TABLE `users` (
 
 
 ALTER TABLE `houses`
-  ADD PRIMARY KEY (`owner`,`houseid`),
-  ADD KEY `houseid` (`houseid`);
+  ADD PRIMARY KEY (`houseid`),
+  ADD UNIQUE KEY `unique_houses` (`owner`,`housename`,`houseid`) USING BTREE;
 
 ALTER TABLE `quizzes`
   ADD PRIMARY KEY (`uuid`),
@@ -99,6 +99,8 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `username` (`email`);
 
 
+ALTER TABLE `houses`
+  MODIFY `houseid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `quizzes`
   MODIFY `uuid` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `results`
@@ -129,6 +131,6 @@ ALTER TABLE `results_responses`
   ADD CONSTRAINT `results_responses_ibfk_3` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `sessions`
-  ADD CONSTRAINT `sessions_ibfk_1` FOREIGN KEY (`house`) REFERENCES `houses` (`houseid`) ON UPDATE CASCADE,
   ADD CONSTRAINT `sessions_ibfk_2` FOREIGN KEY (`quiz`) REFERENCES `quizzes` (`uuid`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `sessions_ibfk_3` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `sessions_ibfk_3` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `sessions_ibfk_4` FOREIGN KEY (`house`) REFERENCES `houses` (`houseid`) ON UPDATE CASCADE;
