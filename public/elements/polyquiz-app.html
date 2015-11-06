@@ -169,6 +169,14 @@
 				var p = findPolyQuizPage(hash);
 				this.importHref(p.path, function(e) {
 					console.log(e);
+					var pp = findPolyQuizPage(hash);
+					if(pp) {
+						pp.loaded = true;
+					} else {
+						console.log("Could not find page: " + hash);
+					}
+					this.page = hash;
+
 					this.$.pageLoadSpinner.active = false;
 					this.$.pageLoadSpinner.hidden = true;
 				},

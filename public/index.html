@@ -175,11 +175,13 @@ function handleSimplePage(ctx, next) {
 	var path = ctx.path.split("/");
 	var page = findPolyQuizPage(path[1]);
 	if(page) {
-		mainapp.page = page.hash;
+		
 		if(!page.loaded) {
 			//do load
 			mainapp.doLoad(page.hash);
 			page.loaded = true;
+		} else {
+			mainapp.page = page.hash;
 		}
 		
 	} else {
