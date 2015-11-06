@@ -45,11 +45,16 @@ class PolyHouse {
 	}
 	public static function post($mysqli, $housename, $owner) {
 		$resultObject = array();
+		$resultObject['status'] = false;
 		if($stmt = $mysqli->prepare("INSERT INTO `houses` (`housename`, `owner`) VALUES (?, ?);")) {
 			$stmt->bind_param("si", $housename, $owner);
-			$stmt->execute();
+			if($stmt->execute()) {
+				$resultObject['status'] = true;
+			} else {
+				$resultObject['status_details'] = $stmt->errno;
+			}
 			$stmt->close();
-			$resultObject['status'] = true;
+			
 		} else {
 			$resultObject['error'] = $mysqli->error;
 		}
