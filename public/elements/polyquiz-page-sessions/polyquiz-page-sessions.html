@@ -290,17 +290,19 @@
 				this.isAdmin = details.admin;
 				this.loginOverlayCheck();
 			},
-			loginOverlayCheck: function(e) {
-				//TODO, figure out why 'iron-select' is called so many times 
-				console.log(e);
-				var mainapp = document.querySelector("#mainapp");
-				if(this.parentNode.selectedItem == this) {
-					if(mainapp.isAdmin) {
-						mainapp.closeLoginOverlay();
-						this.reloadSessions();
-						return;
+			loginOverlayCheck: function(selectorTarget, mainapp) {
+				return function(e) {
+					if(selectorTarget == e.srcElement) {
+						console.log(e);
+						if(this.parentNode.selectedItem == this) {
+							if(mainapp.isAdmin) {
+								mainapp.closeLoginOverlay();
+								this.reloadSessions();
+								return;
+							}
+							mainapp.openLoginOverlay();
+						}
 					}
-					mainapp.openLoginOverlay();
 				}
 			},
 			ready: function() {
@@ -311,8 +313,7 @@
 				mainapp.addEventListener('polyquiz-admin-status', this.onAdminStatusChanged.bind(this));
 
 				var parentSelector = this.parentNode;
-
-				parentSelector.addEventListener('iron-select', this.loginOverlayCheck.bind(this));
+				parentSelector.addEventListener('iron-select', this.loginOverlayCheck(parentSelector, mainapp).bind(this));
 				this.$.rowWrapper.hidden = true;
 			}
 		});
