@@ -103,7 +103,7 @@
 								</paper-material>
 								
 								
-								<div id="rowWrapper">
+								<div id="rowWrapper" style="margin-bottom: 28px;">
 									<template id="sessionRows" is="dom-repeat" items="{{sessions}}" as="session" on-dom-change="spinnerOff" sort="{{sessionSort(sortBy, housedata, quizdata)}}">
 										<polyquiz-admin-session-row sessionobject="{{session}}" on-session-deleted="reloadSessions" quizdata="{{_computeQuizData(quizdata, session.quiz)}}" housedata="{{_computeHouseData(housedata, session.house)}}"></polyquiz-admin-session-row>
 									</template>
