@@ -18,12 +18,12 @@
 	</style>
 	<template>
 		<iron-ajax id="editAjax" method="PUT" handle-as="json" on-response="onEditAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
-		<paper-dialog id="mainDialog" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
-			<div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss on-click="doDismiss"></paper-icon-button></div>
+		<paper-dialog id="mainDialog" on-iron-overlay-closed="doDismiss" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
+			<div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss></paper-icon-button></div>
 			<div class="dialog-content"><content></content></div>
 			<div class="layout horizontal">
 				<paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>[[confirmText]]</paper-button>
-				<paper-button raised on-click="doDismiss" dialog-dismiss>Cancel</paper-button>
+				<paper-button raised dialog-dismiss>Cancel</paper-button>
 				<div class="flex"></div>
 			</div>
 		</paper-dialog>
@@ -65,7 +65,8 @@
 			}
 			return false;
 		},
-		doDismiss: function() {
+		doDismiss: function(e) {
+			console.log(e);
 			this.fire('dismiss');
 		},
 		_invalidChanged: function(e) {
