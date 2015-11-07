@@ -14,14 +14,10 @@
 	</style>
 	<template>
 		<iron-ajax id="editAjax" method="PUT" handle-as="json" on-response="onEditAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
-		<h2>Edit House</h2>
-		<paper-input id="houseName" label="House Name" value="[[houseData.name]]"></paper-input>
-		<div class="layout horizontal">
-			<div class="flex"></div>
-			<paper-button raised on-click="editHouse" dialog-confirm>Edit</paper-button>
-			<paper-button raised dialog-dismiss>Cancel</paper-button>
-			<div class="flex"></div>
-		</div>
+		<polyquiz-dialog id="mainDialog" on-confirm="editHouse" on-dismiss="_resetForm" confirm-text="Edit">
+			<h2>Edit House</h2>
+			<paper-input id="houseName" label="House Name" value="[[houseData.name]]" on-input="_inputChanged" on-keydown="_checkEnter"></paper-input>
+		</polyquiz-dialog>
 	</template>
 	<script>
 	Polymer({
@@ -32,6 +28,7 @@
 			}
 		},
 		editHouse: function(e) {
+			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
 			if(this.houseData) {
 				this.$.editAjax.params = {
 					id: this.houseData.id
@@ -40,17 +37,48 @@
 				this.$.editAjax.generateRequest();
 			}
 		},
+		open: function() {
+			this.$.mainDialog.open();
+		},
+		close: function() {
+			this.$.mainDialog.close();
+		},
+		_checkEnter: function(e) {
+			if(e.keyCode == 13) {
+				this.$.mainDialog.doConfirm();
+			}
+		},
+		_inputChanged: function(e) {
+			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
+			this._validateForm();
+		},
+		_validateForm: function() {
+			var valid = (this.$.houseName.value.length > 0);
+			this.$.mainDialog.invalid = !valid;
+			return valid;
+		},
 		onEditAjaxResponse: function(e) {
 			if(e.detail.response.status) {
+				this.close();
 				this.fire('firetoast', { message: "Edited!"});
 				this.fire('reload-houses');
 			} else {
+				this._resetForm();
 				var det = "NO_DETAILS";
 				if(e.detail.response.status_details) {
 					det = e.detail.response.status_details;
 				}
 				this.fire('firetoast', { message: "Failed to edit! [" + det + "]" });
 			}
+		},
+		_resetForm: function(e) {
+			if(e) {
+				e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
+			}
+			if(this.houseData) {
+				this.$.houseName.value = this.houseData.name;
+			}
+			this._validateForm();
 		},
 		ready: function(){
 			
