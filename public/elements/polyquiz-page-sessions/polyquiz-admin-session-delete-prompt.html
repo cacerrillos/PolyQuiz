@@ -1,51 +1,33 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-delete-prompt">
-	<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
-	<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 
 	<style is="custom-style">
-		paper-dialog {
-			background-color: white;
-			padding-left: 20px;
-			padding-right: 20px;
-		}
+
 	</style>
 
 	<template>
 		<iron-ajax method="DELETE" id="deleteAjax" url="../../api/1.1/sessions" handle-as="json" on-response="onDeleteResp"></iron-ajax>
-		<paper-dialog id="dialog" on-iron-overlay-closed="onDialogClosed" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+		<polyquiz-dialog id="dialog" on-confirm="_onConfirm" on-dismiss="_onDismiss" confirm-text="Delete" valid-color="#c62828">
 			<h2>Delete Session?</h2>
-			Id: <span style="font-weight:bold;">[[sessionObject.sessionid]]</span><br>
-			Name: <span style="font-weight:bold;">[[sessionObject.name]]</span>
-			<div class="buttons">
-				<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
-				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Delete</paper-button>
-			</div>
-		</paper-dialog>
+			Id: <b>[[sessionObject.sessionid]]</b><br>
+			Name: <b>[[sessionObject.name]]</b>
+		</polyquiz-dialog>
 	</template>
 
 	<script>
 		Polymer({
 			is: "polyquiz-admin-session-delete-prompt",
 			properties: {
-				sessionObject: Object,
-				reopen: {
-					type: Boolean,
-					value: false
-				}
+				sessionObject: Object
 			},
-			onDialogClosed: function(e){
-				if(e.detail.confirmed){
-					this.$.deleteAjax.params = {
-						id: this.sessionObject.sessionid
-					};
-					this.$.deleteAjax.generateRequest();
-				}
-				console.log(e);
-				if(this.reopen) {
-					this.$.dialog.open();
-					this.reopen = false;
-				}
+			_onConfirm: function() {
+				this.$.deleteAjax.params = {
+					id: this.sessionObject.sessionid
+				};
+				this.$.deleteAjax.generateRequest();
+			},
+			_onDismiss: function(e){
+				
 			},
 			onDeleteResp: function(e){
 				if(e.detail.response.status == true){
@@ -63,13 +45,7 @@
 			},
 			open: function(sessionObject){
 				this.sessionObject = sessionObject;
-				if(!this.$.dialog.opened) {
-					this.$.dialog.setAttribute("entry-animation", "scale-up-animation");
-					this.$.dialog.open();
-				} else {
-					this.reopen = true;
-					this.$.dialog.setAttribute("entry-animation", "fade-in-animation");
-				}
+				this.$.dialog.open();
 			},
 			ready: function(){
 				
