@@ -14,14 +14,11 @@
 	</style>
 	<template>
 		<iron-ajax id="deleteAjax" method="DELETE" handle-as="json" on-response="onDeleteAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
-		<h2>Are you sure?</h2>
-		<p>Delete <div>[[houseData.name]]</div></p>
-		<div class="layout horizontal">
-			<div class="flex"></div>
-			<paper-button raised on-click="deleteHouse" dialog-confirm>Delete</paper-button>
-			<paper-button raised dialog-dismiss>Cancel</paper-button>
-			<div class="flex"></div>
-		</div>
+		<polyquiz-dialog id="deleteDialog" on-confirm="deleteHouse" confirm-text="Delete">
+			<h2>Delete House</h2>
+			<p>Are you sure?<p>
+			<h3>[[houseData.name]]</h3>
+		</polyquiz-dialog>
 	</template>
 	<script>
 	Polymer({
@@ -38,6 +35,12 @@
 				};
 				this.$.deleteAjax.generateRequest();
 			}
+		},
+		open: function() {
+			this.$.deleteDialog.open();
+		},
+		close: function() {
+			this.$.deleteDialog.close();
 		},
 		onDeleteAjaxResponse: function(e) {
 			if(e.detail.response.status) {

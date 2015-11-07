@@ -48,11 +48,9 @@
 			<polyquiz-admin-house-create-form></polyquiz-admin-house-create-form>
 		</paper-dialog>
 
-		<polyquiz-admin-house-edit-form house-data="[[selectedHouse]]" id="editHouseDialog"></polyquiz-admin-house-edit-form>
+		<polyquiz-admin-house-edit-form id="editHouseDialog" house-data="[[selectedHouse]]"></polyquiz-admin-house-edit-form>
 
-		<paper-dialog id="deleteHouseDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<polyquiz-admin-house-delete-form house-data="[[selectedHouse]]"></polyquiz-admin-house-create-form>
-		</paper-dialog>
+		<polyquiz-admin-house-delete-form id="deleteHouseDialog" house-data="[[selectedHouse]]"></polyquiz-admin-house-delete-form>
 
 		<paper-material style="margin-bottom: 42px; padding-top:32px; padding-bottom: 32px;">
 			<paper-fab icon="icons:add" class="addhouse" on-click="doAddNewHouse"></paper-fab>
