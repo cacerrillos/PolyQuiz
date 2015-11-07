@@ -102,7 +102,6 @@
 					<polyquiz-page-quizzes data-page="quiz" ctx="[[ctx]]"></polyquiz-page-quizzes>
 					<polyquiz-page-edit-quiz data-page="quizedit" ctx="[[ctx]]"></polyquiz-page-edit-quiz>
 				</neon-animated-pages>
-				<polyquiz-dialog id="pd"></polyquiz-dialog>
 				
 			</paper-scroll-header-panel>
 			
@@ -264,7 +263,6 @@
 				this.$.mainPanel.responsiveWidth = "768px";
 				this.polyQuizPages = polyQuizPages;
 				console.log(polyQuizPages);
-				this.$.pd.open();
 			}
 		});
 	</script>
