@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-dialog">
 	<style is="custom-style">
-		.nomargins { 
-			margin: 0px;
-		}
-		.validButton {
-			background-color: #4285f4;
-			color: rgba(255,255,255,1.00);
-		}
-		paper-button {
-			margin-top: 8px;
-		}
 		paper-dialog {
 			background-color: white;
 			min-width: 300px;
@@ -32,7 +22,7 @@
 			<div><paper-icon-button icon="icons:close" class="close-button" dialog-dismiss on-click="doDismiss"></paper-icon-button></div>
 			<div class="dialog-content"><content></content></div>
 			<div class="layout horizontal">
-				<paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm class="validButton">[[confirmText]]</paper-button>
+				<paper-button id="confirmButton" raised on-click="doConfirm" dialog-confirm>[[confirmText]]</paper-button>
 				<paper-button raised on-click="doDismiss" dialog-dismiss>Cancel</paper-button>
 				<div class="flex"></div>
 			</div>
@@ -59,6 +49,10 @@
 				value: false,
 				observer: '_invalidChanged'
 			},
+			validColor: {
+				type: String,
+				value: "#4285f4"
+			},
 			confirmText: {
 				type: String,
 				value: "Accept"
@@ -67,14 +61,16 @@
 		doConfirm: function() {
 			if(!this.invalid) {
 				this.fire('confirm');
+				return true;
 			}
+			return false;
 		},
 		doDismiss: function() {
 			this.fire('dismiss');
 		},
 		_invalidChanged: function(e) {
 			if(!e) {
-				this.$.confirmButton.style.backgroundColor = "#4285f4";
+				this.$.confirmButton.style.backgroundColor = this.validColor;
 				this.$.confirmButton.style.color = "white";
 				this.$.confirmButton.disabled = false;
 			} else {
@@ -90,7 +86,7 @@
 			this.$.mainDialog.close();
 		},
 		ready: function(){
-			
+			this._invalidChanged();
 		}
 	});
 	</script>
