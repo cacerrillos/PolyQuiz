@@ -1,38 +1,14 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-house-create-form">
 	<style is="custom-style">
-		.nomargins { 
-			margin: 0px;
-		}
-		.validButton {
-			background-color: #4285f4;
-			color: rgba(255,255,255,1.00);
-		}
-		paper-button {
-			margin-top: 8px;
-		}
+
 	</style>
 	<template>
-		<div class="layout vertical">
-			<div class="layout horizontal">
-				<div class="flex"></div>
-					<h2 class="nomargins">Create New House</h2>
-				<div class="flex"></div>
-			</div>
-			
-			<iron-ajax id="createAjax" url="../../api/1.1/houses" handle-as="json" on-response="createResp" method="POST"></iron-ajax>
-
-			<paper-input name="housename" label="House Name" on-change="formDataChanged" id="housename" style="padding-left:12px; padding-right:12px;"></paper-input>
-
-			<div class="layout horizontal">
-				<div class="flex"></div>
-				<paper-button raised id="submitButton" class="" on-click="doForm">Create</paper-button>
-				<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
-				<paper-button raised dialog-dismiss>Cancel</paper-button>
-				<div class="flex"></div>
-			</div>
-		
-		</div>
+		<iron-ajax id="createAjax" url="../../api/1.1/houses" handle-as="json" on-response="createResp" method="POST"></iron-ajax>
+		<polyquiz-dialog id="mainDialog" on-confirm="doForm" on-dismiss="_resetForm" confirm-text="Create" valid-color="#8BC34A">
+			<h2>Create New House</h2>
+			<paper-input name="housename" label="House Name" on-input="_inputChanged" on-keydown="_checkEnter" id="housename"></paper-input>
+		</polyquiz-dialog>
 	</template>
 	<script>
 	Polymer({
@@ -46,7 +22,7 @@
 		},
 		createResp: function(e){
 			if(e.detail.response.status === true){
-				this.resetForm();
+				this._resetForm();
 				this.fire('firetoast', { message: "Created new House!"});
 				this.fire("reload-houses", { });
 			} else {
@@ -66,14 +42,32 @@
 			
 			console.log(e);
 		},
-		resetForm: function(e){
-			this.$.housename.value = "";
+		open: function() {
+			this.$.mainDialog.open();
 		},
-		formDataChanged: function(e){
-			//check if house name exists
+		close: function() {
+			this.$.mainDialog.close();
+		},
+		_checkEnter: function(e) {
+			if(e.keyCode == 13) {
+				this.$.mainDialog.doConfirm();
+			}
+		},
+		_inputChanged: function(e) {
+			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
+			this._validateForm();
+		},
+		_validateForm: function() {
+			var valid = (this.$.housename.value.length > 0);
+			this.$.mainDialog.invalid = !valid;
+			return valid;
+		},
+		_resetForm: function(e){
+			this.$.housename.value = "";
+			this._validateForm();
 		},
 		ready: function(){
-			this.formDataChanged();
+			this._validateForm();
 		}
 	});
 	</script>
