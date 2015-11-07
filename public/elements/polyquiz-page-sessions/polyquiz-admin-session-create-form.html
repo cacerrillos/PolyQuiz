@@ -19,39 +19,34 @@
 		}
 	</style>
 <template>
-	<paper-dialog id="mainDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+	<iron-ajax method="POST" id="createAjax" url="../../api/1.1/sessions" handle-as="json" on-response="createResp"></iron-ajax>
+	
+	<iron-ajax id="allquizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizData}}" auto></iron-ajax>
+
+	<polyquiz-dialog id="mainDialog" on-confirm="reqSubmit" on-dismiss="resetForm" confirm-text="Create" valid-color="#8BC34A">
+		<div class="layout horizontal">
+			<div class="flex"></div>
+			<h2>Create New Session</h2>
+			<div class="flex"></div>
+		</div>
 		<div class="layout vertical">
-		<div class="layout horizontal">
-			<div class="flex"></div>
-				<h2 class="nomargins">Create New Session</h2>
-			<div class="flex"></div>
-		</div>
-		
-		<iron-ajax method="POST" id="createAjax" url="../../api/1.1/sessions" handle-as="json" on-response="createResp"></iron-ajax>
+			<paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
+			<polyquiz-dropdown-input id="houseSelector" name="house" objects="[[_computeHouseData(houseData)]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
+			
+			<polyquiz-dropdown-input id="quizSelector" name="quiz" objects="[[_computeQuizData(quizData)]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
 
-		<paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
-		<polyquiz-dropdown-input id="houseSelector" name="house" objects="[[_computeHouseData(houseData)]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
-		<iron-ajax id="allquizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizData}}" auto></iron-ajax>
-		<polyquiz-dropdown-input id="quizSelector" name="quiz" objects="[[_computeQuizData(quizData)]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
+			<paper-radio-group selected="open" id="status" class="layout horizontal">
+				<paper-radio-button name="open">Open</paper-radio-button>
+				<paper-radio-button name="closed">Closed</paper-radio-button>
+			</paper-radio-group>
 
-		<paper-radio-group selected="open" id="status" class="layout horizontal">
-			<paper-radio-button name="open">Open</paper-radio-button>
-			<paper-radio-button name="closed">Closed</paper-radio-button>
-		</paper-radio-group>
-		<paper-radio-group selected="show" id="show" class="layout horizontal">
-			<paper-radio-button name="show">Show Scores</paper-radio-button>
-			<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
-		</paper-radio-group>
-		<div class="layout horizontal">
-			<div class="flex"></div>
-			<paper-button raised id="submitButton" class="" on-click="reqSubmit">Create</paper-button>
-			<paper-button raised id="reset" class="" on-click="resetForm">Reset</paper-button>
-			<paper-button raised dialog-dismiss>Cancel</paper-button>
-			<div class="flex"></div>
+			<paper-radio-group selected="show" id="show" class="layout horizontal">
+				<paper-radio-button name="show">Show Scores</paper-radio-button>
+				<paper-radio-button name="dontshow">Don't Show Scores</paper-radio-button>
+			</paper-radio-group>
+
 		</div>
-		
-		</div>
-	</paper-dialog>
+	</polyquiz-dialog>
 </template>
 <script>
 Polymer({
@@ -133,6 +128,7 @@ Polymer({
 		console.log(e);
 	},
 	resetForm: function(e){
+		console.log("DO RESET");
 		this.$.sessionName.value = "";
 		this.$.houseSelector.selected = -1;
 		this.$.quizSelector.selected = -1;
@@ -140,14 +136,10 @@ Polymer({
 		this.$.show.selected = "show";
 	},
 	formDataChanged: function(e){
-		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1 && this.$.sessionName.value.length > 0){
-			this.$.submitButton.style.backgroundColor = "#4285f4";
-			this.$.submitButton.style.color = "white";
-			this.$.submitButton.disabled = false;
+		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1 && this.$.sessionName.value.length > 0) {
+			this.$.mainDialog.invalid = false;
 		} else {
-			this.$.submitButton.style.backgroundColor = "#eaeaea";
-			this.$.submitButton.style.color = "#a8a8a8";
-			this.$.submitButton.disabled = true;
+			this.$.mainDialog.invalid = true;
 		}
 	},
 	ready: function(){
