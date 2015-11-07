@@ -30,7 +30,7 @@
 			<div class="flex"></div>
 		</div>
 		<div class="layout vertical">
-			<paper-input name="sessionname" label="Session Name" on-change="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
+			<paper-input name="sessionname" label="Session Name" on-input="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
 			<polyquiz-dropdown-input id="houseSelector" name="house" objects="[[_computeHouseData(houseData)]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
 			
 			<polyquiz-dropdown-input id="quizSelector" name="quiz" objects="[[_computeQuizData(quizData)]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
@@ -128,7 +128,6 @@ Polymer({
 		console.log(e);
 	},
 	resetForm: function(e){
-		console.log("DO RESET");
 		this.$.sessionName.value = "";
 		this.$.houseSelector.selected = -1;
 		this.$.quizSelector.selected = -1;
