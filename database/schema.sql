@@ -65,7 +65,7 @@ CREATE TABLE `users` (
 
 ALTER TABLE `houses`
   ADD PRIMARY KEY (`houseid`),
-  ADD UNIQUE KEY `unique_houses` (`owner`,`housename`,`houseid`) USING BTREE;
+  ADD UNIQUE KEY `unique_houses` (`owner`,`housename`) USING BTREE;
 
 ALTER TABLE `quizzes`
   ADD PRIMARY KEY (`uuid`),
