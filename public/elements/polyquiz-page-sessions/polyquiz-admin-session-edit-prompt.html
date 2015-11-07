@@ -7,19 +7,10 @@
 	<template>
 		<iron-ajax id="editAjax" url="../../api/1.0/sessions/edit.php" handle-as="json" on-response="onEditResp"></iron-ajax>
 
-		<paper-dialog id="editDialog" on-iron-overlay-closed="onDialogClosed" style="background-color: white;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-			<div class="row">
-				<div class="12u">
-					Edit Session
-					<paper-input id="sessionNameEdit" label="Session Name" value="[[sessiondata.name]]"></paper-input>
-				</div>
-			</div>
-			
-			<div class="buttons">
-				<paper-button dialog-dismiss raised><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
-				<paper-button dialog-confirm raised><iron-icon icon="check"></iron-icon>Save</paper-button>
-			</div>
-		</paper-dialog>
+		<polyquiz-dialog id="mainDialog" on-confirm="_onConfirm" on-dismiss="_onDismiss" confirm-text="Edit">
+			<h2>Edit Session</h2>
+			<paper-input id="sessionNameEdit" label="Session Name" value="[[sessiondata.name]]" on-input="_inputChanged" on-keydown="_checkEnter"></paper-input>
+		</polyquiz-dialog>
 	</template>
 	<script>
 	Polymer({
@@ -27,24 +18,40 @@
 		properties: {
 			sessiondata: {
 				type: Object
-			},
-			reopen: {
-				type: Boolean,
-				value: false
 			}
 		},
-		onDialogClosed: function(e){
-			if(e.detail.confirmed){
-				this.$.editAjax.params = {
-					uuid: this.sessiondata.sessionid,
-					name: this.$.sessionNameEdit.value
-				};
-				this.$.editAjax.generateRequest();
+		_onConfirm: function() {
+			this.$.editAjax.params = {
+				uuid: this.sessiondata.sessionid,
+				name: this.$.sessionNameEdit.value
+			};
+			this.$.editAjax.generateRequest();
+		},
+		_onDismiss: function(e) {
+			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
+			this._resetForm();
+		},
+		_checkEnter: function(e) {
+			if(e.keyCode == 13) {
+				if(this.$.mainDialog.doConfirm()) {
+					this.$.mainDialog.close();
+				}
 			}
-			if(this.reopen) {
-				this.$.dialog.open();
-				this.reopen = false;
+		},
+		_inputChanged: function(e) {
+			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
+			this._validateForm();
+		},
+		_validateForm: function() {
+			var valid = (this.$.sessionNameEdit.value.length > 0);
+			this.$.mainDialog.invalid = !valid;
+			return valid;
+		},
+		_resetForm: function() {
+			if(this.sessiondata) {
+				this.$.sessionNameEdit.value = this.sessiondata.name;
 			}
+			this._validateForm();
 		},
 		onEditResp: function(e){
 			if(e.detail.response.status == true){
@@ -56,13 +63,7 @@
 		},
 		open: function(e) {
 			this.sessiondata = e;
-			if(!this.$.editDialog.opened) {
-				this.$.editDialog.setAttribute("entry-animation", "scale-up-animation");
-				this.$.editDialog.open();
-			} else {
-				this.reopen = true;
-				this.$.editDialog.setAttribute("entry-animation", "fade-in-animation");
-			}
+			this.$.mainDialog.open();
 		},
 		ready: function() {
 			
