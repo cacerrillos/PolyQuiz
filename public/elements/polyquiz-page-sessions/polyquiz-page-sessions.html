@@ -52,7 +52,7 @@
 	</style>
 	
 	<template>
-		<iron-ajax id="query" url="../../api/1.1/sessions" handle-as="json" on-response="onResp"></iron-ajax>
+		<iron-ajax id="sessionsInfoAjax" url="../../api/1.1/sessions" handle-as="json" on-response="onResp"></iron-ajax>
 		<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizdata}}" auto></iron-ajax>
 		<iron-ajax id="houseInfoAjax" url="../../api/1.1/houses" handle-as="json" last-response="{{housedata}}" auto></iron-ajax>
 
@@ -257,7 +257,9 @@
 				this._onPageResized();
 			},
 			reloadSessions: function(e){
-				this.$.query.generateRequest();
+				this.$.sessionsInfoAjax.generateRequest();
+				this.$.houseInfoAjax.generateRequest();
+				this.$.quizInfoAjax.generateRequest();
 				this.$.rowSpinner.active = true;
 				this.$.rowSpinner.hidden = false;
 			},
@@ -286,7 +288,7 @@
 							console.log(e);
 							if(mainapp.isAdmin) {
 								mainapp.closeLoginOverlay();
-								this.reloadSessions();
+							this.reloadSessions();
 								return;
 							}
 							mainapp.openLoginOverlay();
