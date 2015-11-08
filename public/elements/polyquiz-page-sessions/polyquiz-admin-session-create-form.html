@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-create-form">
 	<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+	<link rel="import" href="../../bower_components/ctech-dropdown-selector/ctech-dropdown-selector.html">
 	<link rel="import" href="../polyquiz-dropdown-input.html">
 
 	<style is="custom-style">
@@ -30,10 +31,9 @@
 			<div class="flex"></div>
 		</div>
 		<div class="layout vertical">
-			<paper-input name="sessionname" label="Session Name" on-input="formDataChanged" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
-			<polyquiz-dropdown-input id="houseSelector" name="house" objects="[[_computeHouseData(houseData)]]" defaulttext="Select A House" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
-			
-			<polyquiz-dropdown-input id="quizSelector" name="quiz" objects="[[_computeQuizData(quizData)]]" defaulttext="Select A Quiz" raised on-selected-changed="formDataChanged"></polyquiz-dropdown-input>
+			<paper-input name="sessionname" label="Session Name" on-input="_validateForm" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
+			<ctech-dropdown-selector id="houseSelector" default-text="Select A House" items="[[houseData]]" attr-for-selected="id" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
+			<ctech-dropdown-selector id="quizSelector" default-text="Select A Quiz" items="[[quizData]]" attr-for-selected="uuid" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
 
 			<paper-radio-group selected="open" id="status" class="layout horizontal">
 				<paper-radio-button name="open">Open</paper-radio-button>
@@ -58,48 +58,21 @@ Polymer({
 		houseData: {
 			type: Object
 		},
-		selectedquiz: String,
-		selectedhouse: String,
 		sessionname: String
 		
 	},
 	open: function() {
 		this.$.mainDialog.open();
 	},
-	_computeHouseData: function(e) {
-		var arr = [];
-		var roww = function(id, text){
-			this.id = id;
-			this.text = text;
-		};
-		for(var key in e) {
-			if(e.hasOwnProperty(key)) {
-				var o = e[key];
-				arr.push(new roww(o.id, o.name));
-			}
-		}
-		return arr;
-	},
-	_computeQuizData: function(e) {
-		var arr = [];
-		var roww = function(id, text){
-			this.id = id;
-			this.text = text;
-		};
-		for(var key in e) {
-			if(e.hasOwnProperty(key)) {
-				var o = e[key];
-				arr.push(new roww(o.uuid, o.name));
-			}
-		}
-		return arr;
+	test: function(e) {
+		console.log(e);
 	},
 	reqSubmit: function(e){
 		this.$.createAjax.body =
 			JSON.stringify({
 				'name': this.$.sessionName.value,
-				'house': this.$.houseSelector.value,
-				'quiz': this.$.quizSelector.value,
+				'house': this.$.houseSelector.selected.id,
+				'quiz': this.$.quizSelector.selected.uuid,
 				'active': this.$.status.selected == "open" ? true : false,
 				'show': this.$.show.selected == "show" ? true : false
 			});
@@ -129,20 +102,20 @@ Polymer({
 	},
 	resetForm: function(e){
 		this.$.sessionName.value = "";
-		this.$.houseSelector.selected = -1;
-		this.$.quizSelector.selected = -1;
+		this.$.houseSelector.select();
+		this.$.quizSelector.select();
 		this.$.status.selected = "open";
 		this.$.show.selected = "show";
 	},
-	formDataChanged: function(e){
-		if(this.$.houseSelector.selected !== -1 && this.$.quizSelector.selected !== -1 && this.$.sessionName.value.length > 0) {
+	_validateForm: function(e){
+		if(this.$.houseSelector.selected && this.$.quizSelector.selected && this.$.sessionName.value.length > 0) {
 			this.$.mainDialog.invalid = false;
 		} else {
 			this.$.mainDialog.invalid = true;
 		}
 	},
 	ready: function(){
-		this.formDataChanged();
+		this._validateForm();
 	}
 });
 </script>
