@@ -276,6 +276,7 @@
 				console.log("SESSIONs CONTEXT CHANGEDD");			
 			},
 			onAdminStatusChanged: function(e) {
+				console.log("SESSIONS ADMIN STATUS CHANGED");
 				var details = e.detail;
 				this.adminStatus = e.detail;
 				this.isAdmin = details.admin;
