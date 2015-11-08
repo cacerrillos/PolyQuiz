@@ -286,10 +286,10 @@
 				return function(e) {
 					if(selectorTarget == e.srcElement) {
 						if(this.parentNode.selectedItem == this) {
+							this.reloadSessions();
 							console.log(e);
 							if(mainapp.isAdmin) {
 								mainapp.closeLoginOverlay();
-							this.reloadSessions();
 								return;
 							}
 							mainapp.openLoginOverlay();
