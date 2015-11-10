@@ -4,46 +4,48 @@
 	<link rel="import" href="polyquiz-admin-house-create-form.html">
 	<link rel="import" href="polyquiz-admin-house-edit-form.html">
 	<link rel="import" href="polyquiz-admin-house-delete-form.html">
+	<link rel="import" href="../../bower_components/ctech-menubar-selector/ctech-menubar-selector.html">
 	<style is="custom-style">
-	paper-material {
+			paper-material {
 			background-color: white;
 			padding: 5px;
 			margin-top: 5px;
 			margin-bottom: 5px;
-		}
-		paper-fab.addhouse {
+			}
+			paper-fab.addhouse {
 			position: absolute;
 			bottom: -28px;
 			right: 8px;
 			z-index: 5;
-		}
-		paper-fab.edithouse {
+			}
+			paper-fab.edithouse {
 			position: absolute;
 			bottom: -28px;
 			right: 132px;
 			z-index: 3;
 			--paper-fab-background: var(--paper-blue-500);
-		}
-		paper-fab.deletehouse {
+			}
+			paper-fab.deletehouse {
 			position: absolute;
 			bottom: -28px;
 			right: 70px;
 			z-index: 4;
 			--paper-fab-background: var(--paper-red-800);
-		}
-		paper-tab {
-			--paper-tab-ink: var(--paper-grey-300);
-		}
-		paper-tab.iron-selected {
-			color: var(--default-primary-color);
-		}
-		paper-dialog { 
+			}
+			paper-dialog { 
 			background-color: white;
 			padding: 5px;
-		}
+			}
 	</style>
 	<template>
-		
+		<style>
+			:host {
+				--ctech-tab-color: var(--default-primary-color);
+				--ctech-tab-ink: var(--paper-grey-300);
+			}
+		</style>
+
+
 		<polyquiz-admin-house-create-form id="newHouseDialog"></polyquiz-admin-house-create-form>
 
 		<polyquiz-admin-house-edit-form id="editHouseDialog" house-data="[[selectedHouse]]"></polyquiz-admin-house-edit-form>
@@ -56,11 +58,7 @@
 			<paper-fab id="deleteHouseButton" icon="icons:delete" class="deletehouse" on-click="doDeleteHouse"></paper-fab>
 			<div class="row">
 				<div class="12u 12u(large) 12u(xsmall)">
-					<paper-tabs id="housesl" selected="-1" no-bar scrollable class="flex" on-iron-select="onHouseSelected" on-iron-deselect="onHouseDeselected">
-					<template is="dom-repeat" items="{{_objectArrayToArray(housedata)}}" as="house" sort="{{houseSort(housedata)}}">
-							<paper-tab data-id="[[house.id]]">[[house.name]]</paper-tab>
-					</template>
-				</paper-tabs>
+					<ctech-menubar-selector class="flex" id="housesl" items="[[housedata]]" selected="{{selectedHouse}}"attr-for-selected="id" on-ctech-select="onHouseSelected" no-bar scrollable></ctech-menubar-selector>
 				</div>
 			</div>
 		</paper-material>
@@ -155,7 +153,6 @@
 			//console.log(e);
 		},
 		onHouseSelected: function(e) {
-			this.selectedHouse = this.housedata[e.detail.item.dataId];
 			this.show();
 		},
 		doAddNewHouse: function(e) {
@@ -169,8 +166,7 @@
 			this.$.deleteHouseDialog.open();
 		},
 		deselectHouse: function(e) {
-			this.$.housesl.select(-1);
-			this.selectedHouse = null;
+			this.$.housesl.select();
 			this.hide();
 		},
 		show: function() {

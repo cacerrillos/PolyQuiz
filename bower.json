@@ -32,6 +32,7 @@
     "gold-elements": "PolymerElements/gold-elements#~1",
     "autofill-event": "~1",
     "chart.js": "~0.1.0",
-    "ctech-dropdown-selector": "~1"
+    "ctech-dropdown-selector": "~1",
+    "ctech-menubar-selector": "~1"
   }
 }
