@@ -24,7 +24,7 @@ $app->post('/login', function() {
 		if(mysqli_connect_errno()) {
 			$result['status_details'] = "Connection Failed: " . mysqli_connect_errno();
 		} else {
-			if($stmt = $mysqli -> prepare("SELECT `id`, `email`, `name` FROM users WHERE email = ? AND password = ?")){
+			if($stmt = $mysqli -> prepare("SELECT `user_id`, `email`, `name` FROM `user` WHERE email = ? AND password = ?")){
 				$stmt -> bind_param("ss", $_POST_JSON['user'], md5($_POST_JSON['pass']));
 				$stmt -> execute();
 				$stmt -> bind_result($data['id'], $data['email'], $data['name']);
