@@ -4,7 +4,7 @@ CREATE TABLE `houses` (
   `houseid` int(10) UNSIGNED NOT NULL,
   `housename` varchar(255) NOT NULL,
   `owner` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `quizzes`;
 CREATE TABLE `quizzes` (
@@ -12,7 +12,7 @@ CREATE TABLE `quizzes` (
   `quizname` varchar(255) NOT NULL,
   `version` int(11) NOT NULL DEFAULT '0',
   `owner` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `quizzes_questions`;
 CREATE TABLE `quizzes_questions` (
@@ -20,7 +20,7 @@ CREATE TABLE `quizzes_questions` (
   `quiz` int(11) NOT NULL,
   `data` mediumtext NOT NULL,
   `owner` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `results`;
 CREATE TABLE `results` (
@@ -30,7 +30,7 @@ CREATE TABLE `results` (
   `quiz` int(11) NOT NULL,
   `session` varchar(32) NOT NULL,
   `owner` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `results_responses`;
 CREATE TABLE `results_responses` (
@@ -39,7 +39,7 @@ CREATE TABLE `results_responses` (
   `questionuuid` varchar(64) NOT NULL,
   `data` mediumtext NOT NULL,
   `owner` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
@@ -52,7 +52,7 @@ CREATE TABLE `sessions` (
   `active` tinyint(1) DEFAULT '1',
   `show_scores` tinyint(1) DEFAULT '1',
   `owner` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -60,7 +60,7 @@ CREATE TABLE `users` (
   `email` varchar(64) NOT NULL,
   `name` varchar(255) NOT NULL,
   `password` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `houses`
