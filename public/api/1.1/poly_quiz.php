@@ -19,7 +19,37 @@ class PolyQuiz {
   public function to_json_client() {
 
   }
-  public static function from_mysql($mysqli, $quiz_id, $user_id) {
+  public static function all_from_mysql($mysqli, $user_id, $fetch_all_data = false) {
+    $result = array();
+    $result['status'] = false;
+    if($stmt = $mysqli->prepare("SELECT `quiz`.`quiz_id` FROM `quiz` WHERE `user_id` = ?;")) {
+      $stmt->bind_param("i", $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($quiz_id_r);
+        $result['result'] = array();
+        while($stmt->fetch()) {
+          $result['status'] = true;
+          array_push($result['result'], $quiz_id_r);
+        }
+        $stmt->close();
+        $final_result = array();
+        foreach($result['result'] as $quiz_id_to_fetch) {
+          $quiz = PolyQuiz::from_mysql($mysqli, $quiz_id_to_fetch, $user_id, $fetch_all_data);
+          if($quiz['status']) {
+             $final_result[$quiz['result']->quiz_id] = $quiz['result'];
+          }
+        }
+        $result['result'] = $final_result;
+      } else {
+        $result['error'] = $mysqli->error;
+        $stmt->close();
+      }
+    } else {
+      $result['stmt_error'] = $mysqli->error;
+    }
+    return $result['result'];
+  }
+  public static function from_mysql($mysqli, $quiz_id, $user_id, $fetch_all_data = false) {
     $result = array();
     $result['status'] = false;
     $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_ONLY);
@@ -31,7 +61,7 @@ class PolyQuiz {
           $result['status'] = true;
           $result['result'] = new PolyQuiz($quiz_id, $quiz_name_r);
           $stmt->close();
-          $result['result']->fetch_questions_from_mysql($mysqli, false);
+          $fetch_all_data ? $result['result']->fetch_questions_from_mysql($mysqli, false) : null;
         }
       } else {
         $result['error'] = $mysqli->error;
@@ -83,7 +113,7 @@ if(isset($_GET['test'])) {
   $mysqli -> select_db($db_name);
 
 
-  $polyQuiz = PolyQuiz::from_mysql($mysqli, 8, -1337);
+  $polyQuiz = PolyQuiz::from_mysql($mysqli, 8, -1337, true);
 
   if($polyQuiz['status']) {
     $polyQuiz = $polyQuiz['result'];
