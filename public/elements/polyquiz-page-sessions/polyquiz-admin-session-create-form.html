@@ -32,7 +32,7 @@
 		</div>
 		<div class="layout vertical">
 			<paper-input name="sessionname" label="Session Name" on-input="_validateForm" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
-			<ctech-dropdown-selector id="houseSelector" default-text="Select A House" items="[[houseData]]" attr-for-selected="id" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
+			<ctech-dropdown-selector id="houseSelector" default-text="Select A House" items="[[houseData]]" attr-for-selected="house_id" attr-for-text="house_name" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
 			<ctech-dropdown-selector id="quizSelector" default-text="Select A Quiz" items="[[quizData]]" attr-for-selected="uuid" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
 
 			<paper-radio-group selected="open" id="status" class="layout horizontal">
@@ -71,7 +71,7 @@ Polymer({
 		this.$.createAjax.body =
 			JSON.stringify({
 				'name': this.$.sessionName.value,
-				'house': this.$.houseSelector.selected.id,
+				'house': this.$.houseSelector.selected.house_id,
 				'quiz': this.$.quizSelector.selected.uuid,
 				'active': this.$.status.selected == "open" ? true : false,
 				'show': this.$.show.selected == "show" ? true : false

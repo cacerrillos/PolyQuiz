@@ -16,7 +16,7 @@
 		<iron-ajax id="deleteAjax" method="DELETE" handle-as="json" on-response="onDeleteAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
 		<polyquiz-dialog id="deleteDialog" on-confirm="deleteHouse" confirm-text="Delete" valid-color="#c62828">
 			<h2>Delete House</h2>
-			<h3>[[houseData.name]]</h3>
+			<h3>[[houseData.house_name]]</h3>
 		</polyquiz-dialog>
 	</template>
 	<script>
@@ -30,7 +30,7 @@
 		deleteHouse: function(e) {
 			if(this.houseData) {
 				this.$.deleteAjax.params = {
-					id: this.houseData.id
+					id: this.houseData.house_id
 				};
 				this.$.deleteAjax.generateRequest();
 			}

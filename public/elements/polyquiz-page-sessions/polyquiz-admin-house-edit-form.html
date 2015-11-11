@@ -16,7 +16,7 @@
 		<iron-ajax id="editAjax" method="PUT" handle-as="json" on-response="onEditAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
 		<polyquiz-dialog id="mainDialog" on-confirm="editHouse" on-dismiss="_resetForm" confirm-text="Edit">
 			<h2>Edit House</h2>
-			<paper-input id="houseName" label="House Name" value="[[houseData.name]]" on-input="_inputChanged" on-keydown="_checkEnter"></paper-input>
+			<paper-input id="houseName" label="House Name" value="[[houseData.house_name]]" on-input="_inputChanged" on-keydown="_checkEnter"></paper-input>
 		</polyquiz-dialog>
 	</template>
 	<script>
@@ -31,7 +31,7 @@
 			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
 			if(this.houseData) {
 				this.$.editAjax.params = {
-					id: this.houseData.id
+					id: this.houseData.house_id
 				};
 				this.$.editAjax.body = JSON.stringify({'name': this.$.houseName.value });
 				this.$.editAjax.generateRequest();
@@ -76,7 +76,7 @@
 				e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
 			}
 			if(this.houseData) {
-				this.$.houseName.value = this.houseData.name;
+				this.$.houseName.value = this.houseData.house_name;
 			}
 			this._validateForm();
 		},

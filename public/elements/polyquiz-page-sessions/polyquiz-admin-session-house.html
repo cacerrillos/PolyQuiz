@@ -36,6 +36,12 @@
 			background-color: white;
 			padding: 5px;
 			}
+			.title {
+				position: absolute;
+				top: 8px;
+				left: 8px;
+				margin: 0px;
+			}
 	</style>
 	<template>
 		<style>
@@ -56,9 +62,10 @@
 			<paper-fab icon="icons:add" class="addhouse" on-click="doAddNewHouse"></paper-fab>
 			<paper-fab id="editHouseButton" icon="icons:create" class="edithouse" on-click="doEditHouse"></paper-fab>
 			<paper-fab id="deleteHouseButton" icon="icons:delete" class="deletehouse" on-click="doDeleteHouse"></paper-fab>
+			<h2 class="title">Houses</h2>
 			<div class="row">
 				<div class="12u 12u(large) 12u(xsmall)">
-					<ctech-menubar-selector class="flex" id="housesl" items="[[housedata]]" selected="{{selectedHouse}}"attr-for-selected="id" on-ctech-select="onHouseSelected" no-bar scrollable></ctech-menubar-selector>
+					<ctech-menubar-selector class="flex" id="housesl" items="[[housedata]]" selected="{{selectedHouse}}" attr-for-selected="house_id" attr-for-text="house_name" on-ctech-select="onHouseSelected" no-bar scrollable></ctech-menubar-selector>
 				</div>
 			</div>
 		</paper-material>
