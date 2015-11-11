@@ -20,11 +20,11 @@ if(isset($_SESSION["is_admin"]) && isset($_GET['uuid'])){
 	
 }
 
-include_once('PolyQuizAdminAPI.php');
+include_once('poly_quiz_admin_api.php');
 
-include_once('PolyHouseAPI.php');
+include_once('poly_house_api.php');
 
-include_once('PolySessionAPI.php');
+include_once('poly_session_api.php');
 
 $app->run();
 
