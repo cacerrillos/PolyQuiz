@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-page-quiz">
+  <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+  <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+  <template>
+    <style>
+      paper-material {
+        background-color: white;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 5px;
+      }
+      .no-margins {
+        margin: 0px;
+      }
+      .newquiz {
+        position: fixed;
+        right: 32px;
+        bottom: 32px;
+      }
+    </style>
+    <iron-ajax
+       auto
+       url="../../api/1.1/quizzes"
+       handle-as="json"
+       last-response="{{quizData}}"
+       on-response="handleResponse"></iron-ajax>
+    <div class="container">
+      <div class="row">
+      
+      <template is="dom-repeat" items="[[_objectArrayToArray(quizData)]]" as="quiz">
+        <div class="12u">
+          <paper-material elevation="2">
+            <h2 class="no-margins">[[quiz.quiz_name]]</h2>
+          </paper-material>
+          
+        </div>
+      </template>
+      
+      </div>
+
+    </div>
+    <paper-fab icon="icons:add" class="newquiz"></paper-fab>
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-page-quiz',
+      properties: {
+        quizData: {
+          type: Object
+        }
+      },
+      _objectArrayToArray: function(arr) {
+        return $.map(arr, function(value, index) { return [value]; });
+      },
+      handleResponse: function(e) {
+        console.log(e);
+      }
+    });
+  </script>
+</dom-module>
