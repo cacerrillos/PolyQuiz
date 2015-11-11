@@ -33,6 +33,7 @@
     "autofill-event": "~1",
     "chart.js": "~0.1.0",
     "ctech-dropdown-selector": "~1",
-    "ctech-menubar-selector": "~1"
+    "ctech-menubar-selector": "~1",
+    "ctech-dialogs": "~1"
   }
 }
