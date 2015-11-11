@@ -5,7 +5,7 @@ require 'Slim/Slim.php';
 include_once("../../func/config.func.php");
 
 //include_once('objects/polyquiz.php');
-include_once("objects/polyhouse.php");
+//include_once("objects/polyhouse.php");
 include_once("objects/polysession.php");
 include_once("objects/polystats.php");
 \Slim\Slim::registerAutoloader();
@@ -28,6 +28,8 @@ include_once('poly_quiz.php');
 include_once('poly_quiz_api.php');
 
 include_once('poly_quiz_admin_api.php');
+
+include_once('poly_house.php');
 
 include_once('poly_house_api.php');
 
