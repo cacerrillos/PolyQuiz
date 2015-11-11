@@ -4,7 +4,10 @@ session_start();
 require 'Slim/Slim.php';
 include_once("../../func/config.func.php");
 
-include_once('objects/polyquiz.php');
+//include_once('objects/polyquiz.php');
+include_once("objects/polyhouse.php");
+include_once("objects/polysession.php");
+include_once("objects/polystats.php");
 \Slim\Slim::registerAutoloader();
 $app = new \Slim\Slim();
 $mysqli = new mysqli($db_host, $db_user, $db_password);
