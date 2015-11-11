@@ -30,6 +30,12 @@ include_once('poly_house_api.php');
 
 include_once('poly_session_api.php');
 
+$app->get('/', function() {
+  $result = array();
+  $result['is_admin'] = isAdmin();
+  echo json_encode($result, JSON_PRETTY_PRINT);
+});
+
 $app->run();
 
 ?>
