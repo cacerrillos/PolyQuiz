@@ -17,7 +17,7 @@
 		
 		},
 		doForm: function(e){
-			this.$.createAjax.body = JSON.stringify({'name': this.$.housename.value });
+			this.$.createAjax.body = JSON.stringify({'house_name': this.$.housename.value });
 			this.$.createAjax.generateRequest();
 		},
 		createResp: function(e){

@@ -31,9 +31,9 @@
 			e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
 			if(this.houseData) {
 				this.$.editAjax.params = {
-					id: this.houseData.house_id
+					house_id: this.houseData.house_id
 				};
-				this.$.editAjax.body = JSON.stringify({'name': this.$.houseName.value });
+				this.$.editAjax.body = JSON.stringify({'house_name': this.$.houseName.value });
 				this.$.editAjax.generateRequest();
 			}
 		},

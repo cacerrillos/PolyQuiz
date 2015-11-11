@@ -30,7 +30,7 @@
 		deleteHouse: function(e) {
 			if(this.houseData) {
 				this.$.deleteAjax.params = {
-					id: this.houseData.house_id
+					house_id: this.houseData.house_id
 				};
 				this.$.deleteAjax.generateRequest();
 			}
