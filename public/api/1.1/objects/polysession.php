@@ -26,7 +26,7 @@ class PolySession {
 		$valid = false;
 		while(!$valid){
 			if($stmt = $mysqli->prepare(
-				"SELECT `sessionid` FROM `sessions` WHERE `sessionid`=? LIMIT 1;"
+				"SELECT `session_id` FROM `session` WHERE `session_id`=? LIMIT 1;"
 			)){
 				$stmt->bind_param("s", $tempId);
 				$stmt->execute();
@@ -49,7 +49,7 @@ class PolySession {
 	}
 	public static function ownedBy($mysqli, $owner){
 		$toReturn = array();
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `date`, `house`, `active`, `show_scores` FROM `sessions` WHERE `owner`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `session_id`, `session_key`, `quiz_id`, `user_id`, `session_name`, `session_date`, `house_id`, `active`, `show_scores` FROM `session` WHERE `user_id`=?;")){
 			$stmt->bind_param("i", $owner);
 			$stmt->execute();
 			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $date, $house, $active, $show_scores);
@@ -75,7 +75,7 @@ class PolySession {
 	public function delete($mysqli, $owner){
 		$status = false;
 		if($owner == $this->owner){
-			if($stmt = $mysqli->prepare("DELETE FROM `sessions` WHERE `owner` = ? AND `sessionid` = ?;")){
+			if($stmt = $mysqli->prepare("DELETE FROM `session` WHERE `user_id` = ? AND `session_id` = ?;")){
 				$stmt->bind_param("is", $owner, $this->sessionid);
 				if($stmt->execute()){
 					if($stmt->affected_rows == 1){
@@ -116,7 +116,7 @@ class PolySession {
 		$toReturn['status'] = false;
 		if($this->owner == $owner){
 			if($this->inDB) {
-				if($stmt = $mysqli->prepare("UPDATE `sessions` SET `name`=?, `active`=?, `show_scores`=? WHERE `sessionid` = ? AND `owner` = ? LIMIT 1;")){
+				if($stmt = $mysqli->prepare("UPDATE `session` SET `session_name`=?, `active`=?, `show_scores`=? WHERE `session_id` = ? AND `owner` = ? LIMIT 1;")){
 					$stmt->bind_param("siisi",  $this->name, intval($this->active), intval($this->show_scores), $this->sessionid, $owner);
 					if($stmt->execute()) {
 						$toReturn['status'] = true;
@@ -129,7 +129,7 @@ class PolySession {
 					$toReturn['status_details'] = $mysqli->error;
 				}
 			} else {
-				if($stmt = $mysqli->prepare("INSERT INTO `sessions` (`sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `active`, `show_scores`, `date`, `house`) VALUES (?,?,?,?,?,?,?,?,?);")){
+				if($stmt = $mysqli->prepare("INSERT INTO `session` (`session_id`, `session_key`, `quiz_id`, `user_id`, `session_name`, `active`, `show_scores`, `session_date`, `house_id`) VALUES (?,?,?,?,?,?,?,?,?);")){
 					$stmt->bind_param("ssiisiiii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, intval($this->active), intval($this->show_scores), $this->date, $this->house);
 					if($stmt->execute()) {
 						$toReturn['status'] = true;
@@ -149,7 +149,7 @@ class PolySession {
 	}
 	public static function fromMySQL($mysqli, $uuid, $owner){
 		$toReturn = false;
-		if($stmt = $mysqli->prepare("SELECT `sessionid`, `sessionkey`, `quiz`, `owner`, `name`, `date`, `house`, `active`, `show_scores` FROM `sessions` WHERE `owner`=? AND `sessionid`=?;")){
+		if($stmt = $mysqli->prepare("SELECT `session_id`, `session_key`, `quiz_id`, `user_id`, `session_name`, `session_date`, `house_id`, `active`, `show_scores` FROM `session` WHERE `user_id`=? AND `session_id`=?;")){
 			$stmt->bind_param("is", $owner, $uuid);
 			$stmt->execute();
 			$stmt->bind_result($sessionid, $sessionkey, $quiz, $owner, $name, $date, $house, $active, $show_scores);
