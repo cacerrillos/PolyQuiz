@@ -1,18 +1,56 @@
 <!DOCTYPE html>
-<dom-module id="polyquiz-page-quiz">
-  <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-  <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<dom-module id="polyquiz-quiz-info-card">
+  <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="../../bower_components/ctech-dialogs/ctech-dialogs.html">
   <template>
     <style>
+      .no-margins {
+        margin: 0px;
+      }
       paper-material {
         background-color: white;
         margin-top: 10px;
         margin-bottom: 10px;
         padding: 5px;
       }
-      .no-margins {
-        margin: 0px;
+      .delete-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
       }
+    </style>
+    <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz">
+      <h2>Delete Quiz</h2>
+      Quiz Name: <b>[[quiz.quiz_name]]</b>
+    </ctech-confirm-dialog>
+    <paper-material elevation="2">
+      <paper-icon-button icon="icons:delete" class="delete-icon" on-click="_showDeleteDialog"></paper-icon-button>
+      <h2 class="no-margins">[[quiz.quiz_name]]</h2>
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-quiz-info-card',
+      properties: {
+        quiz: {
+          type: Object
+        }
+      },
+      _doDeleteQuiz: function(e) {
+        console.log(e);
+      },
+      _showDeleteDialog: function(e) {
+        this.$.deleteDialog.open();
+      }
+    });
+  </script>
+</dom-module>
+<dom-module id="polyquiz-page-quiz">
+  <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+  <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+  <template>
+    <style>
       .newquiz {
         position: fixed;
         right: 32px;
@@ -30,10 +68,7 @@
       
       <template is="dom-repeat" items="[[_objectArrayToArray(quizData)]]" as="quiz">
         <div class="12u">
-          <paper-material elevation="2">
-            <h2 class="no-margins">[[quiz.quiz_name]]</h2>
-          </paper-material>
-          
+        <polyquiz-quiz-info-card quiz="[[quiz]]"></polyquiz-quiz-info-card>
         </div>
       </template>
       

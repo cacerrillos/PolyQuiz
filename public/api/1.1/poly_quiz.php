@@ -102,6 +102,22 @@ class PolyQuiz {
     }
     return $result;
   }
+  public static function delete($mysqli, $quiz_id, $user_id) {
+    $result = array();
+    $result['status'] = false;
+    if($stmt = $mysqli->prepare("DELETE FROM `quiz` WHERE `quiz_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $quiz_id, $user_id);
+      if($stmt->execute()) {
+        $result['status'] = true;
+      } else {
+        $result['error'] = $mysqli->error;
+      }
+      $stmt->close();
+    } else {
+      $result['stmt_error'] = $mysqli->error;
+    }
+    return $result;
+  }
 }
 
 include('poly_question.php');
