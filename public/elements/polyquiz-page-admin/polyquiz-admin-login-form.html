@@ -65,7 +65,7 @@
 			<h3>Log In</h3>
 			<div class="flex"></div>
 		</div>
-		<iron-ajax id="loginAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.0/admin/login.php"></iron-ajax>
+		<iron-ajax id="loginAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.1/login"></iron-ajax>
 		<form id="adminlogin">
 			<paper-input id="user" name="user" label="Email Address" on-input="loginFieldsCheck" on-keydown="checkForEnter"></paper-input>
 			<paper-input id="pass" name="pass" label="Password" on-input="loginFieldsCheck" on-keydown="checkForEnter" type="password"></paper-input>
