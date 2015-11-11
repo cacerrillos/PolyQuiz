@@ -53,7 +53,7 @@
 	
 	<template>
 		<iron-ajax id="sessionsInfoAjax" url="../../api/1.1/sessions" handle-as="json" on-response="onResp"></iron-ajax>
-		<iron-ajax id="quizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizdata}}" auto></iron-ajax>
+		<iron-ajax id="quizInfoAjax" url="../../api/1.1/quizzes" handle-as="json" last-response="{{quizdata}}" auto></iron-ajax>
 		<iron-ajax id="houseInfoAjax" url="../../api/1.1/houses" handle-as="json" last-response="{{housedata}}" auto></iron-ajax>
 
 		<polyquiz-admin-session-edit-prompt id="editPrompt"></polyquiz-admin-session-edit-prompt>
