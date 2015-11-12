@@ -38,7 +38,7 @@
         }
       },
       _doDeleteQuiz: function(e) {
-        console.log(e);
+        this.fire('do-delete-quiz', { quiz_id: this.quiz.quiz_id });
       },
       _showDeleteDialog: function(e) {
         this.$.deleteDialog.open();
@@ -59,10 +59,17 @@
     </style>
     <iron-ajax
        auto
+       id="quizDataAjax"
        url="../../api/1.1/quizzes"
        handle-as="json"
        last-response="{{quizData}}"
        on-response="handleResponse"></iron-ajax>
+    <iron-ajax
+      id="quizManageAjax"
+      url="../../api/1.1/quizzes"
+      handle-as="json"
+      on-response="_doQuizRefresh">
+      </iron-ajax>
     <div class="container">
       <div class="row">
       
@@ -84,6 +91,18 @@
         quizData: {
           type: Object
         }
+      },
+      listeners : {
+        'do-delete-quiz': '_doDeleteQuiz'
+      },
+      _doDeleteQuiz: function(e) {
+        console.log(e);
+        this.$.quizManageAjax.method = "DELETE";
+        this.$.quizManageAjax.params = { "quiz_id": e.detail.quiz_id };
+        this.$.quizManageAjax.generateRequest();
+      },
+      _doQuizRefresh: function(e) {
+        this.$.quizDataAjax.generateRequest();
       },
       _objectArrayToArray: function(arr) {
         return $.map(arr, function(value, index) { return [value]; });
