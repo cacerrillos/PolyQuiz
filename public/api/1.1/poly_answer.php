@@ -12,6 +12,22 @@ class PolyAnswer {
   public function get_sort_id() {
     return $this->parent_question->get_answer_sort_id($this->answer_id);
   }
+  public function save($mysqli) {
+    $response = array();
+    $response['status'] = false;
+    if($stmt = $mysqli->prepare("UPDATE `answer` SET `answer_type` = ?, `sort_id` = ? WHERE `answer`.`answer_id` = ? AND `answer`.`question_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("siii", $this->type, $this->get_sort_id(), $this->answer_id, $this->parent_question->question_id);
+      if($stmt->execute()) {
+        $response['status'] = true;
+      } else {
+        $response['error'] = $mysqli->error;
+      }
+      $stmt->close();
+    } else {
+      $response['error'] = $mysqli->error;
+    }
+    return $response;
+  }
 }
 
 class PolyAnswer_Standard extends PolyAnswer {
