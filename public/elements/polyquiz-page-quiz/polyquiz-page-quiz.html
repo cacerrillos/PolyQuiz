@@ -2,7 +2,6 @@
 <dom-module id="polyquiz-quiz-info-card">
   <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
   <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-  <link rel="import" href="../../bower_components/ctech-dialogs/ctech-dialogs.html">
   <template>
     <style>
       .no-margins {
@@ -19,14 +18,16 @@
         top: 0;
         right: 0;
       }
+      .edit-icon {
+        position: absolute;
+        top: 0;
+        right: 32px;
+      }
     </style>
-    <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz">
-      <h2>Delete Quiz</h2>
-      Quiz Name: <b>[[quiz.quiz_name]]</b>
-    </ctech-confirm-dialog>
     <paper-material elevation="2">
-      <paper-icon-button icon="icons:delete" class="delete-icon" on-click="_showDeleteDialog"></paper-icon-button>
-      <h2 class="no-margins">[[quiz.quiz_name]]</h2>
+      <paper-icon-button icon="icons:delete" class="delete-icon" on-click="_doDeleteQuiz"></paper-icon-button>
+      <paper-icon-button icon="icons:create" class="edit-icon" on-click="_doManageQuiz"></paper-icon-button>
+      <h2 class="no-margins layout horizontal"><div style="padding: 8px;">[[quiz.quiz_name]]</div><paper-icon-button icon="icons:create" on-click="_doRenameQuiz"></paper-icon-button></h2>
     </paper-material>
   </template>
   <script>
@@ -37,11 +38,11 @@
           type: Object
         }
       },
+      _doManageQuiz: function(e) {
+        page('/quiz/' + this.quiz.quiz_id);
+      },
       _doDeleteQuiz: function(e) {
         this.fire('do-delete-quiz', { quiz_id: this.quiz.quiz_id });
-      },
-      _showDeleteDialog: function(e) {
-        this.$.deleteDialog.open();
       }
     });
   </script>
@@ -49,6 +50,7 @@
 <dom-module id="polyquiz-page-quiz">
   <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
   <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+  <link rel="import" href="../../bower_components/ctech-dialogs/ctech-dialogs.html">
   <template>
     <style>
       .newquiz {
@@ -70,6 +72,14 @@
       handle-as="json"
       on-response="_doQuizRefresh">
       </iron-ajax>
+      <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz">
+      <h2>Delete Quiz</h2>
+      Quiz Name: <b>[[quizToDelete.quiz_name]]</b>
+    </ctech-confirm-dialog>
+    <ctech-confirm-dialog id="createDialog" on-ctech-dialog-confirm="_doCreateQuiz">
+      <h2>New Quiz</h2>
+      <paper-input label="Quiz Name" value="{{newQuizName}}" on-input="_validateCreateForm"></paper-input>
+    </ctech-confirm-dialog>
     <div class="container">
       <div class="row">
       
@@ -82,7 +92,7 @@
       </div>
 
     </div>
-    <paper-fab icon="icons:add" class="newquiz"></paper-fab>
+    <paper-fab icon="icons:add" class="newquiz" on-click="_showCreateDialog"></paper-fab>
   </template>
   <script>
     Polymer({
@@ -90,25 +100,53 @@
       properties: {
         quizData: {
           type: Object
+        },
+        quizToDelete: {
+          type: Object,
+          readonly: true
+        },
+        newQuizName: {
+          type: String,
+          value: ""
         }
       },
       listeners : {
-        'do-delete-quiz': '_doDeleteQuiz'
+        'do-delete-quiz': '_showDeleteDialog'
       },
       _doDeleteQuiz: function(e) {
         console.log(e);
         this.$.quizManageAjax.method = "DELETE";
-        this.$.quizManageAjax.params = { "quiz_id": e.detail.quiz_id };
+        this.$.quizManageAjax.params = { "quiz_id": this.quizToDelete.quiz_id };
         this.$.quizManageAjax.generateRequest();
       },
       _doQuizRefresh: function(e) {
+        console.log(e);
         this.$.quizDataAjax.generateRequest();
       },
       _objectArrayToArray: function(arr) {
         return $.map(arr, function(value, index) { return [value]; });
       },
       handleResponse: function(e) {
-        console.log(e);
+        //console.log(e);
+      },
+      _validateCreateForm: function(e) {
+        this.$.createDialog.invalid = this.newQuizName.length > 0 ? false : true;
+      },
+      _doCreateQuiz: function(e) {
+        this.$.quizManageAjax.method = "POST";
+        this.$.quizManageAjax.body = JSON.stringify({ "quiz_name": this.newQuizName });
+        this.$.quizManageAjax.generateRequest();
+      },
+      _showCreateDialog: function(e) {
+        this.newQuizName = "";
+        this.$.createDialog.open();
+        this._validateCreateForm();
+      },
+      _showDeleteDialog: function(e) {
+        this.quizToDelete = this.quizData[e.detail.quiz_id];
+        if(this.quizToDelete) {
+          this.$.deleteDialog.open();
+        }
       }
     });
   </script>
