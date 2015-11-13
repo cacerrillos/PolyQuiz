@@ -70,9 +70,9 @@ class PolyQuiz {
     } else {
       $result['stmt_error'] = $mysqli->error;
     }
-    if(!$mysqli->commit()) {
-      $result['commit_error'] = $mysqli->error;
-    }
+    //if(!$mysqli->commit()) {
+    //  $result['commit_error'] = $mysqli->error;
+    //}
     return $result;
   }
   public function fetch_questions_from_mysql($mysqli, $transaction = true) {
