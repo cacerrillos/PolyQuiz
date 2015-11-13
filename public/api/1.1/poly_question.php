@@ -33,11 +33,11 @@ class PolyQuestion {
   public function fetch_answers_from_mysql($mysqli, $transaction) {
     $fetch_answer_standard = PolyAnswer_Standard::from_mysql($mysqli, $this, $transaction);
     if($fetch_answer_standard['status']) {
-      $this->answers = array_merge($this->answers, $fetch_answer_standard['result']);
+      $this->answers = $this->answers + $fetch_answer_standard['result'];
     }
     $fetch_answer_standard_smart = PolyAnswer_Standard_Smart::from_mysql($mysqli, $this, $transaction);
     if($fetch_answer_standard_smart['status']) {
-      $this->answers = array_merge($this->answers, $fetch_answer_standard_smart['result']);
+      $this->answers = $this->answers + $fetch_answer_standard_smart['result'];
     }
   }
 }
