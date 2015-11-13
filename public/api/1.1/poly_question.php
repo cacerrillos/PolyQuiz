@@ -30,6 +30,15 @@ class PolyQuestion {
   public function get_parent_quiz() {
     return $this->parent_quiz;
   }
+  function count_answers_by_type($answer_type) {
+    $counter = 0;
+    foreach($this->answers as &$answer) {
+      if($answer['answer']->type == $answer_type) {
+        $counter++;
+      }
+    }
+    return $counter;
+  }
   public function fetch_answers_from_mysql($mysqli, $transaction) {
     $fetch_answer_standard = PolyAnswer_Standard::from_mysql($mysqli, $this, $transaction);
     if($fetch_answer_standard['status']) {
