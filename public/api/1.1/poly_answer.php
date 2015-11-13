@@ -44,7 +44,7 @@ class PolyAnswer_Standard extends PolyAnswer {
           $res['answer'] = new self($parent_question);
           $res['answer']->answer_id = $answer_id;
           $res['answer']->text = $text;
-          array_push($result['result'], $res);
+          $result['result'][$answer_id] = $res;
         }
         $stmt->close();
       } else {
@@ -170,7 +170,7 @@ class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
           $res['sort_id'] = $sort_id;
           $res['answer'] = new self($parent_question);
           $res['answer']->answer_id = $answer_id;
-          array_push($result['result'], $res);
+          $result['result'][$answer_id] = $res;
         }
         $stmt->close();
         foreach($result['result'] as &$ans) {
