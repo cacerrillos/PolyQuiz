@@ -48,6 +48,55 @@ class PolyQuestion {
     if($fetch_answer_standard_smart['status']) {
       $this->answers = $this->answers + $fetch_answer_standard_smart['result'];
     }
+    $do_sort = false;
+    foreach($this->answers as &$answer) {
+      if($answer['sort_id'] == 0) {
+        $do_sort = true;
+        break;
+      }
+    }
+
+    if($do_sort) {
+      $num_of_standard = $this->count_answers_by_type("STANDARD");
+      $num_of_standard_smart = $this->count_answers_by_type("STANDARD_SMART");
+      $total_num = $num_of_standard + $num_of_standard_smart;
+      
+      $standard_arr = range(1, $num_of_standard);
+      $standard_counter = 0;
+      $standard_smart_arr = range($num_of_standard, $total_num);
+      $standard_smart_counter = 0;
+
+      foreach($this->answers as &$answer) {
+        if($answer['answer']->type == "STANDARD") {
+          $answer['sort_id'] = $standard_arr[$standard_counter];
+          $standard_counter++;
+        } else if($answer['answer']->type == "STANDARD_SMART") {
+          $answer['sort_id'] = $standard_smart_arr[$standard_smart_counter];
+          $standard_smart_counter++;
+        }
+      }
+      $this->save($mysqli);
+    }
+  }
+  public function save($mysqli) {
+    $response = array();
+    $response['status'] = false;
+    if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("siii", $this->question_type, $this->parent_quiz->get_question_sort_id($this->question_id), $this->question_id, $this->parent_quiz->quiz_id);
+      if($stmt->execute()) {
+        $response['status'] = true;
+      } else {
+        $response['error'] = $mysqli->error;
+      }
+      $stmt->close();
+    } else {
+      $response['error'] = $mysqli->error;
+    }
+    //save all answers
+    foreach($this->answers as &$answer) {
+      $answer['answer']->save($mysqli);
+    }
+    return $response;
   }
 }
 class PolyQuestion_Standard extends PolyQuestion {
@@ -99,6 +148,10 @@ class PolyQuestion_Standard extends PolyQuestion {
       }
     }
     return $result;
+  }
+  public function save($mysqli) {
+    PolyQuestion::save($mysqli);
+
   }
 }
 ?>
