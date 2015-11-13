@@ -17,6 +17,17 @@ function get_quiz($mysqli, $quiz_id, $user_id, $all_data) {
   echo json_encode(PolyQuiz::from_mysql($mysqli, $quiz_id, $user_id, $all_data), JSON_PRETTY_PRINT);
 }
 
+$app->post('/quizzes', function() {
+  global $mysqli, $_POST_JSON;
+  if(isAdmin()) {
+    if(isset($_GET['quiz_name'])) {
+      echo json_encode(PolyQuiz::create($mysqli, $_GET['quiz_name'], $_SESSION['dbext']), JSON_PRETTY_PRINT);
+    } else if(isset($_POST_JSON['quiz_name'])) {
+      echo json_encode(PolyQuiz::create($mysqli, $_POST_JSON['quiz_name'], $_SESSION['dbext']), JSON_PRETTY_PRINT);
+    }
+  }
+});
+
 $app->delete('/quizzes/:quizid', function($quizid) {
   global $mysqli;
   if(isAdmin()) {
