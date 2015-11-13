@@ -19,6 +19,9 @@ class PolyQuiz {
   public function to_json_client() {
 
   }
+  public function get_question_sort_id($question_id) {
+    return $questions[$question_id]['sort_id'];
+  }
   public static function all_from_mysql($mysqli, $user_id, $fetch_all_data = false) {
     $result = array();
     $result['status'] = false;
