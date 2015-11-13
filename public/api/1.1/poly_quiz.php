@@ -52,7 +52,7 @@ class PolyQuiz {
   public static function from_mysql($mysqli, $quiz_id, $user_id, $fetch_all_data = false) {
     $result = array();
     $result['status'] = false;
-    $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_ONLY);
+    //$mysqli->begin_transaction(MYSQLI_TRANS_START_READ_ONLY);
     if($stmt = $mysqli->prepare("SELECT `quiz_name` FROM `quiz` WHERE `quiz_id` = ? AND `user_id` = ? LIMIT 1;")) {
       $stmt->bind_param("ii", $quiz_id, $user_id);
       if($stmt->execute()) {
