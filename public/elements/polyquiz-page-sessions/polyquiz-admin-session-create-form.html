@@ -22,7 +22,7 @@
 <template>
 	<iron-ajax method="POST" id="createAjax" url="../../api/1.1/sessions" handle-as="json" on-response="createResp"></iron-ajax>
 	
-	<iron-ajax id="allquizInfoAjax" url="../../api/1.0/quiz/owned.php" handle-as="json" last-response="{{quizData}}" auto></iron-ajax>
+	<iron-ajax id="allquizInfoAjax" url="../../api/1.1/quizzes" handle-as="json" last-response="{{quizData}}" auto></iron-ajax>
 
 	<polyquiz-dialog id="mainDialog" on-confirm="reqSubmit" on-dismiss="resetForm" confirm-text="Create" valid-color="#8BC34A">
 		<div class="layout horizontal">
@@ -33,7 +33,7 @@
 		<div class="layout vertical">
 			<paper-input name="sessionname" label="Session Name" on-input="_validateForm" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
 			<ctech-dropdown-selector id="houseSelector" default-text="Select A House" items="[[houseData]]" attr-for-selected="house_id" attr-for-text="house_name" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
-			<ctech-dropdown-selector id="quizSelector" default-text="Select A Quiz" items="[[quizData]]" attr-for-selected="uuid" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
+			<ctech-dropdown-selector id="quizSelector" default-text="Select A Quiz" items="[[quizData]]" attr-for-selected="quiz_id" attr-for-text="quiz_name" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
 
 			<paper-radio-group selected="open" id="status" class="layout horizontal">
 				<paper-radio-button name="open">Open</paper-radio-button>
@@ -72,7 +72,7 @@ Polymer({
 			JSON.stringify({
 				'name': this.$.sessionName.value,
 				'house': this.$.houseSelector.selected.house_id,
-				'quiz': this.$.quizSelector.selected.uuid,
+				'quiz': this.$.quizSelector.selected.quiz_id,
 				'active': this.$.status.selected == "open" ? true : false,
 				'show': this.$.show.selected == "show" ? true : false
 			});
