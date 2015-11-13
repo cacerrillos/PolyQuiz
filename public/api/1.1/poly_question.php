@@ -11,7 +11,7 @@ class PolyQuestion {
   public function addAnswer($answer) {
     $arr = array();
     $arr['answer'] = $answer;
-    $arr['sort_id'] = -1;
+    $arr['sort_id'] = 0;
     $this->answers[$answer->answer_id] = $arr;
   }
   public function get_answer($answer_id) {
