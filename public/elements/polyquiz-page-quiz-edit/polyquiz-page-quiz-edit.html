@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-quiz-edit-answer-area">
+  <template>
+    <style>
+    paper-material {
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+      }
+      .fab-padding {
+        padding-right: 72px;
+        min-height: 64px;
+        margin-bottom: 32px;
+
+      }
+    .right-edge {
+        position: absolute;
+        right: 8px;
+        bottom: -28px;
+      }
+      .right-edge-mini {
+        position: absolute;
+        right: 8px;
+        bottom: -20px;
+      }
+      .right-edge-mini {
+        position: absolute;
+        right: 8px;
+        bottom: -20px;
+      }
+      .inner-handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }
+    </style>
+    <paper-material class="flex layout vertical fab-padding">
+      <div class="right-edge not-large">
+        <paper-fab icon="icons:add"></paper-fab>
+        <paper-tooltip position="top">Add Answer</paper-tooltip>
+      </div>
+      <div class="right-edge-mini only-large">
+        <paper-fab icon="icons:add" mini></paper-fab>
+        <paper-tooltip position="top">Add Answer</paper-tooltip>
+      </div>
+      <div>[[question.text]]</div>
+      <sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate">
+        <template id="answerstemplate" is="dom-repeat" items="[[_objectArrayToArray(question.answers)]]" as="answer" sort="{{_sortAnswers(question)}}">
+          <paper-item class="layout horizontal answer-item" data-id$="[[answer.answer.answer_id]]"><iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>[<div>[[answer.answer.answer_id]]</div>] <div>[[answer.sort_id]]</div>) <div>[[answer.answer.text]]</div></paper-item>
+        </template>
+      </sortable-js>
+      <button on-click="_logStore">log</button>
+      <button on-click="_store">store</button>
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-quiz-edit-answer-area',
+      properties: {
+        question: {
+          type: Object
+        }
+      },
+      _sortAnswers: function(bla) {
+        return function(a, b) {
+          if(a.sort_id > b.sort_id) {
+            return 1;
+          } else {
+            return 0;
+          }
+        };
+      },
+      _onSortUpdate: function(e) {
+        if(e.detail) {
+          console.log(e.detail);
+          var sortableEvent = e.detail;
+          var item = sortableEvent.item;
+          console.log("answer " + item.getAttribute("data-id") + " moved from " + sortableEvent.oldIndex + " " + sortableEvent.newIndex);
+        }
+      },
+      _objectArrayToArray: function(arr) {
+        return $.map(arr, function(value, index) { return [value]; });
+      },
+      _logStore: function(e) {
+        console.log(this.$.sortableQuestions.dataIdAttr);
+        console.log(this.$.sortableQuestions.sortable.toArray());
+        this.question.answers[10].sort_id = 2;
+        this.$.answerstemplate.render();
+        console.log(this.question.answers);
+        //console.log(this.$.sortableQuestions.store);
+      },
+      _store: function(e) {
+        this.$.sortableQuestions.sortable.store();
+      },
+      ready: function(e) {
+        this.$.sortableQuestions.group = {
+          name: this.question.question_id + "_answers",
+          pull: false,
+          put: false
+        };
+        this.$.sortableQuestions.store = {
+          get: function(sortable) {
+            var order = localStorage.getItem(sortable.options.group);
+            return order ? order.split('|') : [];
+          },
+          set: function(sortable) {
+            console.log(sortable);
+            var o = sortable.toArray();
+            console.log(o);
+            localStorage.setItem(sortable.options.group, o.join('|'));
+          }
+        };
+      }
+    });
+  </script>
+</dom-module>
+<dom-module id="polyquiz-page-quiz-edit">
+  <link rel="import" href="../../bower_components/Sortable/Sortable.html">
+  <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+  <template>
+    <style>
+      .no-select {
+        max-height: 24px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      paper-material {
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+      }
+      .no-margins {
+        margin: 0px;
+      }
+      .handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }
+    </style>
+    <iron-ajax id="quizData" url="../../api/1.1/quizzes" handle-as="json" on-response="_onQuizDataUpdate"></iron-ajax>
+    <div class="container">
+      <div class="row">
+        <div class="12u">
+          <paper-material>
+            <h1 class="no-margins layout horizontal"><div style="font-weight: normal;">Edit Quiz:</div><div style="min-width: 8px;"></div><div>[[quiz.quiz_name]]</div></h1>
+          </paper-material>
+        </div>
+      </div>
+      <sortable-js handle=".handle">
+        <template is="dom-repeat" items="[[quiz.questions]]" as="question">
+          <div class="layout horizontal">
+            <paper-material class="no-select">
+              <iron-icon class="handle" icon="icons:reorder"></iron-icon>
+            </paper-material>
+            <polyquiz-quiz-edit-answer-area class="flex" question="[[question.question]]"></polyquiz-quiz-edit-answer-area>
+          </div>
+          
+        </template>
+      </sortable-js>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-page-quiz-edit',
+      properties: {
+        ctx: {
+          type: Object,
+          observer: '_onContextChanged'
+        },
+        quiz: {
+          type: Object
+        }
+      },
+      
+      logg: function(e) {
+        console.log(e);
+        return e;
+      },
+      _onQuizDataUpdate: function(e) {
+        if(e.detail.response.status) {
+          this.quiz = e.detail.response.result;
+          console.log(this.quiz);
+        }
+      },
+      _onContextChanged: function(e) {
+        console.log(e);
+        this._reloadAllData();
+      },
+      _reloadAllData: function() {
+        this.$.quizData.method = "GET";
+        this.$.quizData.params = { "quiz_id": this.ctx.params.quizid, "all_data": true };
+        this.$.quizData.generateRequest();
+      },
+      _onPageSelected: function(selectorTarget, mainapp) {
+        return function(e) {
+          if(selectorTarget == e.srcElement) {
+            if(this.parentNode.selectedItem == this) {
+              this._reloadAllData();
+              console.log(e);
+              if(mainapp.isAdmin) {
+                mainapp.closeLoginOverlay();
+                return;
+              }
+              mainapp.openLoginOverlay();
+            }
+          }
+        }
+      },
+      ready: function() {
+        var mainapp = document.querySelector("#mainapp");
+        var parentSelector = this.parentNode;
+
+        parentSelector.addEventListener('iron-select', this._onPageSelected(parentSelector, mainapp).bind(this));
+      }
+    });
+  </script>
+</dom-module>
