@@ -22,7 +22,10 @@ class PolyQuestion {
   public function get_answer_sort_id($answer_id) {
     if(isset($this->answers[$answer_id])) {
       return $this->answers[$answer_id]['sort_id'];
+    } else {
+      echo "COULDNT FINMD NASWER";
     }
+
   }
   public function toJSON(){
     return json_encode($this, JSON_PRETTY_PRINT);
