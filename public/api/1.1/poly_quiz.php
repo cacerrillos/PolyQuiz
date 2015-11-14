@@ -124,7 +124,7 @@ class PolyQuiz {
 }
 
 include('poly_question.php');
-include('poly_answer.php');
+
 
 if(isset($_GET['test'])) {
   include_once("../../func/config.func.php");
