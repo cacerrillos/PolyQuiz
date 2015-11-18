@@ -8,10 +8,7 @@ class PolyQuiz {
     $this->quiz_name = $quiz_name;
   }
   public function addQuestion($question) {
-    $arr = array();
-    $arr['question'] = $question;
-    $arr['sort_id'] = -1;
-    $this->questions[$question->question_id] = $arr;
+    $this->questions[$question->question_id] = $question;
   }
   public function to_json_admin() {
     return json_encode($this, JSON_PRETTY_PRINT);
@@ -55,7 +52,6 @@ class PolyQuiz {
   public static function from_mysql($mysqli, $quiz_id, $user_id, $fetch_all_data = false) {
     $result = array();
     $result['status'] = false;
-    //$mysqli->begin_transaction(MYSQLI_TRANS_START_READ_ONLY);
     if($stmt = $mysqli->prepare("SELECT `quiz_name` FROM `quiz` WHERE `quiz_id` = ? AND `user_id` = ? LIMIT 1;")) {
       $stmt->bind_param("ii", $quiz_id, $user_id);
       if($stmt->execute()) {
@@ -64,7 +60,7 @@ class PolyQuiz {
           $result['status'] = true;
           $result['result'] = new PolyQuiz($quiz_id, $quiz_name_r);
           $stmt->close();
-          $fetch_all_data ? $result['result']->fetch_questions_from_mysql($mysqli, false) : null;
+          $fetch_all_data ? $result['result']->fetch_questions_from_mysql($mysqli, $user_id) : null;
         }
       } else {
         $result['error'] = $mysqli->error;
@@ -73,21 +69,17 @@ class PolyQuiz {
     } else {
       $result['stmt_error'] = $mysqli->error;
     }
-    //if(!$mysqli->commit()) {
-    //  $result['commit_error'] = $mysqli->error;
-    //}
     return $result;
   }
-  public function fetch_questions_from_mysql($mysqli, $transaction = true) {
-    $fetch_question_standard = PolyQuestion_Standard::from_mysql($mysqli, $this, $transaction);
+  public function fetch_questions_from_mysql($mysqli, $user_id) {
+    $fetch_question_standard = PolyQuestion_Standard::all_from_mysql($mysqli, $this, $user_id);
     if($fetch_question_standard['status']) {
-      $this->questions = array_merge($this->questions, $fetch_question_standard['result']);
+      $this->questions = $this->questions + $fetch_question_standard['result'];
     }
   }
   public static function create($mysqli, $quiz_name, $user_id) {
     $result = array();
     $result['status'] = false;
-    $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
     if($stmt = $mysqli->prepare("INSERT INTO `quiz` (`quiz_id`, `quiz_name`, `user_id`) VALUES (NULL, ?, ?)")) {
       $stmt->bind_param("si", $quiz_name, $user_id);
       if($stmt->execute()) {
@@ -99,9 +91,6 @@ class PolyQuiz {
       $stmt->close();
     } else {
       $result['stmt_error'] = $mysqli->error;
-    }
-    if(!$mysqli->commit()) {
-      $result['commit_error'] = $mysqli->error;
     }
     return $result;
   }

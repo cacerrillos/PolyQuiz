@@ -23,17 +23,21 @@ if(isset($_SESSION["is_admin"]) && isset($_GET['uuid'])){
 	
 }
 
-include_once('poly_quiz.php');
+include('poly_quiz.php');
 
-include_once('poly_quiz_api.php');
+include('poly_quiz_api.php');
 
-include_once('poly_quiz_admin_api.php');
+include('poly_answer.php');
 
-include_once('poly_house.php');
+include('poly_answer_api.php');
 
-include_once('poly_house_api.php');
+include('poly_quiz_admin_api.php');
 
-include_once('poly_session_api.php');
+include('poly_house.php');
+
+include('poly_house_api.php');
+
+include('poly_session_api.php');
 
 $app->get('/', function() {
   $result = array();

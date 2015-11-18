@@ -4,28 +4,18 @@ class PolyQuestion {
   public $question_type;
   public $data = array();
   public $answers = array();
+  public $sort_id = 0;
   protected $parent_quiz;
   public function __construct($parent_quiz) {
     $this->parent_quiz = $parent_quiz;
   }
   public function addAnswer($answer) {
-    $arr = array();
-    $arr['answer'] = $answer;
-    $arr['sort_id'] = 0;
-    $this->answers[$answer->answer_id] = $arr;
+    $this->answers[$answer->answer_id] = $answer;
   }
   public function get_answer($answer_id) {
     if(isset($this->answers[$answer_id])) {
-      return $this->answers[$answer_id]['answer'];
+      return $this->answers[$answer_id];
     }
-  }
-  public function get_answer_sort_id($answer_id) {
-    if(isset($this->answers[$answer_id])) {
-      return $this->answers[$answer_id]['sort_id'];
-    } else {
-      echo "COULDNT FINMD NASWER";
-    }
-
   }
   public function toJSON(){
     return json_encode($this, JSON_PRETTY_PRINT);
@@ -36,24 +26,26 @@ class PolyQuestion {
   function count_answers_by_type($answer_type) {
     $counter = 0;
     foreach($this->answers as &$answer) {
-      if($answer['answer']->type == $answer_type) {
+      if($answer->type == $answer_type) {
         $counter++;
       }
     }
     return $counter;
   }
-  public function fetch_answers_from_mysql($mysqli, $transaction) {
-    $fetch_answer_standard = PolyAnswer_Standard::from_mysql($mysqli, $this, $transaction);
+  public function fetch_answers_from_mysql($mysqli, $user_id) {
+    $fetch_answer_standard = PolyAnswer_Standard::all_from_mysql($mysqli, $this, $user_id);
     if($fetch_answer_standard['status']) {
+      //$this->answers = array_merge($this->answers, $fetch_answer_standard['result']);
       $this->answers = $this->answers + $fetch_answer_standard['result'];
     }
-    $fetch_answer_standard_smart = PolyAnswer_Standard_Smart::from_mysql($mysqli, $this, $transaction);
+    $fetch_answer_standard_smart = PolyAnswer_Standard_Smart::all_from_mysql($mysqli, $this, $user_id);
     if($fetch_answer_standard_smart['status']) {
+      //$this->answers = array_merge($this->answers, $fetch_answer_standard_smart['result']);
       $this->answers = $this->answers + $fetch_answer_standard_smart['result'];
     }
     $do_sort = false;
     foreach($this->answers as &$answer) {
-      if($answer['sort_id'] == 0) {
+      if($answer->sort_id == 0) {
         $do_sort = true;
         break;
       }
@@ -70,22 +62,22 @@ class PolyQuestion {
       $standard_smart_counter = 0;
 
       foreach($this->answers as &$answer) {
-        if($answer['answer']->type == "STANDARD") {
-          $answer['sort_id'] = $standard_arr[$standard_counter];
+        if($answer->type == "STANDARD") {
+          $answer->sort_id = $standard_arr[$standard_counter];
           $standard_counter++;
-        } else if($answer['answer']->type == "STANDARD_SMART") {
-          $answer['sort_id'] = $standard_smart_arr[$standard_smart_counter];
+        } else if($answer->type == "STANDARD_SMART") {
+          $answer->sort_id = $standard_smart_arr[$standard_smart_counter];
           $standard_smart_counter++;
         }
       }
-      $this->save($mysqli);
+      $this->save($mysqli, $user_id);
     }
   }
-  public function save($mysqli) {
+  public function save($mysqli, $user_id) {
     $response = array();
     $response['status'] = false;
-    if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? LIMIT 1;")) {
-      $stmt->bind_param("siii", $this->question_type, $this->parent_quiz->get_question_sort_id($this->question_id), $this->question_id, $this->parent_quiz->quiz_id);
+    if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? AND `question`.`user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("siiii", $this->question_type, $this->parent_quiz->get_question_sort_id($this->question_id), $this->question_id, $this->parent_quiz->quiz_id, $user_id);
       if($stmt->execute()) {
         $response['status'] = true;
       } else {
@@ -97,7 +89,8 @@ class PolyQuestion {
     }
     //save all answers
     foreach($this->answers as &$answer) {
-      $answer['answer']->save($mysqli);
+      echo gettype($answer);
+      $answer->save($mysqli, $user_id);
     }
     return $response;
   }
@@ -110,33 +103,30 @@ class PolyQuestion_Standard extends PolyQuestion {
     $this->parent_quiz = $parent_quiz;
     $this->question_type = "STANDARD";
   }
-  public static function from_mysql($mysqli, $parent_quiz, $transaction = true) {
+  public static function all_from_mysql($mysqli, $parent_quiz, $user_id) {
     $result = array();
     $result['status'] = false;
     $result['result'] = array();
-    $transaction ? $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_ONLY) : null;
     $query = "SELECT `question`.`question_id`, `question`.`sort_id`, `question_standard`.`extra_credit`, `question_standard`.`canvas` , `question_standard_text`.`text`"
     . " FROM `question` LEFT JOIN `question_standard` ON `question`.`question_id` = `question_standard`.`question_id`"
     . " LEFT JOIN `question_standard_text` ON `question_standard`.`question_id` = `question_standard_text`.`question_id`"
-    . " WHERE `question`.`quiz_id` = ? AND `question`.`question_type` = 'STANDARD';";
+    . " WHERE `question`.`quiz_id` = ? AND `question`.`question_type` = 'STANDARD' AND `question`.`user_id` = ?;";
     if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("i", $parent_quiz->quiz_id);
+      $stmt->bind_param("ii", $parent_quiz->quiz_id, $user_id);
       if($stmt->execute()) {
         $stmt->bind_result($question_id, $sort_id, $extra_credit, $canvas, $text);
         while($stmt->fetch()) {
           $result['status'] = true;
-          $res = array();
-          $res['sort_id'] = $sort_id;
-          $res['question'] = new self($parent_quiz);
-          $res['question']->question_id = $question_id;
-          $res['question']->extra_credit = $extra_credit ? true : false;
-          $res['question']->canvas = $canvas ? true : false;
-          $res['question']->text = $text;
-          array_push($result['result'], $res);          
+          $new_question = new self($parent_quiz);
+          $new_question->question_id = $question_id;
+          $new_question->extra_credit = $extra_credit ? true : false;
+          $new_question->canvas = $canvas ? true : false;
+          $new_question->text = $text;
+          array_push($result['result'], $new_question);          
         }
         $stmt->close();
         foreach($result['result'] as &$question) {
-          $question['question']->fetch_answers_from_mysql($mysqli, $transaction);
+          $question->fetch_answers_from_mysql($mysqli, $user_id);
         }
       } else {
         $result['error'] = $mysqli->error;
@@ -145,15 +135,10 @@ class PolyQuestion_Standard extends PolyQuestion {
     } else {
       $result['stmt_error'] = $mysqli->error;
     }
-    if($transaction) {
-      if(!$mysqli->commit()) {
-        $result['commit_error'] = $mysqli->error;
-      }
-    }
     return $result;
   }
-  public function save($mysqli) {
-    PolyQuestion::save($mysqli);
+  public function save($mysqli, $user_id) {
+    PolyQuestion::save($mysqli, $user_id);
 
   }
 }
