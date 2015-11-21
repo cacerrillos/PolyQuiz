@@ -147,7 +147,7 @@
 						this.fire('firetoast', { message: "Invalid Username And/Or Password!"});
 					}
 				} else {
-					this.fire('firetoast', { message: "Failed To Login! Server Encountered an Error!"});
+					this.fire('firetoast', { message: "Failed To Login! Server Encountered an Error! [ " + details.detail.response['status_details'] + " ]"});
 				}
 
 				this.$.loginSpinner.active = false;
