@@ -35,8 +35,18 @@
 <dom-module id="polyquiz-page-quiz-edit">
   <link rel="import" href="../../bower_components/Sortable/Sortable.html">
   <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+  <link rel="import" href="../../bower_components/ctech-dialogs/ctech-dialogs.html">
+  <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+  <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+  <link rel="import" href="../../bower_components/tinymce-decorator/tinymce-decorator.html">
+  <script src="../../bower_components/tinymce-equation-editor/build/js/plugin.min.js"></script>
   <template>
     <style>
+      :host {
+        --paper-tooltip: {
+          font-size: 16px;
+        };
+      }
       .no-select {
         max-height: 24px;
         -webkit-touch-callout: none;
@@ -87,6 +97,31 @@
         background-color: var(--primary-background-color);
         opacity: 0.5;
       }
+      .new-question-fab {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+      }
+      tinymce-decorator {
+        margin-bottom: 20px;
+        display: block;
+      }
+      tinymce-decorator:last-child {
+        margin-bottom: 0px;
+      }
+      ctech-confirm-dialog.new-question-dialog {
+        --ctech-confirm-dialog: {
+          min-width: 50%;
+        };
+      }
+      paper-toggle-button {
+        margin-bottom: 20px;
+        display: block;
+      }
+      paper-toggle-button:last-child {
+        margin-bottom: 0px;
+      }
+
     </style>
     <iron-ajax id="quizData" url="../../api/1.1/quizzes" handle-as="json" on-response="_onQuizDataUpdate"></iron-ajax>
     <div class="container">
@@ -127,6 +162,22 @@
         </template>
       </sortable-js>
     </div>
+    <ctech-confirm-dialog id="newQuestionDialog" class="new-question-dialog" on-ctech-dialog-confirm="_doNewQuestion" on-ctech-dialog-dismiss="_doNewQuestionDismiss">
+      <iron-ajax
+         id="questionAjax"
+         url="../../api/1.1/questions"
+         handle-as="json"
+         on-response="_newQuestionAjaxResponse"></iron-ajax>
+      <h2>New Question</h2>
+      <div class="layout vertical">
+        <paper-input label="Question Text"></paper-input>
+        <tinymce-decorator id="newQuestionText" content_css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"><textarea id="questionText"></textarea></tinymce-decorator>
+        <paper-toggle-button id="extraCredit">Extra Credit</paper-toggle-button>
+        <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
+      </div>
+    </ctech-confirm-dialog>
+    <paper-fab id="newQuestionFab" class="new-question-fab" icon="icons:add" on-click="_openNewQuetionDialog"></paper-fab>
+    <paper-tooltip for="newQuestionFab" position="top">New Question</paper-tooltip>
   </template>
   <script>
     Polymer({
@@ -139,7 +190,43 @@
         quiz: {
           type: Object,
           observer: 'questionChanged'
+        },
+        newQuestionSelected: {
+          type: Number,
+          value: 0,
+          readonly: true
+        },
+        tinyMCEToolbar: {
+          type: Array,
+          value: ['undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | equationeditor'],
+          readonly: true
+        },
+        tinyMCEPlugins: {
+          type: String,
+          value: 'autolink link lists charmap spellchecker searchreplace wordcount fullscreen table contextmenu paste textcolor equationeditor',
+          readonly: true
         }
+      },
+      _doNewQuestion: function(e) {
+        console.log(this.$.questionText.value);
+        var text = this.$.questionText.value;
+        var extraCredit = this.$.extraCredit.checked;
+        var useCanvas = this.$.useCanvas.checked;
+        var type = "STANDARD";
+        //questions
+        this.$.questionAjax.method = "POST";
+        this.$.questionAjax.body = JSON.stringify({'type': type, 'text': text, 'extra_credit': extraCredit, 'use_canvas': useCanvas});
+        this.$.questionAjax.generateRequest();
+      },
+      _newQuestionAjaxResponse: function(e) {
+        console.log(e);
+      },
+      _doNewQuestionDismiss: function(e) {
+        this.$.newQuestionText.element.value = "";
+        tinyMCE.get('questionText').setContent('');
+      },
+      _openNewQuetionDialog: function(e) {
+        this.$.newQuestionDialog.open();
       },
       _computeAnswerSelectableGroup: function(question) {
         return question.question_id + "_answers";
@@ -246,10 +333,13 @@
           }
         }
       },
+      _onPageResized: function() {
+        this.$.newQuestionDialog.notifyResize();
+      },
       ready: function() {
         var mainapp = document.querySelector("#mainapp");
         var parentSelector = this.parentNode;
-
+        document.addEventListener('polyquiz-resize', this._onPageResized());
         parentSelector.addEventListener('iron-select', this._onPageSelected(parentSelector, mainapp).bind(this));
         /*
         this.$.sortableQuestions.group = {
