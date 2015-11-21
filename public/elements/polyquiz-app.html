@@ -258,7 +258,9 @@
 			closeLoginOverlay: function() {
 				this.$.loginoverlay.close();
 			},
-
+			_onResize: function() {
+				this.fire('polyquiz-resize');
+			},
 			ready: function() {
 				this.$.mainPanel.responsiveWidth = "768px";
 				this.polyQuizPages = polyQuizPages;

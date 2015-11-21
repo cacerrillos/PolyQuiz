@@ -64,6 +64,9 @@ skel.on("change", function() {
 <script src="bower_components/page/page.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/autofill-event/src/autofill-event.js"></script>
+<script src="bower_components/tinymce/tinymce.min.js"></script>
+<script src="bower_components/tinymce-equation-editor/build/js/mathquill.min.js"></script>
+<script src="bower_components/tinymce-equation-editor/build/js/plugin.min.js"></script>
 <link rel="import" href="elements/polyquiz-app.html">
 
 <style is="custom-style">
@@ -140,12 +143,16 @@ function findPolyQuizPage(hash) {
 }
 </script>
 </head>
-<body>
+<body onresize="onResize()">
 	<polyquiz-app id="mainapp"></polyquiz-app>
 </body>
 </html>
 <script>
 var mainapp = document.querySelector("#mainapp");
+
+function onResize() {
+	mainapp._onResize();
+}
 
 page('/', function(ctx, next) {
 	page.redirect('/home');
