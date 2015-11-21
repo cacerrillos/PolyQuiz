@@ -35,6 +35,7 @@
     "ctech-dropdown-selector": "~1",
     "ctech-menubar-selector": "~1",
     "ctech-dialogs": "~1",
-    "Sortable": "angular-ng-sortablejs#~1.4.2"
+    "Sortable": "angular-ng-sortablejs#~1.4.2",
+    "tinymce-equation-editor": "~1"
   }
 }
