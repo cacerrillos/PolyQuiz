@@ -27,6 +27,10 @@ include('poly_quiz.php');
 
 include('poly_quiz_api.php');
 
+include('poly_question.php');
+
+include('poly_question_api.php');
+
 include('poly_answer.php');
 
 include('poly_answer_api.php');

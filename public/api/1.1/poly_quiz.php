@@ -112,7 +112,6 @@ class PolyQuiz {
   }
 }
 
-include('poly_question.php');
 
 
 if(isset($_GET['test'])) {
