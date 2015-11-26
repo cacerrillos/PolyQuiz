@@ -38,7 +38,7 @@
   <link rel="import" href="../../bower_components/ctech-dialogs/ctech-dialogs.html">
   <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
   <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
-  <link rel="import" href="../../bower_components/tinymce-decorator/tinymce-decorator.html">
+  <link rel="import" href="../../bower_components/ctech-tinymce/ctech-tinymce.html">
   <script src="../../bower_components/tinymce-equation-editor/build/js/plugin.min.js"></script>
   <template>
     <style>
@@ -102,11 +102,11 @@
         right: 24px;
         bottom: 24px;
       }
-      tinymce-decorator {
+      ctech-tinymce {
         margin-bottom: 20px;
         display: block;
       }
-      tinymce-decorator:last-child {
+      ctech-tinymce:last-child {
         margin-bottom: 0px;
       }
       ctech-confirm-dialog.new-question-dialog {
@@ -170,7 +170,7 @@
          on-response="_newQuestionAjaxResponse"></iron-ajax>
       <h2>New Question</h2>
       <div class="layout vertical">
-        <tinymce-decorator id="newQuestionText" content_css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"><textarea id="questionText"></textarea></tinymce-decorator>
+        <ctech-tinymce id="newQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
         <paper-toggle-button id="extraCredit">Extra Credit</paper-toggle-button>
         <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
       </div>
@@ -207,8 +207,8 @@
         }
       },
       _doNewQuestion: function(e) {
-        console.log(this.$.questionText.value);
-        var text = this.$.questionText.value;
+        console.log(this.$.newQuestionText.value);
+        var text = this.$.newQuestionText.value;
         var extraCredit = this.$.extraCredit.checked;
         var useCanvas = this.$.useCanvas.checked;
         var type = "STANDARD";
@@ -221,8 +221,7 @@
         console.log(e);
       },
       _doNewQuestionDismiss: function(e) {
-        this.$.newQuestionText.element.value = "";
-        tinyMCE.get('questionText').setContent('');
+        this.$.newQuestionText.value = "";
       },
       _openNewQuetionDialog: function(e) {
         this.$.newQuestionDialog.open();

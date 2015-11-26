@@ -28,6 +28,7 @@
     "neon-elements": "PolymerElements/neon-elements#~1",
     "tinymce": "~4",
     "tinymce-decorator": "*",
+    "ctech-tinymce": "~1",
     "page": "page.js#~1",
     "gold-elements": "PolymerElements/gold-elements#~1",
     "autofill-event": "~1",
