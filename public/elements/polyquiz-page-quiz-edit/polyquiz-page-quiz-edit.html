@@ -170,7 +170,6 @@
          on-response="_newQuestionAjaxResponse"></iron-ajax>
       <h2>New Question</h2>
       <div class="layout vertical">
-        <paper-input label="Question Text"></paper-input>
         <tinymce-decorator id="newQuestionText" content_css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"><textarea id="questionText"></textarea></tinymce-decorator>
         <paper-toggle-button id="extraCredit">Extra Credit</paper-toggle-button>
         <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
@@ -215,7 +214,7 @@
         var type = "STANDARD";
         //questions
         this.$.questionAjax.method = "POST";
-        this.$.questionAjax.body = JSON.stringify({'type': type, 'text': text, 'extra_credit': extraCredit, 'use_canvas': useCanvas});
+        this.$.questionAjax.body = JSON.stringify({'type': type, 'quiz_id': this.quiz.quiz_id, 'text': text, 'extra_credit': extraCredit, 'canvas': useCanvas});
         this.$.questionAjax.generateRequest();
       },
       _newQuestionAjaxResponse: function(e) {
