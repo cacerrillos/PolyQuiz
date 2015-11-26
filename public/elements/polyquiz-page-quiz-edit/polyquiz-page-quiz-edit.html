@@ -79,14 +79,19 @@
         right: 8px;
         bottom: -28px;
       }
+      .right-edge-edit {
+        position: absolute;
+        right: 80px;
+        bottom: -28px;
+      }
       .right-edge-mini {
         position: absolute;
         right: 8px;
         bottom: -20px;
       }
-      .right-edge-mini {
+      .right-edge-edit-mini {
         position: absolute;
-        right: 8px;
+        right: 60px;
         bottom: -20px;
       }
       .inner-handle {
@@ -132,35 +137,44 @@
           </paper-material>
         </div>
       </div>
-      <sortable-js handle=".handle" draggable=".questiondiv" ghost-class="ghost-select">
-        <template is="dom-repeat" items="{{quiz.questions}}" as="question" on-dom-change="_questionTemplateDomChanged">
+      <!--<sortable-js handle=".handle" draggable=".questiondiv" ghost-class="ghost-select">-->
+        <template is="dom-repeat" items="{{_objectArrayToArray(quiz.questions)}}" as="question" on-dom-change="_questionTemplateDomChanged">
           <div class="layout horizontal questiondiv">
-            <paper-material class="no-select">
+            <!--<paper-material class="no-select">
               <iron-icon class="handle" icon="icons:reorder"></iron-icon>
-            </paper-material>
+            </paper-material>-->
 
             <paper-material class="flex layout vertical fab-padding">
+              <div class="right-edge-edit not-large">
+                <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;"></paper-fab>
+                <paper-tooltip position="top">Edit Question</paper-tooltip>
+              </div>
               <div class="right-edge not-large">
-                <paper-fab icon="icons:add"></paper-fab>
+                <paper-fab icon="icons:add" on-click="_addAnswerDialog"></paper-fab>
                 <paper-tooltip position="top">Add Answer</paper-tooltip>
               </div>
+
+              <div class="right-edge-edit-mini only-large">
+                <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;" mini></paper-fab>
+                <paper-tooltip position="top">Edit Question</paper-tooltip>
+              </div>
               <div class="right-edge-mini only-large">
-                <paper-fab icon="icons:add" mini></paper-fab>
+                <paper-fab icon="icons:add" on-click="_addAnswerDialog" mini></paper-fab>
                 <paper-tooltip position="top">Add Answer</paper-tooltip>
               </div>
               <div>[[question.text]]</div>
-              <sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">
+              <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
                 <template is="dom-repeat" items="{{_objectArrayToArray(question.answers)}}" as="answer">
                   <paper-item class="layout horizontal answer-item" data-id$="[[answer.answer_id]]">
-                    <iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>[<div>[[answer.answer_id]]</div>] <div>[[answer.sort_id]]</div>) <div>[[answer.text]]</div>
+                    <!--<iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>-->[<div>[[answer.answer_id]]</div>] <div>[[answer.sort_id]]</div>) <div>[[answer.text]]</div>
                   </paper-item>
                 </template>
-              </sortable-js>
+              <!--</sortable-js>-->
             </paper-material>
           </div>
           
         </template>
-      </sortable-js>
+      <!--</sortable-js>-->
     </div>
     <ctech-confirm-dialog id="newQuestionDialog" class="new-question-dialog" on-ctech-dialog-confirm="_doNewQuestion" on-ctech-dialog-dismiss="_doNewQuestionDismiss">
       <iron-ajax
@@ -174,6 +188,15 @@
         <paper-toggle-button id="extraCredit">Extra Credit</paper-toggle-button>
         <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
       </div>
+    </ctech-confirm-dialog>
+    <ctech-confirm-dialog id="editQuestionDialog" on-ctech-dialog-confirm="_doEditQuestion" on-ctech-dialog-dismiss="_doEditQuestionDismiss">
+      <h2>Edit Question</h2>
+      <ctech-tinymce id="editQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]" value="{{editQuestion.text}}"></ctech-tinymce>
+    </ctech-confirm-dialog>
+    <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss">
+      <h2>Add New Answer</h2>
+      For: <b>[[newAnswerQuestion.text]]</b>
+      <ctech-tinymce id="newAnswerText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
     </ctech-confirm-dialog>
     <paper-fab id="newQuestionFab" class="new-question-fab" icon="icons:add" on-click="_openNewQuetionDialog"></paper-fab>
     <paper-tooltip for="newQuestionFab" position="top">New Question</paper-tooltip>
@@ -204,7 +227,37 @@
           type: String,
           value: 'autolink link lists charmap spellchecker searchreplace wordcount fullscreen table contextmenu paste textcolor equationeditor',
           readonly: true
+        },
+        newAnswerQuestion: {
+          type: Object,
+          readonly: true
+        },
+        editQuestion: {
+          type: Object,
+          readonly: true
         }
+      },
+      _editQuestionDialog: function(e) {
+        this.editQuestion = this.quiz.questions[e.model.get('question.question_id')];
+        this.$.editQuestionDialog.open();
+      },
+      _doEditQuestion: function(e) {
+
+      },
+      _doEditQuestionDismiss: function(e) {
+        this.$.editQuestion = null;
+      },
+      _addAnswerDialog: function(e) {
+        this.newAnswerQuestion = this.quiz.questions[e.model.get('question.question_id')];
+        this.$.newAnswerDialog.open();
+      },
+      _doNewAnswer: function(e) {
+
+        this._doNewAnswerDismiss();
+      },
+      _doNewAnswerDismiss: function(e) {
+        this.$.newAnswerText.value = "";
+        this.newAnswerQuestion = null;
       },
       _doNewQuestion: function(e) {
         console.log(this.$.newQuestionText.value);
