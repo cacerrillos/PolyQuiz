@@ -242,6 +242,7 @@
         }
       },
       _editQuestionDialog: function(e) {
+        this.$.editQuestionText.editor.undoManager.clear();
         this.editQuestion = this.quiz.questions[e.model.get('question.question_id')];
         this.$.editQuestionDialog.open();
       },
