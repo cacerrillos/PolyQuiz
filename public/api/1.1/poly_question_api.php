@@ -1,4 +1,22 @@
 <?
+
+$app->get('/questions', function() {
+  global $mysqli;
+  if(isset($_GET['question_id']) && isset($_GET['quiz_id'])) {
+    //give error
+    echo json_encode(false, JSON_PRETTY_PRINT);
+  } else if(isset($_GET['question_id'])) {
+    echo json_encode(PolyQuestionFactory::get($mysqli, intval($_GET['question_id']), $_SESSION['dbext']), JSON_PRETTY_PRINT);
+  } else if(isset($_GET['quiz_id'])) {
+    echo json_encode(PolyQuestionFactory::get_by_quiz($mysqli, intval($_GET['quiz_id']), $_SESSION['dbext']), JSON_PRETTY_PRINT);
+  }
+});
+
+$app->get('/questions/:questionid', function($questionid) {
+  global $mysqli;
+  echo json_encode(PolyQuestionFactory::get($mysqli, intval($questionid), $_SESSION['dbext']), JSON_PRETTY_PRINT);
+});
+
 $app->post('/questions', function() {
   global $_POST_JSON, $mysqli;
   $quiz = PolyQuiz::from_mysql($mysqli, $_POST_JSON['quiz_id'], $_SESSION['dbext']);
