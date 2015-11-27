@@ -19,9 +19,10 @@ $app->get('/questions/:questionid', function($questionid) {
 
 $app->post('/questions', function() {
   global $_POST_JSON, $mysqli;
+  $question = false;
   $quiz = PolyQuiz::from_mysql($mysqli, $_POST_JSON['quiz_id'], $_SESSION['dbext']);
   if($_POST_JSON['type'] == "STANDARD") {
-    $question = new PolyQuestion_Standard($quiz['result']);
+    $question = PolyQuestionFactory::create($mysqli, $_POST_JSON['quiz_id'], "STANDARD", $_SESSION['dbext']);
     $question->text = $_POST_JSON['text'];
     $question->extra_credit = $_POST_JSON['extra_credit'];
     $question->canvas = $_POST_JSON['canvas'];
