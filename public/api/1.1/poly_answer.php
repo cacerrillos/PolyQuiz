@@ -1,10 +1,49 @@
 <?php
 class PolyAnswerFactory {
   public static function get($mysqli, $answer_id, $user_id) {
-
+    $to_return = false;
+    if($stmt = $mysqli->prepare("SELECT `answer_type` FROM `answer` WHERE `answer_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $answer_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($answer_type_r);
+        $stmt->fetch();
+        $type = $answer_type_r;
+        $stmt->close();
+        switch ($type) {
+          case "STANDARD":
+            $to_return = new PolyAnswer_Standard($answer_id);
+            $to_return->fetch($mysqli, $user_id);
+            break;
+          case "STANDARD_SMART":
+            $to_return = new PolyAnswer_Standard_Smart($answer_id);
+            $to_return->fetch($mysqli, $user_id);
+            break;
+          default:
+            break;
+        }
+      } else {
+        echo $mysqli->error;
+      }
+    }
+    return $to_return;
   }
   public static function get_by_question($mysqli, $question_id, $user_id) {
-
+    $to_return = array();
+    $to_fetch = array();
+    if($stmt = $mysqli->prepare("SELECT `answer_id` FROM `answer` WHERE `question_id` = ? AND `user_id` = ?;")) {
+      $stmt->bind_param("ii", $question_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($answer_id_r);
+        while($stmt->fetch()) {
+          array_push($to_fetch, $answer_id_r);
+        }
+        $stmt->close();
+        foreach($to_fetch as &$x) {
+          $to_return[$x] = PolyAnswerFactory::get($mysqli, $x, $user_id);
+        }
+      }
+    }
+    return $to_return;
   }
 }
 class PolyAnswer {
