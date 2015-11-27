@@ -180,7 +180,7 @@
         </template>
       <!--</sortable-js>-->
     </div>
-    <ctech-confirm-dialog id="newQuestionDialog" class="new-question-dialog" on-ctech-dialog-confirm="_doNewQuestion" on-ctech-dialog-dismiss="_doNewQuestionDismiss">
+    <ctech-confirm-dialog id="newQuestionDialog" class="new-question-dialog" on-ctech-dialog-confirm="_doNewQuestion" on-ctech-dialog-dismiss="_doNewQuestionDismiss" modal>
       <iron-ajax
          id="questionAjax"
          url="../../api/1.1/questions"
@@ -193,11 +193,11 @@
         <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
       </div>
     </ctech-confirm-dialog>
-    <ctech-confirm-dialog id="editQuestionDialog" on-ctech-dialog-confirm="_doEditQuestion" on-ctech-dialog-dismiss="_doEditQuestionDismiss">
+    <ctech-confirm-dialog id="editQuestionDialog" on-ctech-dialog-confirm="_doEditQuestion" on-ctech-dialog-dismiss="_doEditQuestionDismiss" modal>
       <h2>Edit Question</h2>
       <ctech-tinymce id="editQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]" value="{{editQuestion.text}}"></ctech-tinymce>
     </ctech-confirm-dialog>
-    <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss">
+    <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss" modal>
       <h2>Add New Answer</h2>
       For: <polyquiz-html-content value="[[newAnswerQuestion.text]]"></polyquiz-html-content>
       <ctech-tinymce id="newAnswerText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
