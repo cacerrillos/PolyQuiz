@@ -3,9 +3,9 @@ class PolyAnswer {
   public $answer_id;
   public $type; //STANDARD, STANDARD_SMART
   public $sort_id = 0;
-  protected $parent_question;
-  public function __construct($parent_question){
-    $this->parent_question = $parent_question;
+  public $question_id;
+  public function __construct($answer_id){
+    $this->answer_id = $answer_id;
   }
   public function toJSON(){
     return json_encode($this, JSON_PRETTY_PRINT);
@@ -43,8 +43,8 @@ class PolyAnswer {
 class PolyAnswer_Standard extends PolyAnswer {
   public $text = "";
   public $points = 0;
-  public function __construct($parent_question) {
-    $this->parent_question = $parent_question;
+  public function __construct($answer_id) {
+    $this->answer_id = $answer_id;
     $this->type = "STANDARD";
   }
   public function getText() {
@@ -66,7 +66,7 @@ class PolyAnswer_Standard extends PolyAnswer {
       $stmt->close();
     }
   }
-  public static function all_from_mysql($mysqli, $parent_question, $user_id) {
+  public static function all_from_mysql($mysqli, $question_id, $user_id) {
     $result = array();
     $result['status'] = false;
     $result['result'] = array();
@@ -75,12 +75,12 @@ class PolyAnswer_Standard extends PolyAnswer {
     . " LEFT JOIN `answer_standard_text` ON `answer_standard`.`answer_id` = `answer_standard_text`.`answer_id`"
     . " WHERE `answer`.`question_id` = ? AND `answer`.`answer_type` = 'STANDARD' AND `answer`.`user_id` = ?;";
     if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("ii", $parent_question->question_id, $user_id);
+      $stmt->bind_param("ii", $question_id, $user_id);
       if($stmt->execute()) {
         $stmt->bind_result($answer_id, $sort_id, $text);
         while($stmt->fetch()) {
           $result['status'] = true;
-          $new_answer = new self($parent_question);
+          $new_answer = new self($answer_id);
           $new_answer->answer_id = $answer_id;
           $new_answer->text = $text;
           $new_answer->sort_id = $sort_id;
@@ -101,8 +101,8 @@ class PolyAnswer_Standard extends PolyAnswer {
 class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
   public $include = array();
   public $exclude = array();
-  public function __construct($parent_question) {
-    $this->parent_question = $parent_question;
+  public function __construct($answer_id) {
+    $this->answer_id = $answer_id;
     $this->type = "STANDARD_SMART";
   }
   public function getText() {
@@ -180,19 +180,19 @@ class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
     PolyAnswer::from_mysql($mysqli, $answer_id, $user_id);
     $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
   }
-  public static function all_from_mysql($mysqli, $parent_question, $user_id) {
+  public static function all_from_mysql($mysqli, $question_id, $user_id) {
     $result = array();
     $result['status'] = false;
     $result['result'] = array();
     $query = "SELECT `answer`.`answer_id`, `answer`.`sort_id` FROM `answer`"
       . " WHERE `answer`.`question_id` = ? AND `answer`.`answer_type` = 'STANDARD_SMART' AND `answer`.`user_id` = ?";
     if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("ii", $parent_question->question_id, $user_id);
+      $stmt->bind_param("ii", $question_id, $user_id);
       if($stmt->execute()) {
         $stmt->bind_result($answer_id, $sort_id);
         while($stmt->fetch()) {
           $result['status'] = true;
-          $new_answer = new self($parent_question);
+          $new_answer = new self($answer_id);
           $new_answer->answer_id = $answer_id;
           $new_answer->sort_id = $sort_id;
           $result['result'][$answer_id] = $new_answer;
