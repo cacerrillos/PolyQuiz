@@ -53,4 +53,10 @@ $app->put('/questions/:questionid', function($questionid) {
   echo json_encode($res, JSON_PRETTY_PRINT);
 });
 
+$app->delete('/questions/:questionid', function($questionid) {
+  global $mysqli;
+  $result = PolyQuestionFactory::delete($mysqli, $questionid, $_SESSION['dbext']);
+  echo json_encode($result, JSON_PRETTY_PRINT);
+});
+
 ?>

@@ -96,6 +96,17 @@ class PolyQuestionFactory {
     }
     return $result;
   }
+  public static function delete($mysqli, $question_id, $user_id) {
+    $result = -1;
+    if($stmt = $mysqli->prepare("DELETE FROM `question` WHERE `question_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $question_id, $user_id);
+      if($stmt->execute()) {
+        $result = $mysqli->affected_rows;
+      }
+      $stmt->close();
+    }
+    return $result;
+  }
 }
 class PolyQuestion {
   public $question_id = null;
