@@ -1,4 +1,47 @@
 <?php
+class PolyQuestionFactory {
+  public static function get($mysqli, $question_id, $user_id) {
+    $to_return = false;
+    if($stmt = $mysqli->prepare("SELECT `question_type` FROM `question` WHERE `question_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $question_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($question_type_r);
+        $stmt->fetch();
+        $type = $question_type_r;
+        $stmt->close();
+        switch ($type) {
+          case "STANDARD":
+            $to_return = new PolyQuestion_Standard($question_id);
+            $to_return->fetch($mysqli, $user_id);
+            break;
+          default:
+            break;
+        }
+      } else {
+
+      }
+    }
+    return $to_return;
+  }
+  public static function get_by_quiz($mysqli, $quiz_id, $user_id) {
+    $to_return = array();
+    $to_fetch = array();
+    if($stmt = $mysqli->prepare("SELECT `question_id` FROM `question` WHERE `quiz_id` = ? AND `user_id` = ?;")) {
+      $stmt->bind_param("ii", $quiz_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($question_id_r);
+        while($stmt->fetch()) {
+          array_push($to_fetch, $question_id_r);
+        }
+        $stmt->close();
+        foreach($to_fetch as &$x) {
+          $to_return[$x] = PolyQuestionFactory::get($mysqli, $x, $user_id);
+        }
+      }
+    }
+    return $to_return;
+  }
+}
 class PolyQuestion {
   public $question_id = null;
   public $question_type;
