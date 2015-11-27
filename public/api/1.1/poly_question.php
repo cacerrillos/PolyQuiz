@@ -41,6 +41,61 @@ class PolyQuestionFactory {
     }
     return $to_return;
   }
+  static function _create_base_question($mysqli, $quiz_id, $question_type, $user_id) {
+    $result = false;
+    if($stmt = $mysqli->prepare("INSERT INTO `question` (`question_id`, `quiz_id`, `question_type`, `sort_id`, `user_id`) VALUES (NULL, ?, ?, ?, ?);")) {
+      $zero = 0;
+      $stmt->bind_param("isii", $quiz_id, $question_type, $zero, $user_id);
+      if($stmt->execute()) {
+        $result = $stmt->insert_id;
+      } else {
+
+      }
+      $stmt->close();
+    } else {
+
+    }
+    return $result;
+  }
+  public static function create($mysqli, $quiz_id, $question_type, $user_id) {
+    $result = false;
+    switch ($question_type) {
+      case "STANDARD":
+        $base_question_id = PolyQuestionFactory::_create_base_question($mysqli, $quiz_id, $question_type, $user_id);
+        if($base_question_id) {
+          if($stmt = $mysqli->prepare("INSERT INTO `question_standard` (`question_id`, `extra_credit`, `canvas`, `user_id`) VALUES (?, ?, ?, ?);")) {
+            $zero = 0;
+            $stmt->bind_param("iiii", $base_question_id, $zero, $zero, $user_id);
+            if($stmt->execute()) {
+              $stmt->close();
+              if($stmt = $mysqli->prepare("INSERT INTO `question_standard_text` (`question_id`, `text`, `user_id`) VALUES (?, ?, ?);")) {
+                $empty_string = "";
+                $stmt->bind_param("isi", $base_question_id, $empty_string, $user_id);
+                if($stmt->execute()) {
+                  $stmt->close();
+                  $result = PolyQuestionFactory::get($mysqli, $base_question_id, $user_id);
+                } else {
+                  $stmt->close();
+                }
+              }
+            } else {
+              $stmt->close();
+            }
+          }
+        }
+        break;
+      case "STANDARD_SMART":
+        $base_question_id = PolyQuestionFactory::_create_base_question($mysqli, $quiz_id, $question_type, $user_id);
+        if($base_question_id) {
+          
+        }
+        break;
+      default:
+        # code...
+        break;
+    }
+    return $result;
+  }
 }
 class PolyQuestion {
   public $question_id = null;
@@ -126,33 +181,16 @@ class PolyQuestion {
   public function save($mysqli, $user_id) {
     $response = array();
     $response['status'] = false;
-    if($question_id) {
-      if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? AND `question`.`user_id` = ? LIMIT 1;")) {
-        $stmt->bind_param("siiii", $this->question_type, $this->sort_id, $this->question_id, $this->quiz_id, $user_id);
-        if($stmt->execute()) {
-          $response['status'] = true;
-        } else {
-          $response['error'] = $mysqli->error;
-        }
-        $stmt->close();
+    if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? AND `question`.`user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("siiii", $this->question_type, $this->sort_id, $this->question_id, $this->quiz_id, $user_id);
+      if($stmt->execute()) {
+        $response['status'] = true;
       } else {
         $response['error'] = $mysqli->error;
       }
-      //save all answers
-      
+      $stmt->close();
     } else {
-      //doinsert
-      if($stmt = $mysqli->prepare("INSERT INTO `question` (`question_id`, `quiz_id`, `question_type`, `sort_id`, `user_id`) VALUES (NULL, ?, ?, ?, ?);")) {
-        $stmt->bind_param("isii", $this->quiz_id, $this->question_type, $this->sort_id, $user_id);
-        if($stmt->execute()) {
-          $response['status'] = true;
-          $this->question_id = $stmt->insert_id;
-        } else {
-          $response['error'] = $mysqli->error;
-        }
-      } else {
-        $response['error'] = $mysqli->error;
-      }
+      $response['error'] = $mysqli->error;
     }
     foreach($this->answers as &$answer) {
       echo gettype($answer);
@@ -190,6 +228,7 @@ class PolyQuestion_Standard extends PolyQuestion {
   }
   public function save($mysqli, $user_id) {
     PolyQuestion::save($mysqli, $user_id);
+
     $response = array();
     $response['status'] = false;
     $num_rows = 0;
@@ -217,27 +256,6 @@ class PolyQuestion_Standard extends PolyQuestion {
       }
     } else {
       $response['error'] = $mysqli->error;
-    }
-    if($num_rows == 0) {
-      ///do insert
-      if($stmt = $mysqli->prepare("INSERT INTO `question_standard` (`question_id`, `extra_credit`, `canvas`, `user_id`) VALUES (?, ?, ?, ?);")) {
-        $stmt->bind_param("iiii", $this->question_id, $this->extra_credit, $this->canvas, $user_id);
-        if($stmt->execute()) {
-          $stmt->close();
-          if($stmt = $mysqli->prepare("INSERT INTO `question_standard_text` (`question_id`, `text`, `user_id`) VALUES (?, ?, ?);")) {
-            $stmt->bind_param("isi", $this->question_id, $this->text, $user_id);
-            if($stmt->execute()) {
-              $response['status'] = true;
-            } else {
-              $response['error'] = $mysqli->error;
-            }
-            $stmt->close();
-          }
-        } else {
-          $stmt->close();
-          $response['error'] = $mysqli->error;
-        }
-      }
     }
     return $response;
   }
