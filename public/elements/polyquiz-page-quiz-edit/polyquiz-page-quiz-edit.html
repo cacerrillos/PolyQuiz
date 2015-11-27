@@ -215,7 +215,7 @@
         },
         quiz: {
           type: Object,
-          observer: 'questionChanged'
+          observer: '_onQuizChanged'
         },
         newQuestionSelected: {
           type: Number,
@@ -238,7 +238,7 @@
         },
         editQuestion: {
           type: Object,
-          readonly: true
+          observer: '_onEditQuestionChanged'
         }
       },
       _editQuestionDialog: function(e) {
@@ -293,9 +293,13 @@
       better: function(e) {
         e.model.set('question.text', "Even Deeez");
       },
-      questionChanged: function(e) {
+      _onQuizChanged: function(e) {
         console.log(e);
         console.log("CHANGED");
+      },
+      _onEditQuestionChanged: function(e) {
+        console.log("editQuestion Changed!");
+        console.log(e);
       },
       _sortAnswers: function(bla) {
         return function(a, b) {
