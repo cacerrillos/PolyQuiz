@@ -222,6 +222,10 @@ class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
     }
     return $result;
   }
+  public function fetch($mysqli, $user_id) {
+    PolyAnswer::fetch($mysqli, $user_id);
+    $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
+  }
   public function from_mysql($mysqli, $answer_id, $user_id) {
     PolyAnswer::from_mysql($mysqli, $answer_id, $user_id);
     $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
