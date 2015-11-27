@@ -5,9 +5,9 @@ class PolyQuestion {
   public $data = array();
   public $answers = array();
   public $sort_id = 0;
-  protected $parent_quiz;
-  public function __construct($parent_quiz) {
-    $this->parent_quiz = $parent_quiz;
+  public $quiz_id;
+  public function __construct($quiz_id) {
+    $this->quiz_id = $quiz_id;
   }
   public function addAnswer($answer) {
     $this->answers[$answer->answer_id] = $answer;
@@ -19,9 +19,6 @@ class PolyQuestion {
   }
   public function toJSON(){
     return json_encode($this, JSON_PRETTY_PRINT);
-  }
-  public function get_parent_quiz() {
-    return $this->parent_quiz;
   }
   function count_answers_by_type($answer_type) {
     $counter = 0;
@@ -78,7 +75,7 @@ class PolyQuestion {
     $response['status'] = false;
     if($question_id) {
       if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? AND `question`.`user_id` = ? LIMIT 1;")) {
-        $stmt->bind_param("siiii", $this->question_type, $this->parent_quiz->get_question_sort_id($this->question_id), $this->question_id, $this->parent_quiz->quiz_id, $user_id);
+        $stmt->bind_param("siiii", $this->question_type, $this->sort_id, $this->question_id, $this->quiz_id, $user_id);
         if($stmt->execute()) {
           $response['status'] = true;
         } else {
@@ -93,7 +90,7 @@ class PolyQuestion {
     } else {
       //doinsert
       if($stmt = $mysqli->prepare("INSERT INTO `question` (`question_id`, `quiz_id`, `question_type`, `sort_id`, `user_id`) VALUES (NULL, ?, ?, ?, ?);")) {
-        $stmt->bind_param("isii", $this->parent_quiz->quiz_id, $this->question_type, $this->sort_id, $user_id);
+        $stmt->bind_param("isii", $this->quiz_id, $this->question_type, $this->sort_id, $user_id);
         if($stmt->execute()) {
           $response['status'] = true;
           $this->question_id = $stmt->insert_id;
@@ -115,8 +112,8 @@ class PolyQuestion_Standard extends PolyQuestion {
   public $text = "";
   public $extra_credit = false;
   public $canvas = false;
-  public function __construct($parent_quiz) {
-    $this->parent_quiz = $parent_quiz;
+  public function __construct($quiz_id) {
+    $this->quiz_id = $quiz_id;
     $this->question_type = "STANDARD";
   }
   public static function all_from_mysql($mysqli, $parent_quiz, $user_id) {
@@ -128,12 +125,12 @@ class PolyQuestion_Standard extends PolyQuestion {
     . " LEFT JOIN `question_standard_text` ON `question_standard`.`question_id` = `question_standard_text`.`question_id`"
     . " WHERE `question`.`quiz_id` = ? AND `question`.`question_type` = 'STANDARD' AND `question`.`user_id` = ?;";
     if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("ii", $parent_quiz->quiz_id, $user_id);
+      $stmt->bind_param("ii", $quiz_id, $user_id);
       if($stmt->execute()) {
         $stmt->bind_result($question_id, $sort_id, $extra_credit, $canvas, $text);
         while($stmt->fetch()) {
           $result['status'] = true;
-          $new_question = new self($parent_quiz);
+          $new_question = new self($quiz_id);
           $new_question->question_id = $question_id;
           $new_question->extra_credit = $extra_credit ? true : false;
           $new_question->canvas = $canvas ? true : false;
