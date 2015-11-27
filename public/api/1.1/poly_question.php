@@ -186,8 +186,8 @@ class PolyQuestion_Standard extends PolyQuestion {
       if($stmt->execute()) {
         $stmt->bind_result($extra_credit_r, $canvas_r, $text_r);
         $stmt->fetch();
-        $this->extra_credit = $extra_credit_r;
-        $this->canvas = $canvas_r;
+        $this->extra_credit = $extra_credit_r ? true : false;
+        $this->canvas = $canvas_r ? true : false;
         $this->text = $text_r;
         $stmt->close();
       } else {
