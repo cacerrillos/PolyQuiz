@@ -69,18 +69,6 @@ class PolyAnswer {
       $stmt->close();
     }
   }
-  public function from_mysql($mysqli, $answer_id, $user_id) {
-    if($stmt = $mysqli->prepare("SELECT `answer_type`, `sort_id` FROM `answer` WHERE `answer_id` = ? AND `user_id` = ? LIMIT 1;")) {
-      $stmt->bind_param("ii", $answer_id, $user_id);
-      if($stmt->execute()) {
-        $stmt->bind_result($answer_type_r, $sort_id_r);
-        $stmt->fetch();
-        $this->answer_type = $answer_type_r;
-        $this->sort_id = $sort_id_r;
-      }
-      $stmt->close();
-    }
-  }
   public function save($mysqli, $user_id) {
     $response = array();
     $response['status'] = false;
@@ -117,22 +105,6 @@ class PolyAnswer_Standard extends PolyAnswer {
         LEFT JOIN `answer_standard_text` ON `answer_standard`.`answer_id` = `answer_standard_text`.`answer_id`
         WHERE `answer_standard`.`answer_id` = ? AND `answer_standard`.`user_id` = ? LIMIT 1;")) {
       $stmt->bind_param("ii", $this->answer_id, $user_id);
-      if($stmt->execute()) {
-        $stmt->bind_result($points_r, $text_r);
-        $stmt->fetch();
-        $this->points = $points_r;
-        $this->text = $text_r;
-      }
-      $stmt->close();
-    }
-  }
-  public function from_mysql($mysqli, $answer_id, $user_id) {
-    PolyAnswer::from_mysql($mysqli, $answer_id, $user_id);
-    if($stmt = $mysqli->prepare(
-      "SELECT `answer_standard`.`points` FROM `answer_standard` "
-      . " LEFT JOIN `answer_standard_text` ON `answer_standard`.`answer_id` = `answer_standard_text`.`answer_id` "
-      . " WHERE `answer_standard`.`answer_id` = ? LIMIT 1;")) {
-      $stmt->bind_param("i", $answer_id);
       if($stmt->execute()) {
         $stmt->bind_result($points_r, $text_r);
         $stmt->fetch();
@@ -224,10 +196,6 @@ class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
   }
   public function fetch($mysqli, $user_id) {
     PolyAnswer::fetch($mysqli, $user_id);
-    $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
-  }
-  public function from_mysql($mysqli, $answer_id, $user_id) {
-    PolyAnswer::from_mysql($mysqli, $answer_id, $user_id);
     $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
   }
 }
