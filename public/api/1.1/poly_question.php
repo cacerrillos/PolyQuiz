@@ -76,18 +76,34 @@ class PolyQuestion {
   public function save($mysqli, $user_id) {
     $response = array();
     $response['status'] = false;
-    if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? AND `question`.`user_id` = ? LIMIT 1;")) {
-      $stmt->bind_param("siiii", $this->question_type, $this->parent_quiz->get_question_sort_id($this->question_id), $this->question_id, $this->parent_quiz->quiz_id, $user_id);
-      if($stmt->execute()) {
-        $response['status'] = true;
+    if($question_id) {
+      if($stmt = $mysqli->prepare("UPDATE `question` SET `question_type` = ?, `sort_id` = ? WHERE `question`.`question_id` = ? AND `question`.`quiz_id` = ? AND `question`.`user_id` = ? LIMIT 1;")) {
+        $stmt->bind_param("siiii", $this->question_type, $this->parent_quiz->get_question_sort_id($this->question_id), $this->question_id, $this->parent_quiz->quiz_id, $user_id);
+        if($stmt->execute()) {
+          $response['status'] = true;
+        } else {
+          $response['error'] = $mysqli->error;
+        }
+        $stmt->close();
       } else {
         $response['error'] = $mysqli->error;
       }
-      $stmt->close();
+      //save all answers
+      
     } else {
-      $response['error'] = $mysqli->error;
+      //doinsert
+      if($stmt = $mysqli->prepare("INSERT INTO `question` (`question_id`, `quiz_id`, `question_type`, `sort_id`, `user_id`) VALUES (NULL, ?, ?, ?, ?);")) {
+        $stmt->bind_param("isii", $this->parent_quiz->quiz_id, $this->question_type, $this->sort_id, $user_id);
+        if($stmt->execute()) {
+          $response['status'] = true;
+          $this->question_id = $stmt->insert_id;
+        } else {
+          $response['error'] = $mysqli->error;
+        }
+      } else {
+        $response['error'] = $mysqli->error;
+      }
     }
-    //save all answers
     foreach($this->answers as &$answer) {
       echo gettype($answer);
       $answer->save($mysqli, $user_id);
@@ -140,7 +156,56 @@ class PolyQuestion_Standard extends PolyQuestion {
   }
   public function save($mysqli, $user_id) {
     PolyQuestion::save($mysqli, $user_id);
-
+    $response = array();
+    $response['status'] = false;
+    $num_rows = 0;
+    if($stmt = $mysqli->prepare("UPDATE `question_standard` SET `extra_credit` = ?, `canvas` = ? WHERE `question_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("iiii", $this->question_type, $this->canvas, $this->question_id, $user_id);
+      if($stmt->execute()) {
+        $response['status'] = true;
+      } else {
+        $response['error'] = $mysqli->error;
+      }
+      $stmt->close();
+      if($response['status']) {
+        if($stmt = $mysqli->prepare("UPDATE `question_standard_text` SET `text` = ? WHERE `question_id` = ? AND `user_id` = ? LIMIT 1;")) {
+          $stmt->bind_param("sii", $this->text, $this->question_id, $user_id);
+          if($stmt->execute()) {
+            $num_rows = $stmt->affected_rows;
+          } else {
+            $response['status'] = false;
+            $response['error'] = $mysqli->error;
+          }
+          $stmt->close();
+        } else {
+          $response['status'] = false;
+        }
+      }
+    } else {
+      $response['error'] = $mysqli->error;
+    }
+    if($num_rows == 0) {
+      ///do insert
+      if($stmt = $mysqli->prepare("INSERT INTO `question_standard` (`question_id`, `extra_credit`, `canvas`, `user_id`) VALUES (?, ?, ?, ?);")) {
+        $stmt->bind_param("iiii", $this->question_id, $this->extra_credit, $this->canvas, $user_id);
+        if($stmt->execute()) {
+          $stmt->close();
+          if($stmt = $mysqli->prepare("INSERT INTO `question_standard_text` (`question_id`, `text`, `user_id`) VALUES (?, ?, ?);")) {
+            $stmt->bind_param("isi", $this->question_id, $this->text, $user_id);
+            if($stmt->execute()) {
+              $response['status'] = true;
+            } else {
+              $response['error'] = $mysqli->error;
+            }
+            $stmt->close();
+          }
+        } else {
+          $stmt->close();
+          $response['error'] = $mysqli->error;
+        }
+      }
+    }
+    return $response;
   }
 }
 ?>
