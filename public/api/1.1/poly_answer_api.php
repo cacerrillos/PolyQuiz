@@ -2,6 +2,6 @@
 $app->get('/answers/:answerid', function($answerid) {
   global $mysqli;
   //$answer = PolyAnswer
-  echo "getting " . $answerid . " owned by " . $_SESSION['dbext'];
+  echo json_encode(PolyAnswerFactory::get($mysqli, $answerid, $_SESSION['dbext']), JSON_PRETTY_PRINT);
 });
 ?>
