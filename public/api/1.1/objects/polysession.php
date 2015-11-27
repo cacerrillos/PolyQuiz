@@ -116,7 +116,7 @@ class PolySession {
 		$toReturn['status'] = false;
 		if($this->owner == $owner){
 			if($this->inDB) {
-				if($stmt = $mysqli->prepare("UPDATE `session` SET `session_name`=?, `active`=?, `show_scores`=? WHERE `session_id` = ? AND `owner` = ? LIMIT 1;")){
+				if($stmt = $mysqli->prepare("UPDATE `session` SET `session_name`=?, `active`=?, `show_scores`=? WHERE `session_id` = ? AND `user_id` = ? LIMIT 1;")){
 					$stmt->bind_param("siisi",  $this->name, intval($this->active), intval($this->show_scores), $this->sessionid, $owner);
 					if($stmt->execute()) {
 						$toReturn['status'] = true;
