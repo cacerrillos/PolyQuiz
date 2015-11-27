@@ -1,4 +1,12 @@
 <?php
+class PolyAnswerFactory {
+  public static function get($mysqli, $answer_id, $user_id) {
+
+  }
+  public static function get_by_question($mysqli, $question_id, $user_id) {
+
+  }
+}
 class PolyAnswer {
   public $answer_id;
   public $type; //STANDARD, STANDARD_SMART
