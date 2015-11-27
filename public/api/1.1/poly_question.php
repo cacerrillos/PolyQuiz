@@ -195,41 +195,6 @@ class PolyQuestion_Standard extends PolyQuestion {
       }
     }
   }
-  public static function all_from_mysql($mysqli, $quiz_id, $user_id) {
-    $result = array();
-    $result['status'] = false;
-    $result['result'] = array();
-    $query = "SELECT `question`.`question_id`, `question`.`sort_id`, `question_standard`.`extra_credit`, `question_standard`.`canvas` , `question_standard_text`.`text`"
-    . " FROM `question` LEFT JOIN `question_standard` ON `question`.`question_id` = `question_standard`.`question_id`"
-    . " LEFT JOIN `question_standard_text` ON `question_standard`.`question_id` = `question_standard_text`.`question_id`"
-    . " WHERE `question`.`quiz_id` = ? AND `question`.`question_type` = 'STANDARD' AND `question`.`user_id` = ?;";
-    if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("ii", $quiz_id, $user_id);
-      if($stmt->execute()) {
-        $stmt->bind_result($question_id, $sort_id, $extra_credit, $canvas, $text);
-        while($stmt->fetch()) {
-          $result['status'] = true;
-          $new_question = new self($question_id);
-          $new_question->question_id = $question_id;
-          $new_question->extra_credit = $extra_credit ? true : false;
-          $new_question->canvas = $canvas ? true : false;
-          $new_question->text = $text;
-          //array_push($result['result'], $new_question);
-          $result['result'][$question_id] = $new_question;
-        }
-        $stmt->close();
-        foreach($result['result'] as &$question) {
-          $question->fetch_answers_from_mysql($mysqli, $user_id);
-        }
-      } else {
-        $result['error'] = $mysqli->error;
-        $stmt->close();
-      }
-    } else {
-      $result['stmt_error'] = $mysqli->error;
-    }
-    return $result;
-  }
   public function save($mysqli, $user_id) {
     PolyQuestion::save($mysqli, $user_id);
     $response = array();
