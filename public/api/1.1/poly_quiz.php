@@ -72,9 +72,9 @@ class PolyQuiz {
     return $result;
   }
   public function fetch_questions_from_mysql($mysqli, $user_id) {
-    $fetch_question_standard = PolyQuestion_Standard::all_from_mysql($mysqli, $this->quiz_id, $user_id);
-    if($fetch_question_standard['status']) {
-      $this->questions = $this->questions + $fetch_question_standard['result'];
+    $questions = PolyQuestionFactory::get_by_quiz($mysqli, $this->quiz_id, $user_id);
+    if($questions) {
+      $this->questions = $this->questions + $questions;
     }
   }
   public static function create($mysqli, $quiz_name, $user_id) {
