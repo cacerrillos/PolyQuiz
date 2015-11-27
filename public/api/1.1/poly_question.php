@@ -48,9 +48,9 @@ class PolyQuestion {
   public $data = array();
   public $answers = array();
   public $sort_id = 0;
-  public $quiz_id;
-  public function __construct($quiz_id) {
-    $this->quiz_id = $quiz_id;
+  public $quiz_id = null;
+  public function __construct($question_id) {
+    $this->question_id = $question_id;
   }
   public function addAnswer($answer) {
     $this->answers[$answer->answer_id] = $answer;
@@ -155,11 +155,11 @@ class PolyQuestion_Standard extends PolyQuestion {
   public $text = "";
   public $extra_credit = false;
   public $canvas = false;
-  public function __construct($quiz_id) {
-    $this->quiz_id = $quiz_id;
+  public function __construct($question_id) {
     $this->question_type = "STANDARD";
+    $this->question_id = $question_id;
   }
-  public static function all_from_mysql($mysqli, $parent_quiz, $user_id) {
+  public static function all_from_mysql($mysqli, $quiz_id, $user_id) {
     $result = array();
     $result['status'] = false;
     $result['result'] = array();
@@ -173,7 +173,7 @@ class PolyQuestion_Standard extends PolyQuestion {
         $stmt->bind_result($question_id, $sort_id, $extra_credit, $canvas, $text);
         while($stmt->fetch()) {
           $result['status'] = true;
-          $new_question = new self($quiz_id);
+          $new_question = new self($question_id);
           $new_question->question_id = $question_id;
           $new_question->extra_credit = $extra_credit ? true : false;
           $new_question->canvas = $canvas ? true : false;
