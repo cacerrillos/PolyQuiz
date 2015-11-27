@@ -113,7 +113,7 @@ class PolyAnswer_Standard extends PolyAnswer {
     PolyAnswer::fetch($mysqli, $user_id);
 
     if($stmt = $mysqli->prepare(
-      "SELECT `answer_standard`.`points` FROM `answer_standard`
+      "SELECT `answer_standard`.`points`, `answer_standard_text`.`text` FROM `answer_standard`
         LEFT JOIN `answer_standard_text` ON `answer_standard`.`answer_id` = `answer_standard_text`.`answer_id`
         WHERE `answer_standard`.`answer_id` = ? AND `answer_standard`.`user_id` = ? LIMIT 1;")) {
       $stmt->bind_param("ii", $this->answer_id, $user_id);
