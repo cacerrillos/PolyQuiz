@@ -45,7 +45,6 @@ class PolyQuestionFactory {
 class PolyQuestion {
   public $question_id = null;
   public $question_type;
-  public $data = array();
   public $answers = array();
   public $sort_id = 0;
   public $quiz_id = null;
