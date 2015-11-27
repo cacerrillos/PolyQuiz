@@ -103,36 +103,6 @@ class PolyAnswer_Standard extends PolyAnswer {
       $stmt->close();
     }
   }
-  public static function all_from_mysql($mysqli, $question_id, $user_id) {
-    $result = array();
-    $result['status'] = false;
-    $result['result'] = array();
-    $query = "SELECT `answer`.`answer_id`, `answer`.`sort_id`, `answer_standard_text`.`text`"
-    . " FROM `answer` LEFT JOIN `answer_standard` ON `answer`.`answer_id` = `answer_standard`.`answer_id`"
-    . " LEFT JOIN `answer_standard_text` ON `answer_standard`.`answer_id` = `answer_standard_text`.`answer_id`"
-    . " WHERE `answer`.`question_id` = ? AND `answer`.`answer_type` = 'STANDARD' AND `answer`.`user_id` = ?;";
-    if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("ii", $question_id, $user_id);
-      if($stmt->execute()) {
-        $stmt->bind_result($answer_id, $sort_id, $text);
-        while($stmt->fetch()) {
-          $result['status'] = true;
-          $new_answer = new self($answer_id);
-          $new_answer->answer_id = $answer_id;
-          $new_answer->text = $text;
-          $new_answer->sort_id = $sort_id;
-          $result['result'][$answer_id] = $new_answer;
-        }
-        $stmt->close();
-      } else {
-        $result['error'] = $mysqli->error;
-        $stmt->close();
-      }
-    } else {
-      $result['stmt_error'] = $mysqli->error;
-    }
-    return $result;
-  }
 }
 
 class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
@@ -216,36 +186,6 @@ class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
   public function from_mysql($mysqli, $answer_id, $user_id) {
     PolyAnswer::from_mysql($mysqli, $answer_id, $user_id);
     $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
-  }
-  public static function all_from_mysql($mysqli, $question_id, $user_id) {
-    $result = array();
-    $result['status'] = false;
-    $result['result'] = array();
-    $query = "SELECT `answer`.`answer_id`, `answer`.`sort_id` FROM `answer`"
-      . " WHERE `answer`.`question_id` = ? AND `answer`.`answer_type` = 'STANDARD_SMART' AND `answer`.`user_id` = ?";
-    if($stmt = $mysqli->prepare($query)) {
-      $stmt->bind_param("ii", $question_id, $user_id);
-      if($stmt->execute()) {
-        $stmt->bind_result($answer_id, $sort_id);
-        while($stmt->fetch()) {
-          $result['status'] = true;
-          $new_answer = new self($answer_id);
-          $new_answer->answer_id = $answer_id;
-          $new_answer->sort_id = $sort_id;
-          $result['result'][$answer_id] = $new_answer;
-        }
-        $stmt->close();
-        foreach($result['result'] as &$ans) {
-          $ans['answer']->fetch_include_exclude_from_mysql($mysqli);
-        }
-      } else {
-        $result['error'] = $mysqli->error;
-        $stmt->close();
-      }
-    } else {
-      $result['stmt_error'] = $mysqli->error;
-    }
-    return $result;
   }
 }
 ?>
