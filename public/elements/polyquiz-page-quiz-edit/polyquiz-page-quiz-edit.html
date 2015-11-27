@@ -39,6 +39,7 @@
   <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
   <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
   <link rel="import" href="../../bower_components/ctech-tinymce/ctech-tinymce.html">
+  <link rel="import" href="../polyquiz-html-content.html">
   <script src="../../bower_components/tinymce-equation-editor/build/js/plugin.min.js"></script>
   <template>
     <style>
@@ -165,7 +166,7 @@
                 <paper-fab icon="icons:add" on-click="_addAnswerDialog" mini></paper-fab>
                 <paper-tooltip position="top">Add Answer</paper-tooltip>
               </div>
-              <div>[[question.text]]</div>
+              <polyquiz-html-content value="[[question.text]]"></polyquiz-html-content>
               <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
                 <template is="dom-repeat" items="{{_objectArrayToArray(question.answers)}}" as="answer">
                   <paper-item class="layout horizontal answer-item" data-id$="[[answer.answer_id]]">
@@ -198,7 +199,7 @@
     </ctech-confirm-dialog>
     <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss">
       <h2>Add New Answer</h2>
-      For: <b>[[newAnswerQuestion.text]]</b>
+      For: <polyquiz-html-content value="[[newAnswerQuestion.text]]"></polyquiz-html-content>
       <ctech-tinymce id="newAnswerText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
     </ctech-confirm-dialog>
     <paper-fab id="newQuestionFab" class="new-question-fab" icon="icons:add" on-click="_openNewQuetionDialog"></paper-fab>
