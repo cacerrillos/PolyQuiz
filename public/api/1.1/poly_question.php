@@ -122,7 +122,8 @@ class PolyQuestion_Standard extends PolyQuestion {
           $new_question->extra_credit = $extra_credit ? true : false;
           $new_question->canvas = $canvas ? true : false;
           $new_question->text = $text;
-          array_push($result['result'], $new_question);          
+          //array_push($result['result'], $new_question);
+          $result['result'][$question_id] = $new_question;
         }
         $stmt->close();
         foreach($result['result'] as &$question) {
