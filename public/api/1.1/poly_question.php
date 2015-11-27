@@ -72,6 +72,23 @@ class PolyQuestion {
     }
     return $counter;
   }
+  public function fetch($mysqli, $user_id) {
+    if($stmt = $mysqli->prepare("SELECT `question_type`, `sort_id`, `quiz_id` FROM `question` WHERE `question_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $this->question_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($question_type_r, $sort_id_r, $quiz_id_r);
+        $stmt->fetch();
+        $this->question_type = $question_type_r;
+        $this->sort_id = $sort_id_r;
+        $this->quiz_id = $quiz_id_r;
+        $stmt->close();
+
+        $this->fetch_answers_from_mysql($mysqli, $user_id);
+      } else {
+        $stmt->close();
+      }
+    }
+  }
   public function fetch_answers_from_mysql($mysqli, $user_id) {
     $fetch_answer_standard = PolyAnswer_Standard::all_from_mysql($mysqli, $this, $user_id);
     if($fetch_answer_standard['status']) {
@@ -158,6 +175,25 @@ class PolyQuestion_Standard extends PolyQuestion {
   public function __construct($question_id) {
     $this->question_type = "STANDARD";
     $this->question_id = $question_id;
+  }
+  public function fetch($mysqli, $user_id) {
+    PolyQuestion::fetch($mysqli, $user_id);
+
+    if($stmt = $mysqli->prepare("SELECT `question_standard`.`extra_credit`, `question_standard`.`canvas`, `question_standard_text`.`text` FROM `question_standard`
+       LEFT JOIN `question_standard_text` ON `question_standard`.`question_id` = `question_standard_text`.`question_id`
+       WHERE `question_standard`.`question_id` = ? AND `question_standard`.`user_id` = ?;")) {
+      $stmt->bind_param("ii", $this->question_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($extra_credit_r, $canvas_r, $text_r);
+        $stmt->fetch();
+        $this->extra_credit = $extra_credit_r;
+        $this->canvas = $canvas_r;
+        $this->text = $text_r;
+        $stmt->close();
+      } else {
+        $stmt->close();
+      }
+    }
   }
   public static function all_from_mysql($mysqli, $quiz_id, $user_id) {
     $result = array();
