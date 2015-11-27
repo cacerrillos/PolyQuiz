@@ -13,6 +13,11 @@ $app->get('/quizzes/:quizid', function($quizid) {
   get_quiz($mysqli, $quizid, $_SESSION['dbext'], isset($_GET['all_data']));
 });
 
+$app->get('/quizzes/:quizid/questions', function($quizid) {
+  global $mysqli;
+  echo json_encode(PolyQuestionFactory::get_by_quiz($mysqli, intval($quizid), $_SESSION['dbext']), JSON_PRETTY_PRINT);
+});
+
 function get_quiz($mysqli, $quiz_id, $user_id, $all_data) {
   echo json_encode(PolyQuiz::from_mysql($mysqli, $quiz_id, $user_id, $all_data), JSON_PRETTY_PRINT);
 }
