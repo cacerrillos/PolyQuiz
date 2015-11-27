@@ -89,15 +89,9 @@ class PolyQuestion {
     }
   }
   public function fetch_answers_from_mysql($mysqli, $user_id) {
-    $fetch_answer_standard = PolyAnswer_Standard::all_from_mysql($mysqli, $this->question_id, $user_id);
-    if($fetch_answer_standard['status']) {
-      //$this->answers = array_merge($this->answers, $fetch_answer_standard['result']);
-      $this->answers = $this->answers + $fetch_answer_standard['result'];
-    }
-    $fetch_answer_standard_smart = PolyAnswer_Standard_Smart::all_from_mysql($mysqli, $this->question_id, $user_id);
-    if($fetch_answer_standard_smart['status']) {
-      //$this->answers = array_merge($this->answers, $fetch_answer_standard_smart['result']);
-      $this->answers = $this->answers + $fetch_answer_standard_smart['result'];
+    $answers = PolyAnswerFactory::get_by_question($mysqli, $this->question_id, $user_id);
+    if($answers) {
+      $this->answers = $this->answers + $answers;
     }
     $do_sort = false;
     foreach($this->answers as &$answer) {
