@@ -74,7 +74,9 @@ class PolyQuiz {
   public function fetch_questions_from_mysql($mysqli, $user_id) {
     $questions = PolyQuestionFactory::get_by_quiz($mysqli, $this->quiz_id, $user_id);
     if($questions) {
-      $this->questions = $this->questions + $questions;
+      //$this->questions = $this->questions + $questions;
+      $this->questions = array_merge($this->questions, $questions);
+      //array_push($this->questions, $questions);
     }
   }
   public static function create($mysqli, $quiz_name, $user_id) {

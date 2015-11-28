@@ -142,7 +142,7 @@
         </div>
       </div>
       <!--<sortable-js handle=".handle" draggable=".questiondiv" ghost-class="ghost-select">-->
-        <template is="dom-repeat" items="{{_objectArrayToArray(quiz.questions)}}" as="question" on-dom-change="_questionTemplateDomChanged">
+        <template id="mainTemplate" is="dom-repeat" items="{{quiz.questions}}" as="question" on-dom-change="_questionTemplateDomChanged">
           <div class="layout horizontal questiondiv">
             <!--<paper-material class="no-select">
               <iron-icon class="handle" icon="icons:reorder"></iron-icon>
@@ -168,7 +168,7 @@
               </div>
               <polyquiz-html-content value="[[question.text]]"></polyquiz-html-content>
               <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
-                <template is="dom-repeat" items="{{_objectArrayToArray(question.answers)}}" as="answer">
+                <template is="dom-repeat" items="{{question.answers}}" as="answer">
                   <paper-item class="layout horizontal answer-item" data-id$="[[answer.answer_id]]">
                     <!--<iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>-->[<div>[[answer.answer_id]]</div>] <div>[[answer.sort_id]]</div>) <div>[[answer.text]]</div>
                   </paper-item>
@@ -196,6 +196,8 @@
     <ctech-confirm-dialog id="editQuestionDialog" on-ctech-dialog-confirm="_doEditQuestion" on-ctech-dialog-dismiss="_doEditQuestionDismiss" modal>
       <h2>Edit Question</h2>
       <ctech-tinymce id="editQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]" value="{{editQuestion.text}}"></ctech-tinymce>
+      <paper-toggle-button id="editExtraCredit" checked="{{editQuestion.extra_credit}}">Extra Credit</paper-toggle-button>
+      <paper-toggle-button id="editUseCanvas" checked="{{editQuestion.canvas}}">Canvas</paper-toggle-button>
     </ctech-confirm-dialog>
     <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss" modal>
       <h2>Add New Answer</h2>
@@ -206,6 +208,13 @@
     <paper-tooltip for="newQuestionFab" position="top">New Question</paper-tooltip>
   </template>
   <script>
+    function findWithAttr(array, attr, value) {
+      for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+          return i;
+        }
+      }
+    }
     Polymer({
       is: 'polyquiz-page-quiz-edit',
       properties: {
@@ -241,19 +250,40 @@
           observer: '_onEditQuestionChanged'
         }
       },
+      _getQuestionById: function(id) {
+        var arr = this.quiz.questions.filter(function(o) { return o.question_id == id; });
+        if(arr.length == 1) {
+          return arr[0];
+        } else {
+          return null;
+        }
+      },
+      _getAnswerById: function(id) {
+        var arr = this.question.answers.filter(function(o){ return o.answer_id == id; });
+        if(arr.length == 1) {
+          return arr[0];
+        }
+        return null;
+      },
       _editQuestionDialog: function(e) {
         this.$.editQuestionText.editor.undoManager.clear();
-        this.editQuestion = this.quiz.questions[e.model.get('question.question_id')];
+        this.editQuestion = this._getQuestionById(e.model.get('question.question_id'));
+        //this.editQuestion = this.quiz.questions[e.model.get('question.question_id')];
         this.$.editQuestionDialog.open();
       },
       _doEditQuestion: function(e) {
+        console.log(this.editQuestion);
 
+        this.quiz.questions[findWithAttr(this.quiz.questions, 'question_id', this.editQuestion.question_id)] = this.editQuestion;
+
+        this.$.mainTemplate.render();
       },
       _doEditQuestionDismiss: function(e) {
         this.$.editQuestion = null;
       },
       _addAnswerDialog: function(e) {
-        this.newAnswerQuestion = this.quiz.questions[e.model.get('question.question_id')];
+        this.newAnswerQuestion = this._getQuestionById(e.model.get('question.question_id'));
+        //this.newAnswerQuestion = this.quiz.questions[e.model.get('question.question_id')];
         this.$.newAnswerDialog.open();
       },
       _doNewAnswer: function(e) {
@@ -341,13 +371,6 @@
       _objectArrayToArray: function(arr) {
         return $.map(arr, function(value, index) { return [value]; });
       },
-      _getAnswerById: function(id) {
-        var r = this.question.answers.filter(function(o){ return o.answer_id == id; });
-        if(r.length > 0) {
-          return r[0];
-        }
-        return null;
-      },
       _logStore: function(e) {
 
       },
@@ -364,6 +387,8 @@
       _onQuizDataUpdate: function(e) {
         if(e.detail.response.status) {
           this.quiz = e.detail.response.result;
+          this.newAnswerQuestion = null;
+          this.editQuestion = null;
           console.log(this.quiz);
         }
       },

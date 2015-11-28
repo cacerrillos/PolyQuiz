@@ -39,7 +39,10 @@ class PolyAnswerFactory {
         }
         $stmt->close();
         foreach($to_fetch as &$x) {
-          $to_return[$x] = PolyAnswerFactory::get($mysqli, $x, $user_id);
+          //$to_return[$x] = PolyAnswerFactory::get($mysqli, $x, $user_id);
+          $this_answer = PolyAnswerFactory::get($mysqli, $x, $user_id);
+          $this_answer->question_id = $question_id;
+          array_push($to_return, $this_answer);
         }
       }
     }

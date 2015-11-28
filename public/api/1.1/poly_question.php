@@ -35,7 +35,8 @@ class PolyQuestionFactory {
         }
         $stmt->close();
         foreach($to_fetch as &$x) {
-          $to_return[$x] = PolyQuestionFactory::get($mysqli, $x, $user_id);
+          //$to_return[$x] = PolyQuestionFactory::get($mysqli, $x, $user_id);
+          array_push($to_return, PolyQuestionFactory::get($mysqli, $x, $user_id));
         }
       }
     }
@@ -157,6 +158,7 @@ class PolyQuestion {
   public function fetch_answers_from_mysql($mysqli, $user_id) {
     $answers = PolyAnswerFactory::get_by_question($mysqli, $this->question_id, $user_id);
     if($answers) {
+      //array_push($this->answers, $answers);
       $this->answers = $this->answers + $answers;
     }
     $do_sort = false;
@@ -204,7 +206,6 @@ class PolyQuestion {
       $response['error'] = $mysqli->error;
     }
     foreach($this->answers as &$answer) {
-      echo gettype($answer);
       $answer->save($mysqli, $user_id);
     }
     return $response;
