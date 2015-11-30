@@ -245,7 +245,7 @@ class PolyQuestion_Standard extends PolyQuestion {
     $response['status'] = false;
     $num_rows = 0;
     if($stmt = $mysqli->prepare("UPDATE `question_standard` SET `extra_credit` = ?, `canvas` = ? WHERE `question_id` = ? AND `user_id` = ? LIMIT 1;")) {
-      $stmt->bind_param("iiii", $this->question_type, $this->canvas, $this->question_id, $user_id);
+      $stmt->bind_param("iiii", $this->extra_credit, $this->canvas, $this->question_id, $user_id);
       if($stmt->execute()) {
         $response['status'] = true;
       } else {
