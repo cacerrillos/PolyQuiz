@@ -31,6 +31,26 @@ $app->post('/questions', function() {
   echo json_encode($res, JSON_PRETTY_PRINT);
 });
 
+$app->put('/questions', function() {
+  global $_POST_JSON, $mysqli;
+  if(isset($_GET['question_id'])) {
+    $question = PolyQuestionFactory::get($mysqli, $_GET['question_id'], $_SESSION['dbext']);
+    if($question) {
+      if(isset($_POST_JSON['text'])) {
+        $question->text = $_POST_JSON['text'];
+      }
+      if(isset($_POST_JSON['extra_credit'])) {
+        $question->extra_credit = $_POST_JSON['extra_credit'];
+      }
+      if(isset($_POST_JSON['canvas'])) {
+        $question->canvas = $_POST_JSON['canvas'];
+      }
+      $res = $question->save($mysqli, $_SESSION['dbext']);
+    }
+  }
+  echo json_encode($question, JSON_PRETTY_PRINT);
+});
+
 $app->put('/questions/:questionid', function($questionid) {
   global $_POST_JSON, $mysqli;
 
