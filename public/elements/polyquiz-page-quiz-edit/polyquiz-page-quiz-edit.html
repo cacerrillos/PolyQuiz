@@ -88,6 +88,11 @@
         right: 80px;
         bottom: -28px;
       }
+      .right-edge-delete {
+        position: absolute;
+        right: 152px;
+        bottom: -28px;
+      }
       .right-edge-mini {
         position: absolute;
         right: 8px;
@@ -96,6 +101,11 @@
       .right-edge-edit-mini {
         position: absolute;
         right: 60px;
+        bottom: -20px;
+      }
+      .right-edge-delete-mini {
+        position: absolute;
+        right: 112px;
         bottom: -20px;
       }
       .inner-handle {
@@ -149,6 +159,10 @@
             </paper-material>-->
 
             <paper-material class="flex layout vertical fab-padding">
+              <div class="right-edge-delete not-large">
+                <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;"></paper-fab>
+                <paper-tooltip position="top">Delete Question</paper-tooltip>
+              </div>
               <div class="right-edge-edit not-large">
                 <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;"></paper-fab>
                 <paper-tooltip position="top">Edit Question</paper-tooltip>
@@ -158,6 +172,10 @@
                 <paper-tooltip position="top">Add Answer</paper-tooltip>
               </div>
 
+              <div class="right-edge-delete-mini only-large">
+                <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;" mini></paper-fab>
+                <paper-tooltip position="top">Delete Question</paper-tooltip>
+              </div>
               <div class="right-edge-edit-mini only-large">
                 <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;" mini></paper-fab>
                 <paper-tooltip position="top">Edit Question</paper-tooltip>
@@ -180,6 +198,7 @@
         </template>
       <!--</sortable-js>-->
     </div>
+
     <ctech-confirm-dialog id="newQuestionDialog" class="new-question-dialog" on-ctech-dialog-confirm="_doNewQuestion" on-ctech-dialog-dismiss="_doNewQuestionDismiss" modal>
       <iron-ajax
          id="questionAjax"
@@ -193,12 +212,31 @@
         <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
       </div>
     </ctech-confirm-dialog>
+
     <ctech-confirm-dialog id="editQuestionDialog" on-ctech-dialog-confirm="_doEditQuestion" on-ctech-dialog-dismiss="_doEditQuestionDismiss" modal>
+      <iron-ajax
+         id="editQuestionAjax"
+         url="../../api/1.1/questions"
+         method="PUT"
+         handle-as="json"
+         on-response="_editQuestionAjaxResponse"></iron-ajax>
       <h2>Edit Question</h2>
       <ctech-tinymce id="editQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]" value="{{editQuestion.text}}"></ctech-tinymce>
       <paper-toggle-button id="editExtraCredit" checked="{{editQuestion.extra_credit}}">Extra Credit</paper-toggle-button>
       <paper-toggle-button id="editUseCanvas" checked="{{editQuestion.canvas}}">Canvas</paper-toggle-button>
     </ctech-confirm-dialog>
+
+    <ctech-confirm-dialog id="deleteQuestionDialog" on-ctech-dialog-confirm="_doDeleteQuestion" valid-color="#c62828" modal>
+      <iron-ajax
+         id="deleteQuestionAjax"
+         url="../../api/1.1/questions"
+         method="DELETE"
+         handle-as="json"
+         on-response="_deleteQuestionAjaxResponse"></iron-ajax>
+      <h2>Delete Question</h2>
+      <polyquiz-html-content value="[[deleteQuestion.text]]"></polyquiz-html-content>
+    </ctech-confirm-dialog>
+
     <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss" modal>
       <h2>Add New Answer</h2>
       For: <polyquiz-html-content value="[[newAnswerQuestion.text]]"></polyquiz-html-content>
@@ -248,7 +286,26 @@
         editQuestion: {
           type: Object,
           observer: '_onEditQuestionChanged'
+        },
+        deleteQuestion: {
+          type: Object
         }
+      },
+      _deleteQuestionAjaxResponse: function(e) {
+        console.log(e);
+        this._reloadAllData();
+      },
+      _doDeleteQuestion: function(e) {
+        this.$.deleteQuestionAjax.params = { question_id: this.deleteQuestion.question_id };
+        this.$.deleteQuestionAjax.generateRequest();
+      },
+      _deleteQuestionDialog: function(e) {
+        this.deleteQuestion = this._getQuestionById(e.model.get('question.question_id'));
+        this.$.deleteQuestionDialog.open();
+      },
+      _editQuestionAjaxResponse: function(e) {
+        console.log(e);
+        this._reloadAllData();
       },
       _getQuestionById: function(id) {
         var arr = this.quiz.questions.filter(function(o) { return o.question_id == id; });
@@ -273,6 +330,14 @@
       },
       _doEditQuestion: function(e) {
         console.log(this.editQuestion);
+        
+        this.$.editQuestionAjax.params = { question_id: this.editQuestion.question_id };
+
+        console.log(this.editQuestion.extra_credit);
+
+        this.$.editQuestionAjax.body = JSON.stringify({ 'text': this.editQuestion.text, 'extra_credit': this.editQuestion.extra_credit, 'canvas': this.editQuestion.canvas });
+
+        this.$.editQuestionAjax.generateRequest();
 
         this.quiz.questions[findWithAttr(this.quiz.questions, 'question_id', this.editQuestion.question_id)] = this.editQuestion;
 
