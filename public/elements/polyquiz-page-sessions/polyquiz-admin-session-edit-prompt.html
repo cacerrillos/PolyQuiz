@@ -5,7 +5,7 @@
 	</style>
 
 	<template>
-		<iron-ajax id="editAjax" url="../../api/1.0/sessions/edit.php" handle-as="json" on-response="onEditResp"></iron-ajax>
+		<iron-ajax method="PUT" id="editAjax" url="../../api/1.1/sessions" handle-as="json" on-response="onEditResp"></iron-ajax>
 
 		<polyquiz-dialog id="mainDialog" on-confirm="_onConfirm" on-dismiss="_onDismiss" confirm-text="Edit">
 			<h2>Edit Session</h2>
@@ -22,9 +22,9 @@
 		},
 		_onConfirm: function() {
 			this.$.editAjax.params = {
-				uuid: this.sessiondata.sessionid,
-				name: this.$.sessionNameEdit.value
+				id: this.sessiondata.sessionid
 			};
+			this.$.editAjax.body = JSON.stringify({'name': this.$.sessionNameEdit.value });
 			this.$.editAjax.generateRequest();
 		},
 		_onDismiss: function(e) {
