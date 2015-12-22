@@ -33,6 +33,23 @@ $app->post('/quizzes', function() {
   }
 });
 
+$app->put('/quizzes', function() {
+  global $mysqli, $_POST_JSON;
+  $result = null;
+  if(isAdmin()) {
+    if(isset($_GET['quiz_id'])) {
+      if(isset($_POST_JSON['quiz_name'])) {
+        $quiz = PolyQuiz::from_mysql($mysqli, $_GET['quiz_id'], $_SESSION['dbext'], false);
+        if($quiz['status']) {
+          $quiz['result']->quiz_name = $_POST_JSON['quiz_name'];
+          $result = $quiz['result']->save($mysqli, $_SESSION['dbext']);
+        }
+      }
+    }
+  }
+  echo json_encode($result, JSON_PRETTY_PRINT);
+});
+
 $app->delete('/quizzes/:quizid', function($quizid) {
   global $mysqli;
   if(isAdmin()) {

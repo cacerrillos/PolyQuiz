@@ -19,6 +19,19 @@ class PolyQuiz {
   public function get_question_sort_id($question_id) {
     return $questions[$question_id]['sort_id'];
   }
+  public function save($mysqli, $user_id) {
+    $result = false;
+    if($stmt = $mysqli->prepare("UPDATE `quiz` SET `quiz_name` = ? WHERE `quiz`.`quiz_id` = ? AND `quiz`.`user_id` = ?;")) {
+      $stmt->bind_param("sii", $this->quiz_name, $this->quiz_id, $user_id);
+      if($stmt->execute()) {
+        if($stmt->affected_rows == 1) {
+          $result = true;
+        }
+      }
+      $stmt->close();
+    }
+    return $result;
+  }
   public static function all_from_mysql($mysqli, $user_id, $fetch_all_data = false) {
     $result = array();
     $result['status'] = false;
