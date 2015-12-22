@@ -151,6 +151,15 @@
           this.$.fabs.hidden = true;
         }
       },
+      _addAnswerDialog: function(e) {
+        this.fire('do-add-answer', { question_id: this.question.question_id });
+      },
+      _editQuestionDialog: function(e) {
+        this.fire('do-edit-question', { question_id: this.question.question_id });
+      },
+      _deleteQuestionDialog: function(e) {
+        this.fire('do-delete-question', { question_id: this.question.question_id });
+      },
       _toggleCollapse: function(e) {
         this.$.collapse.toggle();
       },
@@ -390,6 +399,11 @@
           value: 0
         }
       },
+      listeners: {
+        'do-edit-question': '_editQuestionDialog',
+        'do-delete-question': '_deleteQuestionDialog',
+        'do-add-answer': '_addAnswerDialog'
+      },
       _toggleCollapse: function(e) {
         if(this.currentQuestion != e.model.get('question.question_id')) {
           this.currentQuestion = e.model.get('question.question_id');
@@ -404,7 +418,7 @@
         this.$.deleteQuestionAjax.generateRequest();
       },
       _deleteQuestionDialog: function(e) {
-        this.deleteQuestion = this._getQuestionById(e.model.get('question.question_id'));
+        this.deleteQuestion = this._getQuestionById(e.detail.question_id);
         this.$.deleteQuestionDialog.open();
       },
       _editQuestionAjaxResponse: function(e) {
@@ -428,7 +442,7 @@
       },
       _editQuestionDialog: function(e) {
         this.$.editQuestionText.editor.undoManager.clear();
-        this.editQuestion = this._getQuestionById(e.model.get('question.question_id'));
+        this.editQuestion = this._getQuestionById(e.detail.question_id);
         //this.editQuestion = this.quiz.questions[e.model.get('question.question_id')];
         this.$.editQuestionDialog.open();
       },
@@ -451,7 +465,7 @@
         this.$.editQuestion = null;
       },
       _addAnswerDialog: function(e) {
-        this.newAnswerQuestion = this._getQuestionById(e.model.get('question.question_id'));
+        this.newAnswerQuestion = this._getQuestionById(e.detail.question_id);
         //this.newAnswerQuestion = this.quiz.questions[e.model.get('question.question_id')];
         this.$.newAnswerDialog.open();
       },
