@@ -38,6 +38,9 @@
           type: Object
         }
       },
+      _doRenameQuiz: function(e) {
+        this.fire('do-renmae-quiz', { quiz: this.quiz });
+      },
       _doManageQuiz: function(e) {
         page('/quiz/' + this.quiz.quiz_id);
       },
@@ -72,14 +75,19 @@
       handle-as="json"
       on-response="_doQuizRefresh">
       </iron-ajax>
-    <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz" valid-color="#c62828" modal>
-      <h2>Delete Quiz</h2>
-      Quiz Name: <b>[[quizToDelete.quiz_name]]</b>
-    </ctech-confirm-dialog>
     <ctech-confirm-dialog id="createDialog" on-ctech-dialog-confirm="_doCreateQuiz" valid-color="#8BC34A" modal>
       <h2>New Quiz</h2>
       <paper-input label="Quiz Name" value="{{newQuizName}}" on-input="_validateCreateForm"></paper-input>
     </ctech-confirm-dialog>
+    <ctech-confirm-dialog id="editDialog" on-ctech-dialog-confirm="_doEditQuiz" valid-color="#4285f4" modal>
+      <h2>Edit Quiz</h2>
+      <paper-input label="Quiz Name" value="{{editQuiz.quiz_name}}" on-input="_validateEditForm"></paper-input>
+    </ctech-confirm-dialog>
+    <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz" valid-color="#c62828" modal>
+      <h2>Delete Quiz</h2>
+      Quiz Name: <b>[[quizToDelete.quiz_name]]</b>
+    </ctech-confirm-dialog>
+    
     <div class="container">
       <div class="row">
       
@@ -108,10 +116,14 @@
         newQuizName: {
           type: String,
           value: ""
+        },
+        editQuiz: {
+          type: Object
         }
       },
       listeners : {
-        'do-delete-quiz': '_showDeleteDialog'
+        'do-delete-quiz': '_showDeleteDialog',
+        'do-renmae-quiz': '_showRenameDialog'
       },
       _doDeleteQuiz: function(e) {
         console.log(e);
@@ -132,15 +144,29 @@
       _validateCreateForm: function(e) {
         this.$.createDialog.invalid = this.newQuizName.length > 0 ? false : true;
       },
+      _validateEditForm: function(e) {
+        this.$.editDialog.invalid = this.editQuiz.quiz_name.length > 0 ? false : true;
+      },
       _doCreateQuiz: function(e) {
         this.$.quizManageAjax.method = "POST";
         this.$.quizManageAjax.body = JSON.stringify({ "quiz_name": this.newQuizName });
+        this.$.quizManageAjax.generateRequest();
+      },
+      _doEditQuiz: function(e) {
+        this.$.quizManageAjax.method = "PUT";
+        this.$.quizManageAjax.params = { quiz_id: this.editQuiz.quiz_id };
+        this.$.quizManageAjax.body = JSON.stringify({ "quiz_name": this.editQuiz.quiz_name });
         this.$.quizManageAjax.generateRequest();
       },
       _showCreateDialog: function(e) {
         this.newQuizName = "";
         this.$.createDialog.open();
         this._validateCreateForm();
+      },
+      _showRenameDialog: function(e) {
+        this.editQuiz = e.detail.quiz;
+        this.$.editDialog.open();
+        this._validateEditForm();
       },
       _showDeleteDialog: function(e) {
         this.quizToDelete = this.quizData[e.detail.quiz_id];
