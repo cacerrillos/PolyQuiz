@@ -48,6 +48,17 @@ class PolyAnswerFactory {
     }
     return $to_return;
   }
+  public static function delete($mysqli, $answer_id, $user_id) {
+    $result = -1;
+    if($stmt = $mysqli->prepare("DELETE FROM `answer` WHERE `answer_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $answer_id, $user_id);
+      if($stmt->execute()) {
+        $result = $mysqli->affected_rows;
+      }
+      $stmt->close();
+    }
+    return $result;
+  }
 }
 class PolyAnswer {
   public $answer_id;
