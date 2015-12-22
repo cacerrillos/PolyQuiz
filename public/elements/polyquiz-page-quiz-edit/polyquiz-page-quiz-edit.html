@@ -32,6 +32,134 @@
     });
   </script>
 </dom-module>
+<dom-module id="polyquiz-question-edit">
+  <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-material {
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+      }
+      .fab-padding {
+        padding-right: 72px;
+        min-height: 64px;
+        margin-bottom: 32px;
+      }
+      .fab-padding {
+        padding-right: 72px;
+        min-height: 64px;
+        margin-bottom: 32px;
+      }
+      .right-edge {
+        position: absolute;
+        right: 8px;
+        bottom: -28px;
+      }
+      .right-edge-edit {
+        position: absolute;
+        right: 80px;
+        bottom: -28px;
+      }
+      .right-edge-delete {
+        position: absolute;
+        right: 152px;
+        bottom: -28px;
+      }
+      .right-edge-mini {
+        position: absolute;
+        right: 8px;
+        bottom: -20px;
+      }
+      .right-edge-edit-mini {
+        position: absolute;
+        right: 60px;
+        bottom: -20px;
+      }
+      .right-edge-delete-mini {
+        position: absolute;
+        right: 112px;
+        bottom: -20px;
+      }
+    </style>
+    <paper-material class="flex layout vertical fab-padding">
+      <polyquiz-html-content value="[[question.text]]" id="qPreview"></polyquiz-html-content>
+      <iron-collapse id="collapse" style="overflow: hidden;">
+        <div id="fabs">
+          <div class="right-edge-delete not-large">
+            <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;"></paper-fab>
+            <paper-tooltip position="top">Delete Question</paper-tooltip>
+          </div>
+          <div class="right-edge-edit not-large">
+            <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;"></paper-fab>
+            <paper-tooltip position="top">Edit Question</paper-tooltip>
+          </div>
+          <div class="right-edge not-large">
+            <paper-fab icon="icons:add" on-click="_addAnswerDialog"></paper-fab>
+            <paper-tooltip position="top">Add Answer</paper-tooltip>
+          </div>
+          <div class="right-edge-delete-mini only-large">
+            <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;" mini></paper-fab>
+            <paper-tooltip position="top">Delete Question</paper-tooltip>
+          </div>
+          <div class="right-edge-edit-mini only-large">
+            <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;" mini></paper-fab>
+            <paper-tooltip position="top">Edit Question</paper-tooltip>
+          </div>
+          <div class="right-edge-mini only-large">
+            <paper-fab icon="icons:add" on-click="_addAnswerDialog" mini></paper-fab>
+            <paper-tooltip position="top">Add Answer</paper-tooltip>
+          </div>
+        </div>
+
+        <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
+          <template is="dom-repeat" items="{{question.answers}}" as="answer">
+            <paper-item class="layout horizontal answer-item" data-id$="[[answer.answer_id]]">
+              <!--<iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>-->[<div>[[answer.answer_id]]</div>] <div>[[answer.sort_id]]</div>) <div>[[answer.text]]</div>
+            </paper-item>
+          </template>
+        <!--</sortable-js>-->
+      </iron-collapse>
+      
+      
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-question-edit',
+      properties: {
+        question: {
+          type: Object
+        },
+        currentQuestion: {
+          type: Number,
+          observer: '_currentQuestionChanged'
+        }
+      },
+      _currentQuestionChanged: function(e) {
+        if(this.question.question_id == e) {
+          this.$.collapse.show();
+          this.$.fabs.hidden = false;
+        } else {
+          this.$.collapse.hide();
+          this.$.fabs.hidden = true;
+        }
+      },
+      _toggleCollapse: function(e) {
+        this.$.collapse.toggle();
+      },
+      show: function() {
+        this.$.collapse.show();
+      },
+      hide: function() {
+        this.$.collapse.hide();
+      }
+    });
+  </script>
+</dom-module>
 <dom-module id="polyquiz-page-quiz-edit">
   <link rel="import" href="../../bower_components/Sortable/Sortable.html">
   <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
@@ -76,7 +204,6 @@
         padding-right: 72px;
         min-height: 64px;
         margin-bottom: 32px;
-
       }
       .right-edge {
         position: absolute;
@@ -157,42 +284,7 @@
             <!--<paper-material class="no-select">
               <iron-icon class="handle" icon="icons:reorder"></iron-icon>
             </paper-material>-->
-
-            <paper-material class="flex layout vertical fab-padding">
-              <div class="right-edge-delete not-large">
-                <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;"></paper-fab>
-                <paper-tooltip position="top">Delete Question</paper-tooltip>
-              </div>
-              <div class="right-edge-edit not-large">
-                <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;"></paper-fab>
-                <paper-tooltip position="top">Edit Question</paper-tooltip>
-              </div>
-              <div class="right-edge not-large">
-                <paper-fab icon="icons:add" on-click="_addAnswerDialog"></paper-fab>
-                <paper-tooltip position="top">Add Answer</paper-tooltip>
-              </div>
-
-              <div class="right-edge-delete-mini only-large">
-                <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;" mini></paper-fab>
-                <paper-tooltip position="top">Delete Question</paper-tooltip>
-              </div>
-              <div class="right-edge-edit-mini only-large">
-                <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;" mini></paper-fab>
-                <paper-tooltip position="top">Edit Question</paper-tooltip>
-              </div>
-              <div class="right-edge-mini only-large">
-                <paper-fab icon="icons:add" on-click="_addAnswerDialog" mini></paper-fab>
-                <paper-tooltip position="top">Add Answer</paper-tooltip>
-              </div>
-              <polyquiz-html-content value="[[question.text]]"></polyquiz-html-content>
-              <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
-                <template is="dom-repeat" items="{{question.answers}}" as="answer">
-                  <paper-item class="layout horizontal answer-item" data-id$="[[answer.answer_id]]">
-                    <!--<iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>-->[<div>[[answer.answer_id]]</div>] <div>[[answer.sort_id]]</div>) <div>[[answer.text]]</div>
-                  </paper-item>
-                </template>
-              <!--</sortable-js>-->
-            </paper-material>
+            <polyquiz-question-edit id="quest" class="flex" question="{{question}}" on-click="_toggleCollapse" current-question="[[currentQuestion]]"></polyquiz-question-edit>
           </div>
           
         </template>
@@ -289,6 +381,15 @@
         },
         deleteQuestion: {
           type: Object
+        },
+        currentQuestion: {
+          type: Number,
+          value: 0
+        }
+      },
+      _toggleCollapse: function(e) {
+        if(this.currentQuestion != e.model.get('question.question_id')) {
+          this.currentQuestion = e.model.get('question.question_id');
         }
       },
       _deleteQuestionAjaxResponse: function(e) {
