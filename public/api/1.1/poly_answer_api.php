@@ -1,4 +1,12 @@
 <?php
+
+$app->get('/answers', function() {
+  global $mysqli;
+  if(isset($_GET['answer_id'])) {
+    echo json_encode(PolyAnswerFactory::get($mysqli, $_GET['answer_id'], $_SESSION['dbext']), JSON_PRETTY_PRINT);
+  }
+});
+
 $app->get('/answers/:answerid', function($answerid) {
   global $mysqli;
   //$answer = PolyAnswer
