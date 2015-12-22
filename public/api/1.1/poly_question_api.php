@@ -73,7 +73,7 @@ $app->put('/questions/:questionid', function($questionid) {
   echo json_encode($res, JSON_PRETTY_PRINT);
 });
 
-$app->delete('/questions', function($questionid) {
+$app->delete('/questions', function() {
   global $mysqli;
   $result = false;
   if(isset($_GET['question_id'])) {
