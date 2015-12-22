@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-delete-prompt">
-
+	<link rel="import" href="../../bower_components/ctech-dialogs/ctech-confirm-dialog.html">
 	<style is="custom-style">
 
 	</style>
 
 	<template>
 		<iron-ajax method="DELETE" id="deleteAjax" url="../../api/1.1/sessions" handle-as="json" on-response="onDeleteResp"></iron-ajax>
-		<polyquiz-dialog id="dialog" on-confirm="_onConfirm" on-dismiss="_onDismiss" confirm-text="Delete" valid-color="#c62828">
+		<ctech-confirm-dialog id="dialog" on-confirm="_onConfirm" on-dismiss="_onDismiss" confirm-text="Delete" valid-color="#c62828" modal>
 			<h2>Delete Session?</h2>
 			Id: <b>[[sessionObject.sessionid]]</b><br>
 			Name: <b>[[sessionObject.name]]</b>
-		</polyquiz-dialog>
+		</ctech-confirm-dialog>
 	</template>
 
 	<script>

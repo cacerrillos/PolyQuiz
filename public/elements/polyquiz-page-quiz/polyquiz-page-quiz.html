@@ -72,11 +72,11 @@
       handle-as="json"
       on-response="_doQuizRefresh">
       </iron-ajax>
-      <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz">
+    <ctech-confirm-dialog id="deleteDialog" on-ctech-dialog-confirm="_doDeleteQuiz" valid-color="#c62828" modal>
       <h2>Delete Quiz</h2>
       Quiz Name: <b>[[quizToDelete.quiz_name]]</b>
     </ctech-confirm-dialog>
-    <ctech-confirm-dialog id="createDialog" on-ctech-dialog-confirm="_doCreateQuiz">
+    <ctech-confirm-dialog id="createDialog" on-ctech-dialog-confirm="_doCreateQuiz" valid-color="#8BC34A" modal>
       <h2>New Quiz</h2>
       <paper-input label="Quiz Name" value="{{newQuizName}}" on-input="_validateCreateForm"></paper-input>
     </ctech-confirm-dialog>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-house-delete-form">
+	<link rel="import" href="../../bower_components/ctech-dialogs/ctech-confirm-dialog.html">
 	<style is="custom-style">
 		.nomargins { 
 			margin: 0px;
@@ -14,10 +15,10 @@
 	</style>
 	<template>
 		<iron-ajax id="deleteAjax" method="DELETE" handle-as="json" on-response="onDeleteAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
-		<polyquiz-dialog id="deleteDialog" on-confirm="deleteHouse" confirm-text="Delete" valid-color="#c62828">
+		<ctech-confirm-dialog id="deleteDialog" on-confirm="deleteHouse" confirm-text="Delete" valid-color="#c62828" modal>
 			<h2>Delete House</h2>
 			<h3>[[houseData.house_name]]</h3>
-		</polyquiz-dialog>
+		</ctech-confirm-dialog>
 	</template>
 	<script>
 	Polymer({

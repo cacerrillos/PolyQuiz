@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-session-create-form">
+	<link rel="import" href="../../bower_components/ctech-dialogs/ctech-confirm-dialog.html">
 	<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
 	<link rel="import" href="../../bower_components/ctech-dropdown-selector/ctech-dropdown-selector.html">
 	<link rel="import" href="../polyquiz-dropdown-input.html">
@@ -24,14 +25,14 @@
 	
 	<iron-ajax id="allquizInfoAjax" url="../../api/1.1/quizzes" handle-as="json" last-response="{{quizData}}" auto></iron-ajax>
 
-	<polyquiz-dialog id="mainDialog" on-confirm="reqSubmit" on-dismiss="resetForm" confirm-text="Create" valid-color="#8BC34A">
+	<ctech-confirm-dialog id="mainDialog" on-confirm="reqSubmit" on-dismiss="resetForm" confirm-text="Create" valid-color="#8BC34A" modal>
 		<div class="layout horizontal">
 			<div class="flex"></div>
 			<h2>Create New Session</h2>
 			<div class="flex"></div>
 		</div>
 		<div class="layout vertical">
-			<paper-input name="sessionname" label="Session Name" on-input="_validateForm" id="sessionName" style="padding-left:12px; padding-right:12px;"></paper-input>
+			<paper-input name="sessionname" label="Session Name" on-input="_validateForm" id="sessionName"></paper-input>
 			<ctech-dropdown-selector id="houseSelector" default-text="Select A House" items="[[houseData]]" attr-for-selected="house_id" attr-for-text="house_name" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
 			<ctech-dropdown-selector id="quizSelector" default-text="Select A Quiz" items="[[quizData]]" attr-for-selected="quiz_id" attr-for-text="quiz_name" on-ctech-select="_validateForm" raised></ctech-dropdown-selector>
 
@@ -46,7 +47,7 @@
 			</paper-radio-group>
 
 		</div>
-	</polyquiz-dialog>
+	</ctech-confirm-dialog>
 </template>
 <script>
 Polymer({

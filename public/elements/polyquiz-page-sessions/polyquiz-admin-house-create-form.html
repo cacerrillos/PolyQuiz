@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-house-create-form">
+	<link rel="import" href="../../bower_components/ctech-dialogs/ctech-confirm-dialog.html">
 	<style is="custom-style">
 
 	</style>
 	<template>
 		<iron-ajax id="createAjax" url="../../api/1.1/houses" handle-as="json" on-response="createResp" method="POST"></iron-ajax>
-		<polyquiz-dialog id="mainDialog" on-confirm="doForm" on-dismiss="_resetForm" confirm-text="Create" valid-color="#8BC34A">
+		<ctech-confirm-dialog id="mainDialog" on-confirm="doForm" on-dismiss="_resetForm" confirm-text="Create" valid-color="#8BC34A" modal>
 			<h2>Create New House</h2>
 			<paper-input name="housename" label="House Name" on-input="_inputChanged" on-keydown="_checkEnter" id="housename"></paper-input>
-		</polyquiz-dialog>
+		</ctech-confirm-dialog>
 	</template>
 	<script>
 	Polymer({

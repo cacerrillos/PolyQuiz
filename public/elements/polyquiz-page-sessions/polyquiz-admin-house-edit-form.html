@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <dom-module id="polyquiz-admin-house-edit-form">
+	<link rel="import" href="../../bower_components/ctech-dialogs/ctech-confirm-dialog.html">
 	<style is="custom-style">
 		.nomargins { 
 			margin: 0px;
@@ -14,10 +15,10 @@
 	</style>
 	<template>
 		<iron-ajax id="editAjax" method="PUT" handle-as="json" on-response="onEditAjaxResponse" url="../../api/1.1/houses"></iron-ajax>
-		<polyquiz-dialog id="mainDialog" on-confirm="editHouse" on-dismiss="_resetForm" confirm-text="Edit">
+		<ctech-confirm-dialog id="mainDialog" on-confirm="editHouse" on-dismiss="_resetForm" confirm-text="Edit" modal>
 			<h2>Edit House</h2>
 			<paper-input id="houseName" label="House Name" value="[[houseData.house_name]]" on-input="_inputChanged" on-keydown="_checkEnter"></paper-input>
-		</polyquiz-dialog>
+		</ctech-confirm-dialog>
 	</template>
 	<script>
 	Polymer({
