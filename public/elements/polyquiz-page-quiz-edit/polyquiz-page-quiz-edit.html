@@ -475,7 +475,11 @@
         this.$.questionAjax.generateRequest();
       },
       _newQuestionAjaxResponse: function(e) {
-        console.log(e);
+        if(e.detail.response) {
+          if(e.detail.response.status) {
+            this._reloadAllData("New Question Dialog");
+          }
+        }
       },
       _doNewQuestionDismiss: function(e) {
         this.$.newQuestionText.value = "";
