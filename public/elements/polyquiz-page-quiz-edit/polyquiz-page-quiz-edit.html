@@ -84,9 +84,12 @@
         right: 112px;
         bottom: -20px;
       }
+      .question-preview {
+        padding-left: 1em;
+      }
     </style>
     <paper-material class="flex layout vertical fab-padding">
-      <polyquiz-html-content value="[[question.text]]" id="qPreview"></polyquiz-html-content>
+      <polyquiz-html-content value="[[question.text]]" id="qPreview" class="question-preview"></polyquiz-html-content>
       <iron-collapse id="collapse" style="overflow: hidden;">
         <div id="fabs">
           <div class="right-edge-delete not-large">
