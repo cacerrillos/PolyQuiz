@@ -130,7 +130,8 @@ class PolyAnswer_Standard extends PolyAnswer {
   }
 }
 
-class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
+class PolyAnswer_Standard_Smart extends PolyAnswer {
+  public $points = 0;
   public $include = array();
   public $exclude = array();
   public function __construct($answer_id) {
@@ -210,6 +211,17 @@ class PolyAnswer_Standard_Smart extends PolyAnswer_Standard {
   }
   public function fetch($mysqli, $user_id) {
     PolyAnswer::fetch($mysqli, $user_id);
+    if($stmt = $mysqli->prepare(
+      "SELECT `answer_standard_smart`.`points` FROM `answer_standard_smart`
+        WHERE `answer_standard_smart`.`answer_id` = ? AND `answer_standard_smart`.`user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("ii", $this->answer_id, $user_id);
+      if($stmt->execute()) {
+        $stmt->bind_result($points_r);
+        $stmt->fetch();
+        $this->points = $points_r;
+      }
+      $stmt->close();
+    }
     $this->fetch_include_exclude_from_mysql($mysqli, $user_id);
   }
 }
