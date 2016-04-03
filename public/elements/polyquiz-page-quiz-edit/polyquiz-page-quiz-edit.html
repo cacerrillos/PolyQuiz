@@ -125,7 +125,7 @@
         </div>
 
         <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
-          <template is="dom-repeat" items="{{question.answers}}" as="answer">
+          <template is="dom-repeat" items="{{question.answers}}" as="answer" sort="_answerSort">
             <iron-pages selected$="[[answer.answer_type]]" attr-for-selected="qtype">
               <paper-item class="layout horizontal answer-item" data-id="[[answer.answer_id]]" qtype="STANDARD">
                 <!--<iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>--><div>[[answer.sort_id]]</div>) <polyquiz-html-content value="[[answer.text]]"></polyquiz-html-content>
@@ -152,6 +152,15 @@
         currentQuestion: {
           type: Number,
           observer: '_currentQuestionChanged'
+        }
+      },
+      _answerSort: function(a, b){
+        if(a.sort_id < b.sort_id) {
+          return -1;
+        } else if(a.sort_id > b.sort_id) {
+          return 1;
+        } else if(a.sort_id == b.sort_id) {
+          return 0;
         }
       },
       _currentQuestionChanged: function(e) {
@@ -418,6 +427,12 @@
     </ctech-confirm-dialog>
 
     <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss" modal>
+      <iron-ajax
+         id="addAnswerAjax"
+         url="../../api/1.1/answers"
+         method="POST"
+         handle-as="json"
+         on-response="_addAnswerAjaxResponse"></iron-ajax>
       <h2>Add New Answer</h2>
       For: <polyquiz-html-content value="[[newAnswerQuestion.text]]"></polyquiz-html-content>
       <ctech-tinymce id="newAnswerText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
@@ -545,8 +560,13 @@
         //this.newAnswerQuestion = this.quiz.questions[e.model.get('question.question_id')];
         this.$.newAnswerDialog.open();
       },
+      _addAnswerAjaxResponse: function(e) {
+        console.log(e);
+        this._reloadAllData();
+      },
       _doNewAnswer: function(e) {
-
+        this.$.addAnswerAjax.body = JSON.stringify({ 'question_id': this.newAnswerQuestion.question_id, 'type': "STANDARD", 'points': 0, 'text': "tetete"});
+        this.$.addAnswerAjax.generateRequest();
         this._doNewAnswerDismiss();
       },
       _doNewAnswerDismiss: function(e) {

@@ -2,6 +2,7 @@
 class PolyAnswerFactory {
   public static function get($mysqli, $answer_id, $user_id) {
     $to_return = false;
+    //$to_return = new PolyQueryResult();
     if($stmt = $mysqli->prepare("SELECT `answer_type` FROM `answer` WHERE `answer_id` = ? AND `user_id` = ? LIMIT 1;")) {
       $stmt->bind_param("ii", $answer_id, $user_id);
       if($stmt->execute()) {
@@ -47,6 +48,70 @@ class PolyAnswerFactory {
       }
     }
     return $to_return;
+  }
+  static function _create_base_answer($mysqli, $question_id, $answer_type, $user_id) {
+    $result = new PolyQueryResult();
+    if($stmt = $mysqli->prepare("INSERT INTO `answer` (`question_id`, `answer_type`, `sort_id`, `user_id`) VALUES (?, ?, ?, ?);")) {
+      $zero = 0;
+      $stmt->bind_param("isii", $question_id, $answer_type, $zero, $user_id);
+      if($stmt->execute()) {
+        $result->result = $stmt->insert_id;
+        $result->status = true;
+      } else {
+        $result->details = $mysqli->error;
+      }
+      $stmt->close();
+    } else {
+      $result->details = $mysqli->error;
+    }
+    return $result;
+  }
+  public static function create($mysqli, $question_id, $answer_type, $user_id) {
+    $result = new PolyQueryResult();
+
+    switch ($answer_type) {
+      case "STANDARD":
+        $base_answer_id = PolyAnswerFactory::_create_base_answer($mysqli, $question_id, $answer_type, $user_id);
+        $result->AddSubResult($base_answer_id);
+        if($base_answer_id->Status()) {
+
+          if($stmt = $mysqli->prepare("INSERT INTO `answer_standard` (`answer_id`, `points`, `user_id`) VALUES (?, ?, ?);")) {
+            $zero = 0;
+            $stmt->bind_param("iii", $base_answer_id->result, $zero, $user_id);
+            if($stmt->execute()) {
+              $stmt->close();
+              if($stmt = $mysqli->prepare("INSERT INTO `answer_standard_text` (`answer_id`, `text`, `user_id`) VALUES (?, ?, ?);")) {
+                $empty_string = "";
+                $stmt->bind_param("isi", $base_answer_id->result, $empty_string, $user_id);
+                if($stmt->execute()) {
+                  $stmt->close();
+                  $result->result = PolyAnswerFactory::get($mysqli, $base_answer_id->result, $user_id);
+                } else {
+                  $stmt->close();
+                  $result->details = "Failed to create STANDARD answer_text entry!" . "\n" . $stmt->error;
+                }
+              }
+            } else {
+              $result->details = "Failed to create STANDARD answer entry!" . "\n" . $mysqli->error;
+              $stmt->close();
+              
+            }
+          }
+        } else {
+          $result->details = "Failed to create base answer entry!";
+        }
+        break;
+      case "STANDARD_SMART":
+        $base_answer = PolyQuestionFactory::_create_base_question($mysqli, $quiz_id, $question_type, $user_id);
+        if($base_answer) {
+          
+        }
+        break;
+      default:
+        # code...
+        break;
+    }
+    return $result;
   }
   public static function delete($mysqli, $answer_id, $user_id) {
     $result = -1;
@@ -125,6 +190,25 @@ class PolyAnswer_Standard extends PolyAnswer {
         $this->points = $points_r;
         $this->text = $text_r;
       }
+      $stmt->close();
+    }
+  }
+  public function save($mysqli, $user_id) {
+    PolyAnswer::save($mysqli, $user_id);
+    if($stmt = $mysqli->prepare("UPDATE `answer_standard` SET `points` = ? WHERE `answer_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("iii", $this->points, $this->answer_id, $user_id);
+      if($stmt->execute()){
+
+      }
+      //update points and text
+      $stmt->close();
+    }
+    if($stmt = $mysqli->prepare("UPDATE `answer_standard_text` SET `text` = ? WHERE `answer_id` = ? AND `user_id` = ? LIMIT 1;")) {
+      $stmt->bind_param("sii", $this->text, $this->answer_id, $user_id);
+      if($stmt->execute()){
+
+      }
+      //update points and text
       $stmt->close();
     }
   }

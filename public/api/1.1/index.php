@@ -23,6 +23,31 @@ if(isset($_SESSION["is_admin"]) && isset($_GET['uuid'])){
 	
 }
 
+class PolyQueryResult {
+  public $status = false;
+  public $details;
+  public $result;
+  public $sub_results = array();
+  public function __construct() {
+
+  }
+  public function Status() {
+    if(count($this->sub_results) == 0) {
+      return $this->status;
+    } else {
+      foreach($this->sub_results as &$sub) {
+        if(!$sub->Status()) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+  public function AddSubResult($result) {
+    array_push($this->sub_results, $result);
+  }
+}
+
 include('poly_quiz.php');
 
 include('poly_quiz_api.php');
