@@ -1,52 +1,64 @@
 <?php
 
-$app->get('/answers', function() {
-  global $mysqli;
-  if(isset($_GET['answer_id'])) {
-    echo json_encode(PolyAnswerFactory::get($mysqli, $_GET['answer_id'], $_SESSION['dbext']), JSON_PRETTY_PRINT);
+$app->get('/answers', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+
+  if(isset($query_params['answer_id'])) {
+    $result = PolyAnswerFactory::get($this->db, $query_params['answer_id'], $_SESSION['dbext']);
   }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->get('/answers/:answerid', function($answerid) {
-  global $mysqli;
-  //$answer = PolyAnswer
-  echo json_encode(PolyAnswerFactory::get($mysqli, $answerid, $_SESSION['dbext']), JSON_PRETTY_PRINT);
+$app->get('/answers/{answer_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+
+  $result = PolyAnswerFactory::get($this->db, $args['answer_id'], $_SESSION['dbext']);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->post('/answers', function() {
-  global $_POST_JSON, $mysqli;
+$app->post('/answers', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $parsed_body = $request->getParsedBody();
+
   $answer = false;
-  $res = false;
-  $question = PolyQuestionFactory::get($mysqli, $_POST_JSON['question_id'], $_SESSION['dbext']);
+
+  $question = PolyQuestionFactory::get($this->db, $parsed_body['question_id'], $_SESSION['dbext']);
   if($question) {
-    if($_POST_JSON['type'] == "STANDARD") {
-      $answer = PolyAnswerFactory::create($mysqli, $_POST_JSON['question_id'], "STANDARD", $_SESSION['dbext']);
-      var_dump($answer);
-      $answer->result->points = $_POST_JSON['points'];
-      $answer->result->text = $_POST_JSON['text'];
-      var_dump($answer);
-      $res = $answer->result->save($mysqli, $_SESSION['dbext']);
-      var_dump($answer);
+    if($parsed_body['type'] == "STANDARD") {
+      $answer = PolyAnswerFactory::create($this->db, $parsed_body['question_id'], "STANDARD", $_SESSION['dbext']);
+      $answer->result->points = $parsed_body['points'];
+      $answer->result->text = $parsed_body['text'];
+      $result = $answer->result->save($this->db, $_SESSION['dbext']);
     }
   }
-  
 
-  echo json_encode($res, JSON_PRETTY_PRINT);
+  return $response->withJson($result, $http_status);
 });
 
-$app->delete('/answers', function() {
-  global $mysqli;
-  $result = false;
-  if(isset($_GET['answer_id'])) {
-    $result = PolyAnswerFactory::delete($mysqli, $_GET['answer_id'], $_SESSION['dbext']);
+$app->delete('/answers', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+
+  if(isset($query_params['answer_id'])) {
+    $result = PolyAnswerFactory::delete($this->db, $query_params['answer_id'], $_SESSION['dbext']);
   }
-  echo json_encode($result, JSON_PRETTY_PRINT);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->delete('/answers/:answerid', function($answerid) {
-  global $mysqli;
-  $result = PolyAnswerFactory::delete($mysqli, $answerid, $_SESSION['dbext']);
-  echo json_encode($result, JSON_PRETTY_PRINT);
+$app->delete('/answers/{answer_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+
+  $result = PolyAnswerFactory::delete($this->db, $args['answer_id'], $_SESSION['dbext']);
+
+  return $response->withJson($result, $http_status);
 });
 
-?>

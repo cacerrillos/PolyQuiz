@@ -1,27 +1,27 @@
-<?
+<?php
+if (PHP_SAPI == 'cli-server') {
+    // To help the built-in PHP dev server, check if the request was actually for
+    // something which should probably be served as a static file
+    $url  = parse_url($_SERVER['REQUEST_URI']);
+    $file = __DIR__ . $url['path'];
+    if (is_file($file)) {
+        return false;
+    }
+}
+
+require __DIR__ . '/../vendor/autoload.php';
+
 session_start();
-//error_reporting(E_ALL);
-require 'Slim/Slim.php';
-include_once("../../func/config.func.php");
 
-//include_once('objects/polyquiz.php');
-//include_once("objects/polyhouse.php");
-include_once("objects/polysession.php");
-include_once("objects/polystats.php");
-\Slim\Slim::registerAutoloader();
-$app = new \Slim\Slim();
-$mysqli = new mysqli($db_host, $db_user, $db_password);
-$mysqli -> select_db($db_name);
+// Instantiate the app
+$settings = require __DIR__ . '/../src/settings.php';
+$app = new \Slim\App($settings);
 
-$_POST_JSON = json_decode(file_get_contents("php://input"), true);
+// Set up dependencies
+require __DIR__ . '/../src/dependencies.php';
 
-function isAdmin() {
-	return isset($_SESSION['is_admin']);
-}
-if(isset($_SESSION["is_admin"]) && isset($_GET['uuid'])){
-	
-	
-}
+require __DIR__ . '/objects/polysession.php';
+require __DIR__ . '/objects/polystats.php';
 
 class PolyQueryResult {
   public $status = false;
@@ -48,32 +48,12 @@ class PolyQueryResult {
   }
 }
 
-include('poly_quiz.php');
 
-include('poly_quiz_api.php');
+// Register middleware
+require __DIR__ . '/../src/middleware.php';
 
-include('poly_question.php');
+// Register routes
+require __DIR__ . '/../src/routes.php';
 
-include('poly_question_api.php');
-
-include('poly_answer.php');
-
-include('poly_answer_api.php');
-
-include('poly_quiz_admin_api.php');
-
-include('poly_house.php');
-
-include('poly_house_api.php');
-
-include('poly_session_api.php');
-
-$app->get('/', function() {
-  $result = array();
-  $result['is_admin'] = isAdmin();
-  echo json_encode($result, JSON_PRETTY_PRINT);
-});
-
+// Run app
 $app->run();
-
-?>
