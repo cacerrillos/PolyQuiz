@@ -5,3 +5,6 @@ dwsync.xml
 *.sublime-workspace
 node_modules/
 bower_components/
+
+*.zip
+config.json

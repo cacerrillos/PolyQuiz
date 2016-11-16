@@ -1,0 +1,15 @@
+{
+  "AWS_ACCOUNT_ID": "",
+  "CLI_PROFILE": "default",
+  "REGION": "us-east-1",
+  "BUCKET": "bucket",
+  "MAX_AGE": "10",
+  "CRYPTO_BYTE_SIZE": 128,
+  "DDB_TABLE": "PolyQuiz_Users",
+  "IDENTITY_POOL_NAME": "us-east-1:...",
+  "DEVELOPER_PROVIDER_NAME": "",
+  "EXTERNAL_NAME": "PolyQuiz Login",
+  "EMAIL_SOURCE": "",
+  "VERIFICATION_PAGE": "https://.../verify.html",
+  "RESET_PAGE": "https://.../reset.html"
+}
