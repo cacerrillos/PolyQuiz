@@ -1,0 +1,182 @@
+<!--
+A comment describing this element
+
+Example:
+
+    <my-elem></my-elem>
+
+Example:
+
+    <my-elem>
+      <h2>Hello my-elem</h2>
+    </my-elem>
+  "queryParams": {"foo": "bar"},
+  "pathParams": {"id": "99"},
+  ,
+  "bodyData": $input.path('$')
+@demo demo/index.html
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<dom-module id="pq-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      /*paper-material {
+        min-width: 200px;
+        min-height: 200px;
+      }*/
+      paper-material {
+        padding: 8px;
+        margin: 8px;
+      }
+      .box {
+        width: 300px;
+      }
+      #response {
+        margin-top: 16px;
+      }
+    </style>
+    <iron-ajax
+      id="getTest"
+      url="[[getUrl]]"
+      handle-as="json"
+      content-type="application/json"
+      on-response="handleResponseGet"></iron-ajax>
+    <iron-ajax
+      handle-as="json"
+      id="registerAjax"
+
+      method="POST"
+      content-type="application/json"
+      on-response="_log"></iron-ajax>
+    <iron-ajax
+      handle-as="json"
+      id="loginAjax"
+      method="POST"
+      content-type="application/json"
+      on-response="_loginResponse"></iron-ajax>
+    <app-localstorage-document key="PolyQuizUserData" data="{{userData}}">
+    </app-localstorage-document>
+    <paper-material elevation="1" class="box">
+      Cognito-Id: <div>[[userId]]</div>
+      Cognito-token: <div>[[userToken]]</div>
+      <paper-input id="loginE" label="Email"></paper-input>
+      <paper-input id="loginP" label="Password" type="password"></paper-input>
+      <paper-button raised on-tap="_login">Login</paper-button>
+    </paper-material>
+    <paper-material elevation="1" class="box">
+      Register
+      <paper-input id="registerEmail" label="Email"></paper-input>
+      <paper-input id="registerPassword" label="Password" type="password"></paper-input>
+      <paper-button raised on-tap="_doRegister">Register</paper-button>
+    </paper-material>
+    <paper-material elevation="1" class="box">
+      Verify
+      <paper-input id="verifyE" label="Email"></paper-input>
+      <paper-input id="verifyC" label="Verification Code"></paper-input>
+      <paper-button raised on-tap="_doVerify">Verify</paper-button>
+    </paper-material>
+    <paper-material elevation="1">
+
+      <paper-input id="ident" label="Identity Id" value="{{userId::input}}"></paper-input>
+      <paper-input label="URL" value="{{getUrl::input}}"></paper-input>
+      <paper-button raised on-tap="_sendGetTest">Test GET</paper-button>
+      <div id="response"></div>
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: 'pq-app',
+      properties: {
+        getUrl: {
+          type: String,
+          value: 'https://r0tn91k21g.execute-api.us-east-1.amazonaws.com/beta/quiz'
+        },
+        userData: {
+          type: Object,
+          observer: '_userData'
+        },
+        userId: {
+          type: String
+        },
+        userToken: {
+          type: String
+        },
+        baseURL: {
+          type: String,
+          value: 'https://r0tn91k21g.execute-api.us-east-1.amazonaws.com/beta'
+        }
+      },
+      _doRegister: function(e) {
+        this.$.registerAjax.url = this.baseURL + '/auth/register';
+        this.$.registerAjax.body = JSON.stringify({
+          "email": this.$.registerEmail.value,
+          "password": this.$.registerPassword.value
+        });
+        this.$.registerAjax.generateRequest();
+      },
+      _doVerify: function(e) {
+        this.$.registerAjax.url = this.baseURL + '/auth/verify';
+        this.$.registerAjax.body = JSON.stringify({
+          "email": this.$.verifyE.value,
+          "verify": this.$.verifyC.value
+        });
+        this.$.registerAjax.generateRequest();
+      },
+      _login: function(e) {
+        this.$.loginAjax.url = this.baseURL + '/auth/login';
+        this.$.loginAjax.body = JSON.stringify({
+          "email": this.$.loginE.value,
+          "password": this.$.loginP.value
+        });
+        this.$.loginAjax.generateRequest();
+      },
+      _loginResponse: function(e) {
+        if(e && e.detail && e.detail.response) {
+          var response = e.detail.response;
+          if(response.login) {
+            this.userId = response.identityId;
+            this.userToken = response.token;
+          }
+        }
+      },
+      _log: function(e) {
+        console.log(e);
+      },
+      _userData: function(e) {
+        console.log(e);
+      },
+      _genHeaders: function(u, p) {
+        return "Basic " + window.btoa(u + ":" + p);
+      },
+      _sendGetTest: function(e) {
+        this.$.getTest.headers['PQAuthUser'] = this.userId;
+        this.$.getTest.headers['PQAuthToken'] = this.userToken;
+        //this.$.getTest.withCredentials = true;
+        this.$.getTest.body = JSON.stringify({
+          identityId: this.userId
+        });
+        this.$.getTest.generateRequest();
+      },
+      handleResponseGet: function(e) {
+        console.log(e);
+        if(e.detail.response) {
+          this.$.response.textContent = JSON.stringify(e.detail.response);
+        }
+      },
+      ready: function() {
+
+      }
+    });
+  </script>
+</dom-module>
