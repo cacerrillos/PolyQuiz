@@ -1,91 +1,122 @@
-<?
+<?php
 
-$app->get('/questions', function() {
-  global $mysqli;
-  if(isset($_GET['question_id']) && isset($_GET['quiz_id'])) {
+$app->get('/questions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+
+  if(isset($query_params['question_id']) && isset($query_params['quiz_id'])) {
     //give error
-    echo json_encode(false, JSON_PRETTY_PRINT);
-  } else if(isset($_GET['question_id'])) {
-    echo json_encode(PolyQuestionFactory::get($mysqli, intval($_GET['question_id']), $_SESSION['dbext']), JSON_PRETTY_PRINT);
-  } else if(isset($_GET['quiz_id'])) {
-    echo json_encode(PolyQuestionFactory::get_by_quiz($mysqli, intval($_GET['quiz_id']), $_SESSION['dbext']), JSON_PRETTY_PRINT);
+    // echo json_encode(false;
+  } else if(isset($query_params['question_id'])) {
+    $result = PolyQuestionFactory::get($this->db, intval($query_params['question_id']), $_SESSION['dbext']);
+  } else if(isset($query_params['quiz_id'])) {
+    $result = PolyQuestionFactory::get_by_quiz($this->db, intval($query_params['quiz_id']), $_SESSION['dbext']);
   }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->get('/questions/:questionid', function($questionid) {
-  global $mysqli;
-  echo json_encode(PolyQuestionFactory::get($mysqli, intval($questionid), $_SESSION['dbext']), JSON_PRETTY_PRINT);
+$app->get('/questions/{question_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
+
+  $result = PolyQuestionFactory::get($this->db, intval($args['question_id']), $_SESSION['dbext']);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->post('/questions', function() {
-  global $_POST_JSON, $mysqli;
+$app->post('/questions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $parsed_body = $request->getParsedBody();
+
   $question = false;
-  $quiz = PolyQuiz::from_mysql($mysqli, $_POST_JSON['quiz_id'], $_SESSION['dbext']);
-  if($_POST_JSON['type'] == "STANDARD") {
-    $question = PolyQuestionFactory::create($mysqli, $_POST_JSON['quiz_id'], "STANDARD", $_SESSION['dbext']);
-    $question->text = $_POST_JSON['text'];
-    $question->extra_credit = $_POST_JSON['extra_credit'];
-    $question->canvas = $_POST_JSON['canvas'];
-    $res = $question->save($mysqli, $_SESSION['dbext']);
+  $quiz = PolyQuiz::from_mysql($this->db, $parsed_body['quiz_id'], $_SESSION['dbext']);
+  if($parsed_body['type'] == "STANDARD") {
+    $question = PolyQuestionFactory::create($this->db, $parsed_body['quiz_id'], "STANDARD", $_SESSION['dbext']);
+    $question->text = $parsed_body['text'];
+    $question->extra_credit = $parsed_body['extra_credit'];
+    $question->canvas = $parsed_body['canvas'];
+    $result = $question->save($this->db, $_SESSION['dbext']);
   }
-  echo json_encode($res, JSON_PRETTY_PRINT);
+  
+  return $response->withJson($result, $http_status);
 });
 
-$app->put('/questions', function() {
-  global $_POST_JSON, $mysqli;
-  if(isset($_GET['question_id'])) {
-    $question = PolyQuestionFactory::get($mysqli, $_GET['question_id'], $_SESSION['dbext']);
+$app->put('/questions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
+
+  if(isset($query_params['question_id'])) {
+    $question = PolyQuestionFactory::get($this->db, $query_params['question_id'], $_SESSION['dbext']);
     if($question) {
-      if(isset($_POST_JSON['text'])) {
-        $question->text = $_POST_JSON['text'];
+      if(isset($parsed_body['text'])) {
+        $question->text = $parsed_body['text'];
       }
-      if(isset($_POST_JSON['extra_credit'])) {
-        $question->extra_credit = $_POST_JSON['extra_credit'];
+      if(isset($parsed_body['extra_credit'])) {
+        $question->extra_credit = $parsed_body['extra_credit'];
       }
-      if(isset($_POST_JSON['canvas'])) {
-        $question->canvas = $_POST_JSON['canvas'];
+      if(isset($parsed_body['canvas'])) {
+        $question->canvas = $parsed_body['canvas'];
       }
-      $res = $question->save($mysqli, $_SESSION['dbext']);
+      $result = $question->save($this->db, $_SESSION['dbext']);
     }
   }
-  echo json_encode($question, JSON_PRETTY_PRINT);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->put('/questions/:questionid', function($questionid) {
-  global $_POST_JSON, $mysqli;
+$app->put('/questions/{question_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
 
-  $res = false;
-  if($_POST_JSON['type'] == "STANDARD") {
-    $question = PolyQuestionFactory::get($mysqli, $questionid, $_SESSION['dbext']);
+  if($parsed_body['type'] == "STANDARD") {
+    $question = PolyQuestionFactory::get($this->db, $args['question_id'], $_SESSION['dbext']);
     if($question) {
-      if(isset($_POST_JSON['text'])) {
-        $question->text = $_POST_JSON['text'];
+      if(isset($parsed_body['text'])) {
+        $question->text = $parsed_body['text'];
       }
-      if(isset($_POST_JSON['extra_credit'])) {
-        $question->extra_credit = $_POST_JSON['extra_credit'];
+      if(isset($parsed_body['extra_credit'])) {
+        $question->extra_credit = $parsed_body['extra_credit'];
       }
-      if(isset($_POST_JSON['canvas'])) {
-        $question->canvas = $_POST_JSON['canvas'];
+      if(isset($parsed_body['canvas'])) {
+        $question->canvas = $parsed_body['canvas'];
       }
-      $res = $question->save($mysqli, $_SESSION['dbext']);
+      $result = $question->save($this->db, $_SESSION['dbext']);
     }
   }
-  echo json_encode($res, JSON_PRETTY_PRINT);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->delete('/questions', function() {
-  global $mysqli;
-  $result = false;
-  if(isset($_GET['question_id'])) {
-    $result = PolyQuestionFactory::delete($mysqli, $_GET['question_id'], $_SESSION['dbext']);
+
+$app->delete('/questions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+
+  if(isset($query_params['question_id'])) {
+    $result = PolyQuestionFactory::delete($this->db, $query_params['question_id'], $_SESSION['dbext']);
   }
-  echo json_encode($result, JSON_PRETTY_PRINT);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->delete('/questions/:questionid', function($questionid) {
-  global $mysqli;
-  $result = PolyQuestionFactory::delete($mysqli, $questionid, $_SESSION['dbext']);
-  echo json_encode($result, JSON_PRETTY_PRINT);
+$app->delete('/questions/{question_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
+
+  $result = PolyQuestionFactory::delete($this->db, $args['question_id'], $_SESSION['dbext']);
+
+  return $response->withJson($result, $http_status);
 });
 
-?>

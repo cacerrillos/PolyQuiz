@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-quiz-edit-answer-material">
+  <template>
+    <style>
+      paper-material {
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+      }
+      
+    </style>
+    
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-quiz-edit-answer-material',
+      properties: {
+        question: {
+          type: Object,
+          observer: 'questionChanged',
+          notify: true
+        },
+        test: {
+          type: String,
+          value: "Evan"
+        }
+      },
+      
+      ready: function(e) {
+        
+      }
+    });
+  </script>
+</dom-module>
+<dom-module id="polyquiz-question-edit">
+  <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-material {
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+      }
+      .fab-padding {
+        padding-right: 72px;
+        min-height: 64px;
+        margin-bottom: 32px;
+      }
+      .fab-padding {
+        padding-right: 72px;
+        min-height: 64px;
+        margin-bottom: 32px;
+      }
+      .right-edge {
+        position: absolute;
+        right: 8px;
+        bottom: -28px;
+        z-index: 10;
+      }
+      .right-edge-edit {
+        position: absolute;
+        right: 80px;
+        bottom: -28px;
+        z-index: 10;
+      }
+      .right-edge-delete {
+        position: absolute;
+        right: 152px;
+        bottom: -28px;
+        z-index: 10;
+      }
+      .right-edge-mini {
+        position: absolute;
+        right: 8px;
+        bottom: -20px;
+        z-index: 10;
+      }
+      .right-edge-edit-mini {
+        position: absolute;
+        right: 60px;
+        bottom: -20px;
+        z-index: 10;
+      }
+      .right-edge-delete-mini {
+        position: absolute;
+        right: 112px;
+        bottom: -20px;
+        z-index: 10;
+      }
+      .question-preview {
+        padding-left: 1em;
+      }
+    </style>
+    <paper-material class="flex layout vertical fab-padding">
+      <polyquiz-html-content value="[[question.text]]" id="qPreview" class="question-preview"></polyquiz-html-content>
+      <iron-collapse id="collapse" style="overflow: hidden;">
+        <div id="fabs">
+          <div class="right-edge-delete not-large">
+            <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;"></paper-fab>
+            <paper-tooltip position="top">Delete Question</paper-tooltip>
+          </div>
+          <div class="right-edge-edit not-large">
+            <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;"></paper-fab>
+            <paper-tooltip position="top">Edit Question</paper-tooltip>
+          </div>
+          <div class="right-edge not-large">
+            <paper-fab icon="icons:add" on-click="_addAnswerDialog"></paper-fab>
+            <paper-tooltip position="top">Add Answer</paper-tooltip>
+          </div>
+          <div class="right-edge-delete-mini only-large">
+            <paper-fab icon="icons:delete" on-click="_deleteQuestionDialog" style="background-color: #c62828;" mini></paper-fab>
+            <paper-tooltip position="top">Delete Question</paper-tooltip>
+          </div>
+          <div class="right-edge-edit-mini only-large">
+            <paper-fab icon="icons:create" on-click="_editQuestionDialog" style="background-color: #2196f3;" mini></paper-fab>
+            <paper-tooltip position="top">Edit Question</paper-tooltip>
+          </div>
+          <div class="right-edge-mini only-large">
+            <paper-fab icon="icons:add" on-click="_addAnswerDialog" mini></paper-fab>
+            <paper-tooltip position="top">Add Answer</paper-tooltip>
+          </div>
+        </div>
+
+        <!--<sortable-js handle=".inner-handle" id="sortableQuestions" on-update="_onSortUpdate" draggable="paper-item" ghost-class="ghost-select" group="[[_computeAnswerSelectableGroup(question)]]">-->
+          <template is="dom-repeat" items="{{question.answers}}" as="answer" sort="_answerSort">
+            <iron-pages selected$="[[answer.answer_type]]" attr-for-selected="qtype">
+              <paper-item class="layout horizontal answer-item" data-id="[[answer.answer_id]]" qtype="STANDARD">
+                <!--<iron-icon class="inner-handle" icon="icons:reorder"></iron-icon>--><div>[[answer.sort_id]]</div>) <polyquiz-html-content value="[[answer.text]]"></polyquiz-html-content>
+              </paper-item>
+              <paper-item qtype="STANDARD_SMART" class="layout horizontal answer-item">
+              <div>[[answer.sort_id]]</div>) <polyquiz-html-content value="[[_generateSmartText(answer.answer_id)]]"></polyquiz-html-content>
+              </paper-item>
+            </iron-pages>
+            
+          </template>
+        <!--</sortable-js>-->
+      </iron-collapse>
+      
+      
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: 'polyquiz-question-edit',
+      properties: {
+        question: {
+          type: Object
+        },
+        currentQuestion: {
+          type: Number,
+          observer: '_currentQuestionChanged'
+        }
+      },
+      _answerSort: function(a, b){
+        if(a.sort_id < b.sort_id) {
+          return -1;
+        } else if(a.sort_id > b.sort_id) {
+          return 1;
+        } else if(a.sort_id == b.sort_id) {
+          return 0;
+        }
+      },
+      _currentQuestionChanged: function(e) {
+        if(this.question.question_id == e) {
+          this.$.collapse.show();
+          this.$.fabs.hidden = false;
+        } else {
+          this.$.collapse.hide();
+          this.$.fabs.hidden = true;
+        }
+      },
+      _getAnswerById: function(id) {
+        var arr = this.question.answers.filter(function(o){ return o.answer_id == id; });
+        if(arr.length == 1) {
+          return arr[0];
+        }
+        return null;
+      },
+      _getLetterOfAnswer: function(answer_id) {
+        var answer = this._getAnswerById(answer_id);
+        if(answer) {
+          return answer.sort_id;
+        } else {
+          return "ERROR";
+        }
+      },
+      _generateSmartText: function(answer_id) {
+        var result = "";
+        var answer = this._getAnswerById(answer_id);
+        if(answer) {
+          if(answer.answer_type != "STANDARD_SMART") {
+            return;
+          }
+          var inc = this._generateIEText(answer.include);
+          var exc = this._generateIEText(answer.exclude);
+          
+          result += inc;
+          if(answer.exclude.length != 0) {
+            result += " BUT NOT ";
+            result += exc;
+          }
+        }
+        
+        return result;
+      },
+      _generateIEText: function(e) {
+        if(e == null) {
+          return;
+        }
+        var result = "";
+        var arr = [];
+        for(var x = 0; x < e.length; x++) {
+          arr.push({answer_id: e[x], sort_id: this._getLetterOfAnswer(e[x])});
+        }
+        arr.sort(function (a, b) {
+          if(a.sort_id < b.sort_id) {
+            return -1;
+          } else if(a.sort_id > b.sort_id) {
+            return 1;
+          } else if(a.sort_id == b.sort_id) {
+            return 0;
+          }
+        });
+        for(var x = 0; x < arr.length; x++) {
+          result += arr[x].sort_id;
+            if(x == arr.length - 2) {
+              result += " and ";
+            } else if(x == arr.length - 1) {
+
+            } else {
+              result += ", ";
+            }
+        }
+        return result;
+      },
+      _addAnswerDialog: function(e) {
+        this.fire('do-add-answer', { question_id: this.question.question_id });
+      },
+      _editQuestionDialog: function(e) {
+        this.fire('do-edit-question', { question_id: this.question.question_id });
+      },
+      _deleteQuestionDialog: function(e) {
+        this.fire('do-delete-question', { question_id: this.question.question_id });
+      },
+      _toggleCollapse: function(e) {
+        this.$.collapse.toggle();
+      },
+      show: function() {
+        this.$.collapse.show();
+      },
+      hide: function() {
+        this.$.collapse.hide();
+      }
+    });
+  </script>
+</dom-module>
+<dom-module id="polyquiz-page-quiz-edit">
+  <link rel="import" href="../../bower_components/Sortable/Sortable.html">
+  <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+  <link rel="import" href="../../bower_components/ctech-dialogs/ctech-dialogs.html">
+  <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+  <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+  <link rel="import" href="../../bower_components/ctech-tinymce/ctech-tinymce.html">
+  <link rel="import" href="../polyquiz-html-content.html">
+  <script src="../../bower_components/tinymce-equation-editor/build/js/plugin.min.js"></script>
+  <template>
+    <style>
+      :host {
+        --paper-tooltip: {
+          font-size: 16px;
+        };
+      }
+      .container {
+        margin-bottom: 96px;
+      }
+      .no-select {
+        max-height: 24px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      paper-material {
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+      }
+      .no-margins {
+        margin: 0px;
+      }
+      .handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }
+      .fab-padding {
+        padding-right: 72px;
+        min-height: 64px;
+        margin-bottom: 32px;
+      }
+      .right-edge {
+        position: absolute;
+        right: 8px;
+        bottom: -28px;
+      }
+      .right-edge-edit {
+        position: absolute;
+        right: 80px;
+        bottom: -28px;
+      }
+      .right-edge-delete {
+        position: absolute;
+        right: 152px;
+        bottom: -28px;
+      }
+      .right-edge-mini {
+        position: absolute;
+        right: 8px;
+        bottom: -20px;
+      }
+      .right-edge-edit-mini {
+        position: absolute;
+        right: 60px;
+        bottom: -20px;
+      }
+      .right-edge-delete-mini {
+        position: absolute;
+        right: 112px;
+        bottom: -20px;
+      }
+      .inner-handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }
+      .ghost-select {
+        background-color: var(--primary-background-color);
+        opacity: 0.5;
+      }
+      .new-question-fab {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+      }
+      ctech-tinymce {
+        margin-bottom: 20px;
+        display: block;
+      }
+      ctech-tinymce:last-child {
+        margin-bottom: 0px;
+      }
+      ctech-confirm-dialog.new-question-dialog {
+        --ctech-confirm-dialog: {
+          min-width: 50%;
+        };
+      }
+      paper-toggle-button {
+        margin-bottom: 20px;
+        display: block;
+      }
+      paper-toggle-button:last-child {
+        margin-bottom: 0px;
+      }
+
+    </style>
+    <iron-ajax id="quizData" url="../../api/1.1/quizzes" handle-as="json" on-response="_onQuizDataUpdate"></iron-ajax>
+    <div class="container">
+      <div class="row">
+        <div class="12u">
+          <paper-material>
+            <h1 class="no-margins layout horizontal"><div style="font-weight: normal;">Edit Quiz:</div><div style="min-width: 8px;"></div><div>[[quiz.quiz_name]]</div></h1>
+          </paper-material>
+        </div>
+      </div>
+      <!--<sortable-js handle=".handle" draggable=".questiondiv" ghost-class="ghost-select">-->
+        <template id="mainTemplate" is="dom-repeat" items="{{quiz.questions}}" as="question" on-dom-change="_questionTemplateDomChanged">
+          <div class="layout horizontal questiondiv">
+            <!--<paper-material class="no-select">
+              <iron-icon class="handle" icon="icons:reorder"></iron-icon>
+            </paper-material>-->
+            <polyquiz-question-edit id="quest" class="flex" question="{{question}}" on-click="_toggleCollapse" current-question="[[currentQuestion]]"></polyquiz-question-edit>
+          </div>
+          
+        </template>
+      <!--</sortable-js>-->
+    </div>
+
+    <ctech-confirm-dialog id="newQuestionDialog" class="new-question-dialog" on-ctech-dialog-confirm="_doNewQuestion" on-ctech-dialog-dismiss="_doNewQuestionDismiss" modal>
+      <iron-ajax
+         id="questionAjax"
+         url="../../api/1.1/questions"
+         handle-as="json"
+         content-type="application/json"
+         on-response="_newQuestionAjaxResponse"></iron-ajax>
+      <h2>New Question</h2>
+      <div class="layout vertical">
+        <ctech-tinymce id="newQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
+        <paper-toggle-button id="extraCredit">Extra Credit</paper-toggle-button>
+        <paper-toggle-button id="useCanvas">Canvas</paper-toggle-button>
+      </div>
+    </ctech-confirm-dialog>
+
+    <ctech-confirm-dialog id="editQuestionDialog" on-ctech-dialog-confirm="_doEditQuestion" on-ctech-dialog-dismiss="_doEditQuestionDismiss" modal>
+      <iron-ajax
+         id="editQuestionAjax"
+         url="../../api/1.1/questions"
+         method="PUT"
+         handle-as="json"
+         content-type="application/json"
+         on-response="_editQuestionAjaxResponse"></iron-ajax>
+      <h2>Edit Question</h2>
+      <ctech-tinymce id="editQuestionText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]" value="{{editQuestion.text}}"></ctech-tinymce>
+      <paper-toggle-button id="editExtraCredit" checked="{{editQuestion.extra_credit}}">Extra Credit</paper-toggle-button>
+      <paper-toggle-button id="editUseCanvas" checked="{{editQuestion.canvas}}">Canvas</paper-toggle-button>
+    </ctech-confirm-dialog>
+
+    <ctech-confirm-dialog id="deleteQuestionDialog" on-ctech-dialog-confirm="_doDeleteQuestion" valid-color="#c62828" modal>
+      <iron-ajax
+         id="deleteQuestionAjax"
+         url="../../api/1.1/questions"
+         method="DELETE"
+         handle-as="json"
+         content-type="application/json"
+         on-response="_deleteQuestionAjaxResponse"></iron-ajax>
+      <h2>Delete Question</h2>
+      <polyquiz-html-content value="[[deleteQuestion.text]]"></polyquiz-html-content>
+    </ctech-confirm-dialog>
+
+    <ctech-confirm-dialog id="newAnswerDialog" class="" on-ctech-dialog-confirm="_doNewAnswer" on-ctech-dialog-dismiss="_doNewAnswerDismiss" modal>
+      <iron-ajax
+         id="addAnswerAjax"
+         url="../../api/1.1/answers"
+         method="POST"
+         handle-as="json"
+         content-type="application/json"
+         on-response="_addAnswerAjaxResponse"></iron-ajax>
+      <h2>Add New Answer</h2>
+      For: <polyquiz-html-content value="[[newAnswerQuestion.text]]"></polyquiz-html-content>
+      <ctech-tinymce id="newAnswerText" content-css="/bower_components/tinymce-equation-editor/build/mathquill.css" plugins="[[tinyMCEPlugins]]" toolbar="[[tinyMCEToolbar]]"></ctech-tinymce>
+    </ctech-confirm-dialog>
+    <paper-fab id="newQuestionFab" class="new-question-fab" icon="icons:add" on-click="_openNewQuetionDialog"></paper-fab>
+    <paper-tooltip for="newQuestionFab" position="top">New Question</paper-tooltip>
+  </template>
+  <script>
+    function findWithAttr(array, attr, value) {
+      for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+          return i;
+        }
+      }
+    }
+    Polymer({
+      is: 'polyquiz-page-quiz-edit',
+      properties: {
+        ctx: {
+          type: Object,
+          observer: '_onContextChanged'
+        },
+        quiz: {
+          type: Object,
+          observer: '_onQuizChanged'
+        },
+        newQuestionSelected: {
+          type: Number,
+          value: 0,
+          readonly: true
+        },
+        tinyMCEToolbar: {
+          type: Array,
+          value: ['undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | equationeditor'],
+          readonly: true
+        },
+        tinyMCEPlugins: {
+          type: String,
+          value: 'autolink link lists charmap spellchecker searchreplace wordcount fullscreen table contextmenu paste textcolor equationeditor',
+          readonly: true
+        },
+        newAnswerQuestion: {
+          type: Object,
+          readonly: true
+        },
+        editQuestion: {
+          type: Object,
+          observer: '_onEditQuestionChanged'
+        },
+        deleteQuestion: {
+          type: Object
+        },
+        currentQuestion: {
+          type: Number,
+          value: 0
+        }
+      },
+      listeners: {
+        'do-edit-question': '_editQuestionDialog',
+        'do-delete-question': '_deleteQuestionDialog',
+        'do-add-answer': '_addAnswerDialog'
+      },
+      _toggleCollapse: function(e) {
+        if(this.currentQuestion != e.model.get('question.question_id')) {
+          this.currentQuestion = e.model.get('question.question_id');
+        }
+      },
+      _deleteQuestionAjaxResponse: function(e) {
+        console.log(e);
+        this._reloadAllData();
+      },
+      _doDeleteQuestion: function(e) {
+        this.$.deleteQuestionAjax.params = { question_id: this.deleteQuestion.question_id };
+        this.$.deleteQuestionAjax.generateRequest();
+      },
+      _deleteQuestionDialog: function(e) {
+        this.deleteQuestion = this._getQuestionById(e.detail.question_id);
+        this.$.deleteQuestionDialog.open();
+      },
+      _editQuestionAjaxResponse: function(e) {
+        console.log(e);
+        this._reloadAllData();
+      },
+      _getQuestionById: function(id) {
+        var arr = this.quiz.questions.filter(function(o) { return o.question_id == id; });
+        if(arr.length == 1) {
+          return arr[0];
+        } else {
+          return null;
+        }
+      },
+      _getAnswerById: function(id) {
+        var arr = this.question.answers.filter(function(o){ return o.answer_id == id; });
+        if(arr.length == 1) {
+          return arr[0];
+        }
+        return null;
+      },
+      _editQuestionDialog: function(e) {
+        this.$.editQuestionText.editor.undoManager.clear();
+        this.editQuestion = this._getQuestionById(e.detail.question_id);
+        //this.editQuestion = this.quiz.questions[e.model.get('question.question_id')];
+        this.$.editQuestionDialog.open();
+      },
+      _doEditQuestion: function(e) {
+        console.log(this.editQuestion);
+        
+        this.$.editQuestionAjax.params = { question_id: this.editQuestion.question_id };
+
+        console.log(this.editQuestion.extra_credit);
+
+        this.$.editQuestionAjax.body = JSON.stringify({ 'text': this.editQuestion.text, 'extra_credit': this.editQuestion.extra_credit, 'canvas': this.editQuestion.canvas });
+
+        this.$.editQuestionAjax.generateRequest();
+
+        this.quiz.questions[findWithAttr(this.quiz.questions, 'question_id', this.editQuestion.question_id)] = this.editQuestion;
+
+        this.$.mainTemplate.render();
+      },
+      _doEditQuestionDismiss: function(e) {
+        this.$.editQuestion = null;
+      },
+      _addAnswerDialog: function(e) {
+        this.newAnswerQuestion = this._getQuestionById(e.detail.question_id);
+        //this.newAnswerQuestion = this.quiz.questions[e.model.get('question.question_id')];
+        this.$.newAnswerDialog.open();
+      },
+      _addAnswerAjaxResponse: function(e) {
+        console.log(e);
+        this._reloadAllData();
+      },
+      _doNewAnswer: function(e) {
+        this.$.addAnswerAjax.body = JSON.stringify({ 'question_id': this.newAnswerQuestion.question_id, 'type': "STANDARD", 'points': 0, 'text': "tetete"});
+        this.$.addAnswerAjax.generateRequest();
+        this._doNewAnswerDismiss();
+      },
+      _doNewAnswerDismiss: function(e) {
+        this.$.newAnswerText.value = "";
+        this.newAnswerQuestion = null;
+      },
+      _doNewQuestion: function(e) {
+        console.log(this.$.newQuestionText.value);
+        var text = this.$.newQuestionText.value;
+        var extraCredit = this.$.extraCredit.checked;
+        var useCanvas = this.$.useCanvas.checked;
+        var type = "STANDARD";
+        //questions
+        this.$.questionAjax.method = "POST";
+        this.$.questionAjax.body = JSON.stringify({'type': type, 'quiz_id': this.quiz.quiz_id, 'text': text, 'extra_credit': extraCredit, 'canvas': useCanvas});
+        this.$.questionAjax.generateRequest();
+      },
+      _newQuestionAjaxResponse: function(e) {
+        if(e.detail.response) {
+          if(e.detail.response.status) {
+            this._reloadAllData("New Question Dialog");
+          }
+        }
+      },
+      _doNewQuestionDismiss: function(e) {
+        this.$.newQuestionText.value = "";
+      },
+      _openNewQuetionDialog: function(e) {
+        this.$.newQuestionDialog.open();
+      },
+      _computeAnswerSelectableGroup: function(question) {
+        return question.question_id + "_answers";
+      },
+      _questionTemplateDomChanged: function(e) {
+        console.log(e);
+      },
+      better: function(e) {
+        e.model.set('question.text', "Even Deeez");
+      },
+      _onQuizChanged: function(e) {
+        console.log(e);
+        console.log("CHANGED");
+      },
+      _onEditQuestionChanged: function(e) {
+        console.log("editQuestion Changed!");
+        console.log(e);
+      },
+      _sortAnswers: function(bla) {
+        return function(a, b) {
+          if(a.sort_id > b.sort_id) {
+            return 1;
+          } else if(a.sort_id < b.sort_id) {
+            return -1;
+          } else {
+            return 0;
+          }
+        };
+      },
+      _onSortUpdate: function(e) {
+        console.log(e);
+        if(e.detail) {
+          //console.log(e.detail);
+          var sortableEvent = e.detail;
+          var item = sortableEvent.item;
+          e.model.question.answers[item.getAttribute("data-id")].text = "SEx";
+          //e.model.set('question', question);
+          console.log("answer " + item.getAttribute("data-id") + " moved from " + sortableEvent.oldIndex + " " + sortableEvent.newIndex);
+        }
+      },
+      _onStart: function(e) {
+        //console.log(e);
+      },
+      _onEnd: function(e) {
+        console.log(e);
+      },
+      _onMove: function(e) {
+        if(e.detail) {
+          var moveEvent = e.detail;
+          console.log(moveEvent);
+        }
+      },
+      _onFilter: function(e) {
+        console.log(e);
+      },
+      _objectArrayToArray: function(arr) {
+        return $.map(arr, function(value, index) { return [value]; });
+      },
+      _logStore: function(e) {
+
+      },
+      _store: function(e) {
+        this.$.sortableQuestions.sortable.store();
+      },
+      sex: function(e) {
+        console.log("yes plz");
+      },
+      logg: function(e) {
+        console.log(e);
+        return e;
+      },
+      _onQuizDataUpdate: function(e) {
+        if(e.detail.response.status) {
+          this.quiz = e.detail.response.result;
+          this.newAnswerQuestion = null;
+          //this.editQuestion = null;
+          console.log(this.quiz);
+        }
+      },
+      _onContextChanged: function(e) {
+        console.log(e);
+        this._reloadAllData("On Context Changed");
+      },
+      _reloadAllData: function(source) {
+        console.log("called by " + source);
+        this.$.quizData.method = "GET";
+        this.$.quizData.params = { "quiz_id": this.ctx.params.quizid, "all_data": true };
+        this.$.quizData.generateRequest();
+      },
+      _onPageSelected: function(selectorTarget, mainapp) {
+        return function(e) {
+          if(selectorTarget == e.srcElement) {
+            if(this.parentNode.selectedItem == this) {
+              this._reloadAllData("On Page Selected");
+              console.log(e);
+              if(mainapp.isAdmin) {
+                mainapp.closeLoginOverlay();
+                return;
+              }
+              mainapp.openLoginOverlay();
+            }
+          }
+        }
+      },
+      _onPageResized: function() {
+        this.$.newQuestionDialog.notifyResize();
+      },
+      ready: function() {
+        var mainapp = document.querySelector("#mainapp");
+        var parentSelector = this.parentNode;
+        document.addEventListener('polyquiz-resize', this._onPageResized());
+        parentSelector.addEventListener('iron-select', this._onPageSelected(parentSelector, mainapp).bind(this));
+        /*
+        this.$.sortableQuestions.group = {
+          name: this.question.question_id + "_answers",
+          pull: false,
+          put: false
+        };
+        */
+        /*
+        this.$.sortableQuestions.store = {
+          get: function(sortable) {
+            var order = localStorage.getItem(sortable.options.group);
+            console.log(this.question.answers);
+            var o = this.question.answers.sort(function(a,b) { if(a.sort_id > b.sort_id) return 1; return 0;});
+            //console.log(o);
+            return o;
+            //return order ? order.split('|') : [];
+          }.bind(this),
+          set: function(sortable) {
+            console.log(sortable);
+            var o = sortable.toArray();
+            for(var x in o) {
+              if(o.hasOwnProperty(x)) {
+                var answer_id = o[x];
+                this._getAnswerById(answer_id).sort_id = parseInt(x) + 1;
+                //console.log(answer);
+              }
+            }
+            console.log(this.question.answers);
+            console.log(o);
+          }.bind(this)
+        };
+        */
+      }
+    });
+  </script>
+</dom-module>

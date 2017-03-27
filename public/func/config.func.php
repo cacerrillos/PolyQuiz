@@ -23,7 +23,7 @@ if(isset($_SERVER['APPLICATION_ENV']) && $_SERVER['APPLICATION_ENV'] == 'develop
 	$db_password = "polyquiz";
 	$db_name = "polyquiz3";
 } else {
-	$db_host = "localhost:23306";
+	$db_host = "localhost";
 	$db_user = "polyquiz";
 	$db_password = "polyquiz";
 	$db_name = "polyquiz3";

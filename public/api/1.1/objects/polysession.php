@@ -115,9 +115,14 @@ class PolySession {
 		$toReturn = array();
 		$toReturn['status'] = false;
 		if($this->owner == $owner){
+			$active_int = intval($this->active);
+			$show_scores_int = intval($this->show_scores);
+			
+
 			if($this->inDB) {
 				if($stmt = $mysqli->prepare("UPDATE `session` SET `session_name`=?, `active`=?, `show_scores`=? WHERE `session_id` = ? AND `user_id` = ? LIMIT 1;")){
-					$stmt->bind_param("siisi",  $this->name, intval($this->active), intval($this->show_scores), $this->sessionid, $owner);
+
+					$stmt->bind_param("siisi",  $this->name, $active_int, $show_scores_int, $this->sessionid, $owner);
 					if($stmt->execute()) {
 						$toReturn['status'] = true;
 					} else {
@@ -130,7 +135,7 @@ class PolySession {
 				}
 			} else {
 				if($stmt = $mysqli->prepare("INSERT INTO `session` (`session_id`, `session_key`, `quiz_id`, `user_id`, `session_name`, `active`, `show_scores`, `session_date`, `house_id`) VALUES (?,?,?,?,?,?,?,?,?);")){
-					$stmt->bind_param("ssiisiiii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, intval($this->active), intval($this->show_scores), $this->date, $this->house);
+					$stmt->bind_param("ssiisiiii", $this->sessionid, $this->sessionkey, $this->quiz, $this->owner, $this->name, $active_int, $show_scores_int, $this->date, $this->house);
 					if($stmt->execute()) {
 						$toReturn['status'] = true;
 						$inDB = true;

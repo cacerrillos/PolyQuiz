@@ -1,142 +1,167 @@
-<?
-$app->get('/sessions', function() {
-	global $mysqli;
-	if(isset($_GET['id'])) {
-		echo json_encode(PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext']), JSON_PRETTY_PRINT);
-	} else {
-		echo json_encode(PolySession::ownedBy($mysqli, $_SESSION['dbext']), JSON_PRETTY_PRINT);
-	}
+<?php
+
+$app->get('/sessions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
+
+  if(isset($query_params['id'])) {
+    $result = PolySession::fromMySQL($this->db, $query_params['id'], $_SESSION['dbext']);
+  } else {
+    $result = PolySession::ownedBy($this->db, $_SESSION['dbext']);
+  }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->get('/sessions/:id', function($id) {
-	global $mysqli;
-	echo json_encode(PolySession::fromMySQL($mysqli, $id, $_SESSION['dbext']), JSON_PRETTY_PRINT);
+$app->get('/sessions/{session_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+
+  $result = PolySession::fromMySQL($this->db, $args['session_id'], $_SESSION['dbext']);
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->post('/sessions', function() {
-	global $mysqli, $_POST_JSON;
-	$status = array();
-	$status['status'] = false;
-	$status['seg'] = $_POST_JSON;
-	if($_POST_JSON) {
-		if(isset($_POST_JSON['name']) && isset($_POST_JSON['quiz']) && isset($_POST_JSON['house']) && isset($_POST_JSON['active']) && isset($_POST_JSON['show'])) {
-			$obj = PolySession::createCheckMysql($mysqli);
-			$obj->owner = $_SESSION['dbext'];
-			
-			$obj->name = $_POST_JSON['name'];
-			$obj->quiz = $_POST_JSON['quiz'];
-			$obj->house = $_POST_JSON['house'];
+$app->post('/sessions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $parsed_body = $request->getParsedBody();
 
-			if($_POST_JSON['active']) {
-				$obj->setStatus(true);
-			} else {
-				$obj->setStatus(false);
-			}
+  $result['seg'] = $parsed_body;
+  if($parsed_body) {
+    if(isset($parsed_body['name']) && isset($parsed_body['quiz']) && isset($parsed_body['house']) && isset($parsed_body['active']) && isset($parsed_body['show'])) {
+      $obj = PolySession::createCheckMysql($this->db);
+      $obj->owner = $_SESSION['dbext'];
+      
+      $obj->name = $parsed_body['name'];
+      $obj->quiz = $parsed_body['quiz'];
+      $obj->house = $parsed_body['house'];
 
-			if($_POST_JSON['show']){
-				$obj->setShowScores(true);
+      if($parsed_body['active']) {
+        $obj->setStatus(true);
+      } else {
+        $obj->setStatus(false);
+      }
 
-			} else {
-				$obj->setShowScores(false);
-			}
-			$subStatus = $obj->saveToMysql($mysqli, $_SESSION['dbext']);
-			if($subStatus['status']){
-				$status['status'] = true;
-			} else {
-				$status['sub'] = $subStatus;
-			}
-		}
-	}
-	echo json_encode($status, JSON_PRETTY_PRINT);
+      if($parsed_body['show']){
+        $obj->setShowScores(true);
+
+      } else {
+        $obj->setShowScores(false);
+      }
+      $subStatus = $obj->saveToMysql($this->db, $_SESSION['dbext']);
+      if($subStatus['status']){
+        $result['status'] = true;
+      } else {
+        $result['sub'] = $subStatus;
+      }
+    }
+  }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->put('/sessions', function() {
-	global $mysqli, $_POST_JSON;
-	$status = array();
-	if(isset($_GET['id'])) {
-		$obj = PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext']);
-		if(isset($_POST_JSON['name'])) {
-			$obj->name = $_POST_JSON['name'];
-		}
-		if(isset($_POST_JSON['quiz'])) {
-			$obj->quiz = $_POST_JSON['quiz'];
-		}
-		if(isset($_POST_JSON['house'])) {
-			$obj->house = $_POST_JSON['house'];
-		}
-		if(isset($_POST_JSON['active'])) {
-			$obj->setStatus($_POST_JSON['active']);
-		}
-		if(isset($_POST_JSON['show'])) {
-			$obj->setShowScores($_POST_JSON['show']);
-		}
-		$status['sex'] = $obj->inDB;
-		$subStatus = $obj->saveToMysql($mysqli, $_SESSION['dbext']);
-		$status['status'] = $subStatus['status'];
-		if($subStatus['status']){
-			$status['status'] = true;
-		} else {
-			$status['sub'] = $subStatus;
-		}
-		
-	} else {
-		
-	}
-	echo json_encode($status, JSON_PRETTY_PRINT);
+$app->put('/sessions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
+
+  if(isset($query_params['id'])) {
+    $obj = PolySession::fromMySQL($this->db, $query_params['id'], $_SESSION['dbext']);
+    if(isset($parsed_body['name'])) {
+      $obj->name = $parsed_body['name'];
+    }
+    if(isset($parsed_body['quiz'])) {
+      $obj->quiz = $parsed_body['quiz'];
+    }
+    if(isset($parsed_body['house'])) {
+      $obj->house = $parsed_body['house'];
+    }
+    if(isset($parsed_body['active'])) {
+      $obj->setStatus($parsed_body['active']);
+    }
+    if(isset($parsed_body['show'])) {
+      $obj->setShowScores($parsed_body['show']);
+    }
+    $result['sex'] = $obj->inDB;
+    $subStatus = $obj->saveToMysql($this->db, $_SESSION['dbext']);
+    $result['status'] = $subStatus['status'];
+    if($subStatus['status']){
+      $result['status'] = true;
+    } else {
+      $result['sub'] = $subStatus;
+    }
+    
+  } else {
+    
+  }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->put('/sessions/:id', function($id) {
-	global $mysqli, $_POST_JSON;
+$app->put('/sessions/{session_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
 
-	$obj = PolySession::fromMySQL($mysqli, $id, $_SESSION['dbext']);
-	if(isset($_POST_JSON['name'])) {
-		$obj->name = $_POST_JSON['name'];
-	}
-	if(isset($_POST_JSON['quiz'])) {
-		$obj->quiz = $_POST_JSON['quiz'];
-	}
-	if(isset($_POST_JSON['house'])) {
-		$obj->house = $_POST_JSON['house'];
-	}
-	if(isset($_POST_JSON['active'])) {
-		$obj->setStatus($_POST_JSON['active']);
-	}
-	if(isset($_POST_JSON['show'])) {
-		$obj->setShowScores($_POST_JSON['show']);
-	}
-	$subStatus = $obj->saveToMysql($mysqli, $_SESSION['dbext']);
-	if($subStatus['status']){
-		$status['status'] = true;
-	} else {
-		$status['sub'] = $subStatus;
-	}
+  $obj = PolySession::fromMySQL($this->db, $args['session_id'], $_SESSION['dbext']);
+  if(isset($parsed_body['name'])) {
+    $obj->name = $parsed_body['name'];
+  }
+  if(isset($parsed_body['quiz'])) {
+    $obj->quiz = $parsed_body['quiz'];
+  }
+  if(isset($parsed_body['house'])) {
+    $obj->house = $parsed_body['house'];
+  }
+  if(isset($parsed_body['active'])) {
+    $obj->setStatus($parsed_body['active']);
+  }
+  if(isset($parsed_body['show'])) {
+    $obj->setShowScores($parsed_body['show']);
+  }
+  $subStatus = $obj->saveToMysql($this->db, $_SESSION['dbext']);
+  if($subStatus['status']){
+    $result['status'] = true;
+  } else {
+    $result['sub'] = $subStatus;
+  }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->delete('/sessions', function() {
-	global $mysqli;
-	$result = array();
-	$result['status'] = false;
-	if(isset($_GET['id'])) {
-		$obj = PolySession::fromMySQL($mysqli, $_GET['id'], $_SESSION['dbext']);
-		
-		$result['status'] = $obj->delete($mysqli, $_SESSION['dbext']);
+$app->delete('/sessions', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
 
-		echo json_encode($result, JSON_PRETTY_PRINT);
-	} else {
-		//DELETE ALL
-	}
+  if(isset($query_params['id'])) {
+    $obj = PolySession::fromMySQL($this->db, $query_params['id'], $_SESSION['dbext']);
+    
+    $result['status'] = $obj->delete($this->db, $_SESSION['dbext']);
+
+  } else {
+    //DELETE ALL
+  }
+
+  return $response->withJson($result, $http_status);
 });
 
-$app->delete('/sessions/:id', function($id) {
-	global $mysqli;
-	$result = array();
-	$result['status'] = false;
+$app->delete('/sessions/{session_id}', function($request, $response, $args) {
+  $result = array("status" => false);
+  $http_status =  200;
+  $query_params = $request->getQueryParams();
+  $parsed_body = $request->getParsedBody();
 
-	$obj = PolySession::fromMySQL($mysqli, $id, $_SESSION['dbext']);
-		
-	$result['status'] = $obj->delete($mysqli, $_SESSION['dbext']);
+  $obj = PolySession::fromMySQL($this->db, $args['session_id'], $_SESSION['dbext']);
+    
+  $result['status'] = $obj->delete($this->db, $_SESSION['dbext']);
 
-	echo json_encode($result, JSON_PRETTY_PRINT);
+  return $response->withJson($result, $http_status);
 });
 
-?>

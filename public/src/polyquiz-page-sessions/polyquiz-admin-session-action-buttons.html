@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<dom-module id="polyquiz-admin-session-action-buttons">
+	<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+	<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+	<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+	<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+	<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+	<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+	<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+	<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+	<style is="custom-style">
+		paper-material {
+			background-color: white;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.active {
+			color: #8BC34A;
+		}
+		.inactive {
+			color: #D32F2F;
+		}
+		paper-dialog {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+	</style>
+	<template>
+		<iron-ajax
+		id="toggleLockAjax"
+		method="PUT"
+		url="../../api/1.1/sessions"
+		handle-as="json"
+		content-type="application/json"
+	 	on-response="onToggleLockResp"></iron-ajax>
+		<iron-ajax
+		id="toggleShowAjax"
+		method="PUT"
+		url="../../api/1.1/sessions"
+		handle-as="json"
+		content-type="application/json"
+	 	on-response="onToggleShowResp"></iron-ajax>
+		<div class="layout horizontal not-medium">
+			<div class="flex">
+				<paper-icon-button icon="icons:create" on-click="editDialog" id="edit"></paper-icon-button>
+			</div>
+			<div class="flex">
+				<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstat"></paper-icon-button>
+			</div>
+			<div class="flex">
+				<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscore"></paper-icon-button>
+			</div>
+			<div class="flex">
+				<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
+			</div>
+		</div>
+		<div class="layout horizontal only-medium">
+			<paper-menu-button id="menuButton" horizontal-align="right">
+				<paper-icon-button icon="icons:menu" class="dropdown-trigger"></paper-icon-button>
+				<div class="dropdown-content layout horizontal" style="background-color: white; padding-top: 8px; padding-bottom: 8px;">
+					<paper-icon-button icon="icons:create" on-click="editDialog" id="editSmall"></paper-icon-button>
+					<paper-icon-button icon="icons:lock-open" on-click="toggleLock" id="openstatSmall"></paper-icon-button>
+					<paper-icon-button icon="image:remove-red-eye" on-click="toggleShow" id="showscoreSmall"></paper-icon-button>
+					<paper-icon-button icon="icons:delete" on-click="onDeleteClick"></paper-icon-button>
+					<paper-icon-button icon="icons:close" on-click="closeMiniButtons"></paper-icon-button>
+				</div>
+			</paper-menu-button>
+		</div>
+	</template>
+	<script>
+		Polymer({
+			is: "polyquiz-admin-session-action-buttons",
+			properties: {
+				_get: {
+					type: Object
+				},
+				sessiondata: {
+					type: Object,
+					observer: 'onSessionDataChanged',
+					notify: true
+				},
+				houses: Object,
+				resultsObject: {
+					type: Array
+				}
+			},
+			closeMiniButtons: function() {
+				this.$.menuButton.close();
+			},
+			onSessionDataChanged: function(e) {
+				if(e.active){
+					this.$.openstat.icon = "icons:lock-open";
+					this.$.openstat.style.color = "#8BC34A";
+					this.$.openstatSmall.icon = "icons:lock-open";
+					this.$.openstatSmall.style.color = "#8BC34A";
+				} else {
+					this.$.openstat.icon = "icons:lock-outline";
+					this.$.openstat.style.color = "#D32F2F";
+					this.$.openstatSmall.icon = "icons:lock-outline";
+					this.$.openstatSmall.style.color = "#D32F2F";
+				}
+				if(e.show_scores){
+					this.$.showscore.style.color = "#8BC34A";
+					this.$.showscoreSmall.style.color = "#8BC34A";
+				} else {
+					this.$.showscore.style.color = "#D32F2F";
+					this.$.showscoreSmall.style.color = "#D32F2F";
+				}
+			},
+			housesResp: function(e){
+				if(e.detail.response){
+					var arr = [];
+					var roww = function(id, text){
+							this.id = id;
+							this.text = text;
+						};
+					for(var x = 0; x < e.detail.response.length; x++){
+						var tis = e.detail.response[x];
+						arr.push(new roww(tis.uuid, tis.name));
+					}
+					if(arr.length > 0){
+						this.houses = arr;
+					}
+				}
+			},
+			closedEvent: function(e){
+				if(e.detail.confirmed){
+					this.doEdit();
+				}
+			},
+			_transformData: function(data){
+				var arr = $.map(data, function(el) { return el; })
+				//console.log(arr);
+				return arr;
+			},
+			toggleLock: function() {
+				this.$.menuButton.disabled = true;
+				this.$.openstat.disabled = true;
+
+				this.$.toggleLockAjax.params = {
+					id: this.sessiondata.sessionid
+				};
+				this.$.toggleLockAjax.body = JSON.stringify({'active': !this.sessiondata.active });
+
+				this.$.toggleLockAjax.generateRequest();
+			},
+			toggleShow: function() {
+				this.$.menuButton.disabled = true;
+				this.$.showscore.disabled = true;
+
+				this.$.toggleShowAjax.params = {
+					id: this.sessiondata.sessionid
+				};
+				this.$.toggleShowAjax.body = JSON.stringify({'show': !this.sessiondata.show_scores });
+
+				this.$.toggleShowAjax.generateRequest();
+			},
+			onDeleteClick: function(){
+				this.fire('delete-session-request' , { sessionObject: this.sessiondata });
+			},
+			onToggleLockResp: function(e){
+				this.$.menuButton.disabled = false;
+				this.$.openstat.disabled = false;
+				if(e.detail.response) {
+					if(e.detail.response.status == true){
+						this.sessionopen = true;
+						this.ready();
+						this.fire('firetoast', { message: "Updated Session!"});
+						this.fire('session-reload');
+						this.fire('show-badge-on-row');
+					} else {
+						var det = "NO_DETAILS";
+						if(e.detail.response.sub.status_details) {
+							det = e.detail.response.sub.status_details;
+						}
+						this.fire('firetoast', { message: "Failed to update Session! [" + det + "]"});
+					}
+				}
+			},
+			onToggleShowResp: function(e){
+				this.$.menuButton.disabled = false;
+				this.$.showscore.disabled = false;
+				if(e.detail.response) {
+					if(e.detail.response.status == true){
+						this.sessionshow = true;
+						this.ready();
+						this.fire('firetoast', { message: "Updated Session!"});
+						this.fire('session-reload');
+						this.fire('show-badge-on-row');
+					} else {
+						var det = "NO_DETAILS";
+						if(e.detail.response.sub.status_details) {
+							det = e.detail.response.sub.status_details;
+						}
+						this.fire('firetoast', { message: "Failed to update Session! [" + det + "]"});
+					}
+				}
+			},
+			editDialog: function(e){
+				this.fire('edit-session-request' , { sessionObject: this.sessiondata });
+			},
+			onSortBySession: function(){
+				window.location = "?p=results&sortby=session";
+			},
+			ready: function() {
+				//this.$.resultsAjax.generateRequest();
+			}
+		});
+	</script>
+
+</dom-module>

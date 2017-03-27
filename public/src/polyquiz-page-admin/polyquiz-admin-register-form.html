@@ -1,0 +1,123 @@
+<!doctype html>
+<dom-module id="polyquiz-admin-register-form">
+	<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+	<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+	<link rel="import" href="../../bower_components/gold-email-input/gold-email-input.html">
+	<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+	
+	<style is="custom-style">
+		form {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+		h3 {
+			margin-top: .25em;
+			margin-bottom: .25em;
+		}
+	</style>
+
+	<template>
+		<div class="layout horizontal" include="iron-flex iron-flex-alignment">
+			<div class="flex"></div>
+			<h3>Sign Up</h3>
+			<div class="flex"></div>
+		</div>
+		<iron-ajax id="signupAjax" method="POST" handle-as="json" on-request="reqCB" on-response="loginCallback" url="../../api/1.0/admin/login.php"></iron-ajax>
+		<form id="register">
+			<div class="layout horizontal">
+				<paper-input id="firstname" label="First Name" class="flex" on-input="formCheck"></paper-input>
+				<div style="margin-left:10px;"></div>
+				<paper-input id="lastname" label="Last Name" class="flex" on-input="formCheck"></paper-input>
+			</div>
+			
+			<gold-email-input id="email" label="Email Address" on-keydown="checkForEnter" on-input="formCheck" auto-validate></gold-email-input>
+			<paper-input id="password" label="Password" on-input="formCheck" on-keydown="checkForEnter" type="password"></paper-input>
+			<paper-input id="passwordConfirm" label="Confirm Password" on-input="formCheck" on-keydown="checkForEnter" type = "password" error-message="Passwords do not match!"></paper-input>
+			<div class="layout horizontal">
+				<div class="flex"></div>
+					<paper-button id="signupButton" on-click="submitSignUp" raised disabled><paper-spinner id="loadingSpinner" style="display:none;"></paper-spinner><span>[[buttonText]]</span></paper-button>
+				<div class="flex"></div>
+			</div>
+		</form>
+	</template>
+
+	<script>
+		Polymer({
+			is: "polyquiz-admin-register-form",
+			properties: {
+				sidebarpage: {
+					type: Number,
+					value: 0
+				},
+				buttonText: {
+					type: String,
+					value: "Sign Up"
+				}
+			},
+			formCheck: function(e) {
+				if(this.$.firstname.value.length > 0 &&
+				   this.$.lastname.value.length > 0 &&
+				   this.$.email.value.length > 0 &&
+				   this.$.password.value.length > 0 &&
+				   this.$.passwordConfirm.value.length > 0){
+					if(this.$.password.value == this.$.passwordConfirm.value && !this.$.email.invalid) {
+						this.$.signupButton.disabled = false;
+						console.log("Tetet");
+						return true;
+					}
+				}
+				this.$.signupButton.disabled = true;
+				return false;
+			},
+			checkForEnter: function(e) {
+				 if(e.keyCode === 13) {
+				 	this.submitSignUp();
+				 }
+			},
+			submitSignUp: function() {
+				if(this.formCheck(null)){
+					this.$.signupButton.disabled = true;
+
+					this.$.loadingSpinner.style.display = "inline-block";
+					this.buttonText = "";
+
+					this.$.loadingSpinner.active = true;
+					
+					
+					//this.$.loginAjax.body = JSON.stringify({'user': this.$.user.value, 'pass': this.$.pass.value });
+					//this.$.loginAjax.generateRequest();
+				}
+				
+				//document.getElementById('adminlogin').submit();
+			},
+			reqCB: function(details) {
+				//console.log(details);
+			},
+			loginCallback: function(details) {
+
+				if(details.detail.response != null) {
+					if(details.detail.response.status) {
+						this.fire('firetoast', { message: "Logged In!"});
+						this.fire('admin-status-changed', {});
+					} else {
+						this.$.pass.value = "";
+						this.fire('firetoast', { message: "Invalid Username And/Or Password!"});
+					}
+				} else {
+					this.fire('firetoast', { message: "Failed To Login! Server Encountered an Error!"});
+				}
+
+				this.$.loadingSpinner.active = false;
+
+				this.$.loadingSpinner.style.display = "none";
+				this.buttonText = "Sign Up";
+
+				this.$.signupButton.disabled = false;
+				this.formCheck(null);
+			},
+			ready: function() {
+				
+			}
+		});
+	</script>
+</dom-module>

@@ -60,15 +60,18 @@ skel.on("change", function() {
 	console.log(skel.stateId);
 });
 </script>
-<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<!-- <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script> -->
+
 <link rel="import" href="bower_components/polymer/polymer.html">
+
 <script src="bower_components/page/page.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/autofill-event/src/autofill-event.js"></script>
 <script src="bower_components/tinymce/tinymce.min.js"></script>
 <script src="bower_components/tinymce-equation-editor/build/js/mathquill.min.js"></script>
 <script src="bower_components/tinymce-equation-editor/build/js/plugin.min.js"></script>
-<link rel="import" href="elements/polyquiz-app.html">
+
+<link rel="import" href="src/polyquiz-app.html">
 
 <style is="custom-style">
 	body{
@@ -125,10 +128,10 @@ function PolyQuizPage(hash, friendlyName, icon, path, adminOnly, loaded) {
 }
 var polyQuizPages = [
 	new PolyQuizPage("home", "Home", "icons:home", "/", false, true),
-	new PolyQuizPage("takeaquiz", "Take A Quiz", "icons:content-paste", "elements/polyquiz-page-takeaquiz/polyquiz-page-takeaquiz.html", false, false),
-	new PolyQuizPage("admin", "Admin", "icons:settings", "elements/polyquiz-page-admin/polyquiz-page-admin.html", false, true),
-	new PolyQuizPage("sessions", "Sessions", "icons:settings", "elements/polyquiz-page-sessions/polyquiz-page-sessions.html", true, false),
-	new PolyQuizPage("quiz", "Quizzes", "icons:content-paste", "elements/polyquiz-page-quiz/polyquiz-page-quiz.html", true, false)
+	new PolyQuizPage("takeaquiz", "Take A Quiz", "icons:content-paste", "src/polyquiz-page-takeaquiz/polyquiz-page-takeaquiz.html", false, false),
+	new PolyQuizPage("admin", "Admin", "icons:settings", "src/polyquiz-page-admin/polyquiz-page-admin.html", false, true),
+	new PolyQuizPage("sessions", "Sessions", "icons:settings", "src/polyquiz-page-sessions/polyquiz-page-sessions.html", true, false),
+	new PolyQuizPage("quiz", "Quizzes", "icons:content-paste", "src/polyquiz-page-quiz/polyquiz-page-quiz.html", true, false)
 ];
 function findPolyQuizPage(hash) {
 	for(var k in polyQuizPages) {
@@ -205,7 +208,7 @@ function handleQuiz(ctx, next) {
 }
 function handleQuizWithId(ctx, next) {
 	//page that shows overview of this quiz, stats?, maybe list the questions as read only?
-	mainapp.doLoadFromPath("elements/polyquiz-page-quiz-edit/polyquiz-page-quiz-edit.html", ctx, "quizedit");
+	mainapp.doLoadFromPath("src/polyquiz-page-quiz-edit/polyquiz-page-quiz-edit.html", ctx, "quizedit");
 	console.log("QUIZID");
 	console.log(ctx);
 }
