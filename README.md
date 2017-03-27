@@ -1,4 +1,4 @@
-##PolyQuiz
+## PolyQuiz
 
 An quiz website that's currently being used by some teachers at my alma mater and for the school's math placement test.
 
