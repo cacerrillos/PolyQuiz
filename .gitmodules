@@ -1,0 +1,3 @@
+[submodule "seshat"]
+	path = seshat
+	url = https://github.com/falvaro/seshat.git
