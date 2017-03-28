@@ -3,6 +3,11 @@
     "sauce": {
       "browsers": [
         {
+          "browserName": "chrome",
+          "platform": "Windows 10",
+          "version": "latest"
+        },
+        {
           "browserName": "microsoftedge",
           "platform": "Windows 10",
           "version": ""
