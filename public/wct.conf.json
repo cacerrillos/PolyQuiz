@@ -1,7 +1,4 @@
 {
-  "suites": [
-    "public/test/"
-  ],
   "plugins" : {
     "sauce": {
       "browsers": [
