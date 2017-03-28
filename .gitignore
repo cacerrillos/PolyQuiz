@@ -3,3 +3,4 @@ _notes
 dwsync.xml
 *.sublime-project
 *.sublime-workspace
+bower_components/

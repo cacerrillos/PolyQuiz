@@ -1,0 +1,7 @@
+{
+  "name": "polyquiz",
+  "short_name": "polyquiz",
+  "description": "Quiz web app.",
+  "start_url": "/",
+  "display": "standalone"
+}
