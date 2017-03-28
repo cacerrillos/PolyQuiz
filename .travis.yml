@@ -11,7 +11,7 @@ addons:
     packages:
     - google-chrome-stable
 before_script:
-- npm install -g bower polymer-cli@next
+- npm install -g bower polymer-cli@next web-component-tester@6.0.0-prerelease.7
 - cd public
 - bower install
 - polymer lint
