@@ -1,4 +1,4 @@
-## PolyQuiz [![Build Status](https://travis-ci.org/cacerrillos/PolyQuiz.svg?branch=master)](https://travis-ci.org/cacerrillos/PolyQuiz)
+## PolyQuiz [![Build Status](https://travis-ci.org/cacerrillos/PolyQuiz.svg?branch=PolyQuiz3.1-polymer2)](https://travis-ci.org/cacerrillos/PolyQuiz)
 
 An quiz website that's currently being used by some teachers at my alma mater and for the school's math placement test.
 
