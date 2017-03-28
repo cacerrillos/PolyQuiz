@@ -6,8 +6,8 @@
 
     <title>polyquiz-app test</title>
 
-    <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
 
     <link rel="import" href="../../src/polyquiz-app/polyquiz-app.html">
   </head>
@@ -22,7 +22,6 @@
       suite('polyquiz-app', function() {
         test('instantiating the element works', function() {
           var element = fixture('basic');
-          console.log(element.is);
           assert.equal(element.is, 'polyquiz-app');
         });
       });
